@@ -1,18 +1,18 @@
 //
-//  CalCVCell.m
+//  DayCVCell.m
 //  Vaiden
 //
 //  Created by Xin on 6/5/15.
 //  Copyright (c) 2014 Xin. All rights reserved.
 //
 
-#import "CalCVCell.h"
+#import "DayCVCell.h"
 
-@interface CalCVCell()
+@interface DayCVCell()
 
 @end
 
-@implementation CalCVCell
+@implementation DayCVCell
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {

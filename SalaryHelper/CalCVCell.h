@@ -1,20 +1,21 @@
 //
-//  BuyVoteCVCell.h
+//  CalCVCell.h
 //  Vaiden
 //
-//  Created by Turbo on 8/4/14.
-//  Copyright (c) 2014 James Chung. All rights reserved.
+//  Created by Xin on 6/5/15.
+//  Copyright (c) 2014 Xin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface BuyVoteCVCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UIView *numberView;
-@property (weak, nonatomic) IBOutlet UILabel *number;
-@property (weak, nonatomic) IBOutlet UIView *priceView;
-@property (weak, nonatomic) IBOutlet UILabel *price;
-@property (weak, nonatomic) IBOutlet UIButton *button;
-@property (weak, nonatomic) IBOutlet UILabel *title;
-@property (weak, nonatomic) IBOutlet UILabel *context;
+@interface CalCVCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UIView *topView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightTop;
+@property (weak, nonatomic) IBOutlet UILabel *month;
 
+@property (weak, nonatomic) IBOutlet UICollectionView *CalView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightCal;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTag;
 @end

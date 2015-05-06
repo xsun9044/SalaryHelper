@@ -1,14 +1,14 @@
 //
-//  ViewController.h
+//  CalCVC.h
 //  SalaryHelper
 //
-//  Created by Turbo on 5/5/15.
+//  Created by Xin on 5/5/15.
 //  Copyright (c) 2015 Xin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface CalCVC : UICollectionViewController
 
 
 @end

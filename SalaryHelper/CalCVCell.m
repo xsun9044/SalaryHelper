@@ -1,31 +1,26 @@
 //
-//  BuyVoteCVCell.m
+//  CalCVCell.m
 //  Vaiden
 //
-//  Created by Turbo on 8/4/14.
-//  Copyright (c) 2014 James Chung. All rights reserved.
+//  Created by Xin on 6/5/15.
+//  Copyright (c) 2014 Xin. All rights reserved.
 //
 
-#import "BuyVoteCVCell.h"
+#import "CalCVCell.h"
 
-@implementation BuyVoteCVCell
+@interface CalCVCell()
 
-- (id)initWithFrame:(CGRect)frame
+@end
+
+@implementation CalCVCell
+
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Initialization code
+        
     }
     return self;
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

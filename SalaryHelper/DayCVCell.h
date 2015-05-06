@@ -1,5 +1,5 @@
 //
-//  CalCVCell.h
+//  DayCVCell.h
 //  Vaiden
 //
 //  Created by Xin on 6/5/15.
@@ -8,14 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CalCVCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UIView *topView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTop;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightTop;
-@property (weak, nonatomic) IBOutlet UILabel *month;
+@interface DayCVCell : UICollectionViewCell
 
-@property (weak, nonatomic) IBOutlet UICollectionView *CalView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightCal;
+@property (weak, nonatomic) IBOutlet UILabel *day;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *dayWidth;
+@property (weak, nonatomic) IBOutlet UIView *cover;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *coverHeight;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTag;
 @end
