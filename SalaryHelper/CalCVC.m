@@ -21,6 +21,8 @@
 @property (nonatomic) NSInteger startWeekDayOfCurrentMonth;
 @property (nonatomic) NSInteger count;
 @property (nonatomic) BOOL hasToday;
+@property (nonatomic, strong) NSIndexPath *todayIndex;
+@property (nonatomic, strong) NSIndexPath *lastSelect;
 @end
 
 @implementation CalCVC
@@ -89,20 +91,13 @@
         cell.CalView.delegate = self;
         cell.CalView.dataSource = self;
         cell.CalView.bounces = NO;
-        [cell.CalView setBackgroundColor:[UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0]];
+        [cell.CalView setBackgroundColor:[UIColor whiteColor]];
         [cell.CalView reloadData];
         
         cell.month.text = [NSString stringWithFormat:@"%@  %ld", [NSDate nameForMonth:indexPath.row%12 + 1], [[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12];
-        if (indexPath.row%12 + 1 == [[NSDate getMonthFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]
-            &&
-            [[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12 == [[NSDate getYearFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
-            self.hasToday = YES;
-        } else {
-            self.hasToday = NO;
-        }
         
         self.startWeekDayOfCurrentMonth = [NSDate getNumberOfWeekdayFromStringInUTC:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,[NSDate nameForMonth:indexPath.row%12 + 1],1]];
-        NSLog(@"%ld",(long)self.startWeekDayOfCurrentMonth);
+        //NSLog(@"%ld",(long)self.startWeekDayOfCurrentMonth);
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
@@ -110,11 +105,11 @@
         [dateFormatter setTimeZone:timeZone];
         NSDate *date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,[NSDate nameForMonth:indexPath.row%12 + 1],1]];
         self.daysOfLastMonth = [NSDate getNumberOfDaysInWeek:date];
-        NSLog(@"%ld",(long)self.daysOfLastMonth);
+        //NSLog(@"%ld",(long)self.daysOfLastMonth);
         
         date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,[NSDate nameForMonth:indexPath.row%12 + 2],1]];
         self.daysOfCurrentMonth = [NSDate getNumberOfDaysInWeek:date];
-        NSLog(@"%ld",(long)self.daysOfCurrentMonth);
+        //NSLog(@"%ld",(long)self.daysOfCurrentMonth);
         
         return cell;
     } else {
@@ -127,43 +122,37 @@
             self.count = 1;
             if (indexPath.row >=  self.startWeekDayOfCurrentMonth - 1) {
                 cell.day.text = [NSString stringWithFormat:@"%ld", (indexPath.row + 1) - (self.startWeekDayOfCurrentMonth-1)];
-                if (self.hasToday && [cell.day.text integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
-                    [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
-                    cell.layer.borderWidth = 1.0f;
-                } else {
-                    [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
-                    cell.layer.borderWidth = 0;
-                }
                 cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
                 cell.cover.hidden = YES;
                 cell.alpha = 1;
             } else {
                 cell.day.text = [NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfCurrentMonth - 2 - indexPath.row)];
-                cell.backgroundColor = [UIColor whiteColor];
+                cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
                 cell.cover.hidden = NO;
-                cell.alpha = 0.2;
+                cell.alpha = 1;
                 [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
                 cell.layer.borderWidth = 0;
             }
         } else {
             if (7 + 7*(indexPath.section-1) + indexPath.row < self.startWeekDayOfCurrentMonth - 1 + self.daysOfCurrentMonth) {
                 cell.day.text = [NSString stringWithFormat:@"%ld", (7 - self.startWeekDayOfCurrentMonth + 1) + 7*(indexPath.section-1) + (indexPath.row + 1)];
-                if (self.hasToday && [cell.day.text integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
+                /*if (self.hasToday && [cell.day.text integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
                     [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
                     cell.layer.borderWidth = 1.0f;
+                    self.todayIndex = indexPath;
                 } else {
                     [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
                     cell.layer.borderWidth = 0;
-                }
+                }*/
                 cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
                 cell.cover.hidden = YES;
                 cell.alpha = 1;
             } else {
                 cell.day.text = [NSString stringWithFormat:@"%ld", (long)self.count];
                 self.count++;
-                cell.backgroundColor = [UIColor whiteColor];
+                cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
                 cell.cover.hidden = NO;
-                cell.alpha = 0.2;
+                cell.alpha = 1;
                 [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
                 cell.layer.borderWidth = 0;
             }
@@ -184,6 +173,36 @@
     }
 }
 
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"test2");
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"test");
+    /*if (collectionView.tag == OUTTER) {
+        if (indexPath.row%12 + 1 == [[NSDate getMonthFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]
+            &&
+            [[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12 == [[NSDate getYearFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
+            self.hasToday = YES;
+        } else {
+            self.hasToday = NO;
+        }
+    } else {
+        DayCVCell *cell = (DayCVCell *)[collectionView cellForItemAtIndexPath:indexPath];
+        if (self.hasToday && [cell.day.text integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
+            [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
+            cell.layer.borderWidth = 1.0f;
+            self.todayIndex = indexPath;
+        } else {
+            [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
+            cell.layer.borderWidth = 0;
+        }
+    }
+     */
+}
+
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout*)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section
@@ -192,6 +211,22 @@
         return UIEdgeInsetsMake(0, 0, 0, 0);
     } else {
         return UIEdgeInsetsMake(1, 0, 0, 0);
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (collectionView.tag != OUTTER) {
+        // Clear last selection
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:self.lastSelect];
+        cell.layer.borderWidth = 0;
+        
+        if (![indexPath isEqual:self.todayIndex] || !self.hasToday) {
+            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+            cell.layer.borderWidth = 1.0f;
+            cell.layer.borderColor = [[UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0] CGColor];
+            self.lastSelect = indexPath;
+        }
     }
 }
 
