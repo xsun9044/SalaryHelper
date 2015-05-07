@@ -72,6 +72,9 @@
                                                         <color key="titleColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="goLeft:" destination="OxH-QG-PuU" eventType="touchUpInside" id="HCI-Py-4eH"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zbk-F4-DTx">
                                                     <rect key="frame" x="381" y="4" width="46" height="30"/>
@@ -83,6 +86,9 @@
                                                         <color key="titleColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="goRight:" destination="OxH-QG-PuU" eventType="touchUpInside" id="QyS-jD-n9u"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SUN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yar-Y6-1vm">
                                                     <rect key="frame" x="0.0" y="39" width="81" height="21"/>
@@ -136,6 +142,19 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eP5-Xu-aa4">
+                                                    <rect key="frame" x="519" y="7" width="27" height="23"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="27" id="a8S-tY-i9T"/>
+                                                        <constraint firstAttribute="height" constant="23" id="pfU-zq-lgV"/>
+                                                    </constraints>
+                                                    <state key="normal" image="setting">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="setting:" destination="OxH-QG-PuU" eventType="touchUpInside" id="bJI-5L-RmF"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -147,6 +166,7 @@
                                                 <constraint firstItem="pI7-k1-BIu" firstAttribute="centerY" secondItem="PGy-DC-7nf" secondAttribute="centerY" id="Fjg-4R-M7K"/>
                                                 <constraint firstItem="PGy-DC-7nf" firstAttribute="centerY" secondItem="4rt-q8-hja" secondAttribute="centerY" id="HSR-uw-77b"/>
                                                 <constraint firstItem="Yar-Y6-1vm" firstAttribute="leading" secondItem="8Sr-Fa-yNZ" secondAttribute="leading" id="Jc0-v8-AM2"/>
+                                                <constraint firstItem="eP5-Xu-aa4" firstAttribute="centerX" secondItem="4rt-q8-hja" secondAttribute="centerX" id="N3C-pC-qQ1"/>
                                                 <constraint firstItem="MpO-ap-0MY" firstAttribute="centerY" secondItem="e9C-AG-8wY" secondAttribute="centerY" constant="-0.5" id="O44-bh-WKp"/>
                                                 <constraint firstItem="pI7-k1-BIu" firstAttribute="height" secondItem="PGy-DC-7nf" secondAttribute="height" id="OAg-wx-agw"/>
                                                 <constraint firstItem="3qN-ZF-waU" firstAttribute="width" secondItem="Pbp-Ze-FxU" secondAttribute="width" id="Ong-h5-CfE"/>
@@ -154,6 +174,7 @@
                                                 <constraint firstItem="3qN-ZF-waU" firstAttribute="leading" secondItem="y17-cp-HJ4" secondAttribute="trailing" constant="1" id="Pvn-4k-5eH"/>
                                                 <constraint firstItem="3qN-ZF-waU" firstAttribute="width" secondItem="y17-cp-HJ4" secondAttribute="width" id="QBQ-op-3W0"/>
                                                 <constraint firstItem="PGy-DC-7nf" firstAttribute="leading" secondItem="pI7-k1-BIu" secondAttribute="trailing" constant="1" id="RJ8-zR-O8Q"/>
+                                                <constraint firstItem="eP5-Xu-aa4" firstAttribute="centerY" secondItem="MpO-ap-0MY" secondAttribute="centerY" id="Ror-J0-aJR"/>
                                                 <constraint firstItem="MpO-ap-0MY" firstAttribute="leading" secondItem="e9C-AG-8wY" secondAttribute="trailing" constant="-96" id="S28-WV-e4G"/>
                                                 <constraint firstItem="pI7-k1-BIu" firstAttribute="height" secondItem="Pbp-Ze-FxU" secondAttribute="height" id="SjE-G8-ESM"/>
                                                 <constraint firstItem="3qN-ZF-waU" firstAttribute="height" secondItem="Pbp-Ze-FxU" secondAttribute="height" id="TgA-Yl-Z2f"/>
@@ -245,7 +266,9 @@
                                     <outlet property="CalView" destination="DHC-jj-KVK" id="3Zp-01-olO"/>
                                     <outlet property="heightCal" destination="85y-2l-ulB" id="SYL-2V-0MJ"/>
                                     <outlet property="heightTop" destination="UMI-BI-dzi" id="GA1-6I-Ozf"/>
+                                    <outlet property="left" destination="e9C-AG-8wY" id="6d9-UB-vWW"/>
                                     <outlet property="month" destination="MpO-ap-0MY" id="bWS-3C-d8P"/>
+                                    <outlet property="right" destination="zbk-F4-DTx" id="esu-0e-Crx"/>
                                     <outlet property="topView" destination="8Sr-Fa-yNZ" id="9z8-uv-XXH"/>
                                     <outlet property="widthTag" destination="HGx-I7-zOe" id="Rng-vL-XbD"/>
                                     <outlet property="widthTop" destination="nL4-bR-Nyw" id="K3b-eT-o23"/>
@@ -264,6 +287,9 @@
             <point key="canvasLocation" x="-272" y="539"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="setting" width="17" height="17"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

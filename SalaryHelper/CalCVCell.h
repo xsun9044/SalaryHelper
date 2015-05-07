@@ -18,4 +18,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightCal;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTag;
+@property (weak, nonatomic) IBOutlet UIButton *left;
+@property (weak, nonatomic) IBOutlet UIButton *right;
 @end

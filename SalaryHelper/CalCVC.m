@@ -20,9 +20,15 @@
 @property (nonatomic) NSInteger daysOfLastMonth;
 @property (nonatomic) NSInteger startWeekDayOfCurrentMonth;
 @property (nonatomic) NSInteger count;
+
 @property (nonatomic) BOOL hasToday;
+
 @property (nonatomic, strong) NSIndexPath *todayIndex;
 @property (nonatomic, strong) NSIndexPath *lastSelect;
+
+@property (nonatomic) NSString *dayText;
+
+@property (nonatomic, strong) DayCVCell *dayCell;
 @end
 
 @implementation CalCVC
@@ -91,7 +97,7 @@
         cell.CalView.delegate = self;
         cell.CalView.dataSource = self;
         cell.CalView.bounces = NO;
-        [cell.CalView setBackgroundColor:[UIColor whiteColor]];
+        [cell.CalView setBackgroundColor:[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0]];
         [cell.CalView reloadData];
         
         cell.month.text = [NSString stringWithFormat:@"%@  %ld", [NSDate nameForMonth:indexPath.row%12 + 1], [[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12];
@@ -111,10 +117,13 @@
         self.daysOfCurrentMonth = [NSDate getNumberOfDaysInWeek:date];
         //NSLog(@"%ld",(long)self.daysOfCurrentMonth);
         
+        cell.left.tag = indexPath.row - 1;
+        cell.right.tag = indexPath.row + 1;
+        
         return cell;
     } else {
         DayCVCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"day_cell" forIndexPath:indexPath];
-        cell.backgroundColor = [UIColor colorWithRed:215/255.0 green:215/255.0 blue:215/255.0 alpha:1.0];
+        //cell.backgroundColor = [UIColor colorWithRed:215/255.0 green:215/255.0 blue:215/255.0 alpha:1.0];
         [cell.coverHeight setConstant:(self.heightBottom-6)/6];
         [cell.dayWidth setConstant:(_fullWidth-6)/7];
         
@@ -122,11 +131,13 @@
             self.count = 1;
             if (indexPath.row >=  self.startWeekDayOfCurrentMonth - 1) {
                 cell.day.text = [NSString stringWithFormat:@"%ld", (indexPath.row + 1) - (self.startWeekDayOfCurrentMonth-1)];
-                cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
+                self.dayText = cell.day.text;
+                cell.backgroundColor = [UIColor whiteColor];
                 cell.cover.hidden = YES;
                 cell.alpha = 1;
             } else {
                 cell.day.text = [NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfCurrentMonth - 2 - indexPath.row)];
+                self.dayText = cell.day.text;
                 cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
                 cell.cover.hidden = NO;
                 cell.alpha = 1;
@@ -136,19 +147,13 @@
         } else {
             if (7 + 7*(indexPath.section-1) + indexPath.row < self.startWeekDayOfCurrentMonth - 1 + self.daysOfCurrentMonth) {
                 cell.day.text = [NSString stringWithFormat:@"%ld", (7 - self.startWeekDayOfCurrentMonth + 1) + 7*(indexPath.section-1) + (indexPath.row + 1)];
-                /*if (self.hasToday && [cell.day.text integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
-                    [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
-                    cell.layer.borderWidth = 1.0f;
-                    self.todayIndex = indexPath;
-                } else {
-                    [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
-                    cell.layer.borderWidth = 0;
-                }*/
-                cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
+                self.dayText = cell.day.text;
+                cell.backgroundColor = [UIColor whiteColor];
                 cell.cover.hidden = YES;
                 cell.alpha = 1;
             } else {
                 cell.day.text = [NSString stringWithFormat:@"%ld", (long)self.count];
+                self.dayText = cell.day.text;
                 self.count++;
                 cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
                 cell.cover.hidden = NO;
@@ -157,6 +162,7 @@
                 cell.layer.borderWidth = 0;
             }
         }
+        self.dayCell = cell;
         
         return cell;
     }
@@ -175,13 +181,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"test2");
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"test");
-    /*if (collectionView.tag == OUTTER) {
+    if (collectionView.tag == OUTTER) {
         if (indexPath.row%12 + 1 == [[NSDate getMonthFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]
             &&
             [[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12 == [[NSDate getYearFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
@@ -190,17 +190,17 @@
             self.hasToday = NO;
         }
     } else {
-        DayCVCell *cell = (DayCVCell *)[collectionView cellForItemAtIndexPath:indexPath];
-        if (self.hasToday && [cell.day.text integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
-            [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
-            cell.layer.borderWidth = 1.0f;
+        if (self.hasToday && [self.dayText integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
+            [self.dayCell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
+            self.dayCell.layer.borderWidth = 1.0f;
             self.todayIndex = indexPath;
+            self.dayCell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
         } else {
-            [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
-            cell.layer.borderWidth = 0;
+            [self.dayCell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
+            self.dayCell.layer.borderWidth = 0;
+            self.dayCell.backgroundColor = [UIColor whiteColor];
         }
     }
-     */
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
@@ -217,19 +217,38 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (collectionView.tag != OUTTER) {
-        // Clear last selection
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:self.lastSelect];
-        cell.layer.borderWidth = 0;
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:self.todayIndex];
+        cell.backgroundColor = [UIColor whiteColor];
         
-        if (![indexPath isEqual:self.todayIndex] || !self.hasToday) {
-            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-            cell.layer.borderWidth = 1.0f;
-            cell.layer.borderColor = [[UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0] CGColor];
-            self.lastSelect = indexPath;
-        }
+        // Clear last selection
+        cell = [collectionView cellForItemAtIndexPath:self.lastSelect];
+        cell.backgroundColor = [UIColor whiteColor];
+        
+        cell = [collectionView cellForItemAtIndexPath:indexPath];
+        cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
+        self.lastSelect = indexPath;
     }
 }
 
 #pragma mark - Actions
+- (IBAction)goLeft:(UIButton *)sender
+{
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:sender.tag inSection:0]
+                                atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                        animated:YES];
+}
+
+- (IBAction)goRight:(UIButton *)sender
+{
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:sender.tag inSection:0]
+                                atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                        animated:YES];
+}
+
+
+- (IBAction)setting:(UIButton *)sender
+{
+    NSLog(@"fuck");
+}
 
 @end

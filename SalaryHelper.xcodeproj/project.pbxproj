@@ -92,17 +92,11 @@
 			children = (
 				B58D7A6E1AF9522B0097A436 /* AppDelegate.h */,
 				B58D7A6F1AF9522B0097A436 /* AppDelegate.m */,
-				B58D7A741AF9522B0097A436 /* CalCVC.h */,
-				B58D7A751AF9522B0097A436 /* CalCVC.m */,
-				B554CC901AFA8EE6006E63F7 /* DayCVCell.h */,
-				B554CC911AFA8EE6006E63F7 /* DayCVCell.m */,
-				B554CC8D1AFA6AB1006E63F7 /* NSDate+DateHelper.h */,
-				B554CC8E1AFA6AB1006E63F7 /* NSDate+DateHelper.m */,
-				B554CC8A1AFA59FB006E63F7 /* CalCVCell.h */,
-				B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */,
 				B58D7A771AF9522C0097A436 /* Main.storyboard */,
 				B58D7A7A1AF9522C0097A436 /* Images.xcassets */,
 				B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */,
+				B5F72C391AFBAE3B001544E7 /* Helper */,
+				B5F72C381AFBAE24001544E7 /* Calendar */,
 				B58D7A6A1AF9522B0097A436 /* Supporting Files */,
 			);
 			path = SalaryHelper;
@@ -132,6 +126,28 @@
 				B58D7A881AF9522C0097A436 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B5F72C381AFBAE24001544E7 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				B58D7A741AF9522B0097A436 /* CalCVC.h */,
+				B58D7A751AF9522B0097A436 /* CalCVC.m */,
+				B554CC8A1AFA59FB006E63F7 /* CalCVCell.h */,
+				B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */,
+				B554CC901AFA8EE6006E63F7 /* DayCVCell.h */,
+				B554CC911AFA8EE6006E63F7 /* DayCVCell.m */,
+			);
+			name = Calendar;
+			sourceTree = "<group>";
+		};
+		B5F72C391AFBAE3B001544E7 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				B554CC8D1AFA6AB1006E63F7 /* NSDate+DateHelper.h */,
+				B554CC8E1AFA6AB1006E63F7 /* NSDate+DateHelper.m */,
+			);
+			name = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
