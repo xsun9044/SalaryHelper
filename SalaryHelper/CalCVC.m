@@ -10,6 +10,7 @@
 #import "CalCVCell.h"
 #import "NSDate+DateHelper.h"
 #import "DayCVCell.h"
+#import "MenuVC.h"
 
 @interface CalCVC ()
 @property (nonatomic) CGFloat fullHeight;
@@ -41,6 +42,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    self.modalPresentationStyle = UIModalPresentationCurrentContext;
+    self.tabBarController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    
     self.fullHeight = [[UIScreen mainScreen] bounds].size.height - [[UIApplication sharedApplication] statusBarFrame].size.height;
     self.fullWidth = [[UIScreen mainScreen] bounds].size.width;
     
@@ -109,13 +114,24 @@
         NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
         dateFormatter.dateFormat = @"yyyy-MM-dd";
         [dateFormatter setTimeZone:timeZone];
-        NSDate *date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,[NSDate nameForMonth:indexPath.row%12 + 1],1]];
+        NSDate *date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%ld-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,indexPath.row%12 + 1,1]];
         self.daysOfLastMonth = [NSDate getNumberOfDaysInWeek:date];
-        //NSLog(@"%ld",(long)self.daysOfLastMonth);
+        //NSLog(@"%@",date);
         
-        date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,[NSDate nameForMonth:indexPath.row%12 + 2],1]];
+        NSInteger nextMonth = indexPath.row%12 + 2;
+        if (nextMonth > 12) {
+            nextMonth = 1;
+        } else if (nextMonth < 2) {
+            nextMonth = 1;
+        }
+        
+        if (nextMonth == 1) {
+            date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%ld-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12 + 1,(long)nextMonth,1]];
+        } else {
+            date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%ld-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,(long)nextMonth,1]];
+        }
         self.daysOfCurrentMonth = [NSDate getNumberOfDaysInWeek:date];
-        //NSLog(@"%ld",(long)self.daysOfCurrentMonth);
+        //NSLog(@"%@",date);
         
         cell.left.tag = indexPath.row - 1;
         cell.right.tag = indexPath.row + 1;
@@ -248,7 +264,25 @@
 
 - (IBAction)setting:(UIButton *)sender
 {
-    NSLog(@"fuck");
+    [self performSegueWithIdentifier:@"menu_segue" sender:sender];
+}
+
+#pragma mark - Navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"menu_segue"]) {
+        MenuVC *controller = (MenuVC *)segue.destinationViewController;
+        
+        // If it's under IOS 8, then take the screenshot
+        NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
+        if (version == 8) {
+            UIGraphicsBeginImageContextWithOptions([[UIScreen mainScreen] bounds].size, self.view.opaque, 0.0);
+            [self.navigationController.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+            UIImage * sc = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            controller.backgroundImage = sc;
+        }
+    }
 }
 
 @end

@@ -10,4 +10,6 @@
 
 @interface UIImageView (imageViewHelper)
 
+- (void)changeTintColorOfUIImage:(UIImage *)image withColor:(UIColor *)color;
+
 @end

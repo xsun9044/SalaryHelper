@@ -10,4 +10,6 @@
 
 @interface UIColor (ColorHelper)
 
++ (UIColor *)goldColor;
+
 @end

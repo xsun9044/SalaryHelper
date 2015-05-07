@@ -1,5 +1,5 @@
 //
-//  CalCVC.h
+//  MenuVC.h
 //  SalaryHelper
 //
 //  Created by Xin on 5/5/15.
@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CalCVC : UICollectionViewController
+@interface MenuVC : UIViewController
 
+@property (nonatomic, strong) UIImage *backgroundImage;
 
 @end
 

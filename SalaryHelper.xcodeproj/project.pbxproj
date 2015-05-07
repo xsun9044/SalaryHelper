@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */; };
+		B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */; };
 		B554CC8C1AFA59FB006E63F7 /* CalCVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */; };
 		B554CC8F1AFA6AB1006E63F7 /* NSDate+DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC8E1AFA6AB1006E63F7 /* NSDate+DateHelper.m */; };
 		B554CC921AFA8EE6006E63F7 /* DayCVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC911AFA8EE6006E63F7 /* DayCVCell.m */; };
@@ -17,6 +19,7 @@
 		B58D7A791AF9522C0097A436 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A771AF9522C0097A436 /* Main.storyboard */; };
 		B58D7A7B1AF9522C0097A436 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A7A1AF9522C0097A436 /* Images.xcassets */; };
 		B58D7A8A1AF9522C0097A436 /* SalaryHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A891AF9522C0097A436 /* SalaryHelperTests.m */; };
+		B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F72C3B1AFBEC7F001544E7 /* MenuVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +33,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B535E1761AFC07200088FE42 /* UIColor+ColorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorHelper.h"; sourceTree = "<group>"; };
+		B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorHelper.m"; sourceTree = "<group>"; };
+		B535E1791AFC0DAD0088FE42 /* UIImageView+imageViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+imageViewHelper.h"; sourceTree = "<group>"; };
+		B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+imageViewHelper.m"; sourceTree = "<group>"; };
 		B554CC8A1AFA59FB006E63F7 /* CalCVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalCVCell.h; sourceTree = "<group>"; };
 		B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalCVCell.m; sourceTree = "<group>"; };
 		B554CC8D1AFA6AB1006E63F7 /* NSDate+DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+DateHelper.h"; sourceTree = "<group>"; };
@@ -49,6 +56,8 @@
 		B58D7A831AF9522C0097A436 /* SalaryHelperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SalaryHelperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B58D7A881AF9522C0097A436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B58D7A891AF9522C0097A436 /* SalaryHelperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SalaryHelperTests.m; sourceTree = "<group>"; };
+		B5F72C3A1AFBEC7F001544E7 /* MenuVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuVC.h; sourceTree = "<group>"; };
+		B5F72C3B1AFBEC7F001544E7 /* MenuVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +140,8 @@
 		B5F72C381AFBAE24001544E7 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
+				B5F72C3A1AFBEC7F001544E7 /* MenuVC.h */,
+				B5F72C3B1AFBEC7F001544E7 /* MenuVC.m */,
 				B58D7A741AF9522B0097A436 /* CalCVC.h */,
 				B58D7A751AF9522B0097A436 /* CalCVC.m */,
 				B554CC8A1AFA59FB006E63F7 /* CalCVCell.h */,
@@ -146,6 +157,10 @@
 			children = (
 				B554CC8D1AFA6AB1006E63F7 /* NSDate+DateHelper.h */,
 				B554CC8E1AFA6AB1006E63F7 /* NSDate+DateHelper.m */,
+				B535E1761AFC07200088FE42 /* UIColor+ColorHelper.h */,
+				B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */,
+				B535E1791AFC0DAD0088FE42 /* UIImageView+imageViewHelper.h */,
+				B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -251,8 +266,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B58D7A701AF9522B0097A436 /* AppDelegate.m in Sources */,
+				B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */,
+				B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */,
 				B58D7A6D1AF9522B0097A436 /* main.m in Sources */,
 				B554CC921AFA8EE6006E63F7 /* DayCVCell.m in Sources */,
+				B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */,
 				B58D7A761AF9522B0097A436 /* CalCVC.m in Sources */,
 				B58D7A731AF9522B0097A436 /* SalaryHelper.xcdatamodeld in Sources */,
 				B554CC8F1AFA6AB1006E63F7 /* NSDate+DateHelper.m in Sources */,

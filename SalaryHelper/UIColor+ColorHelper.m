@@ -10,4 +10,9 @@
 
 @implementation UIColor (ColorHelper)
 
++ (UIColor *)goldColor
+{
+    return [UIColor colorWithRed:199/255.0 green:199/255.0 blue:199/255.0 alpha:1.0];
+}
+
 @end

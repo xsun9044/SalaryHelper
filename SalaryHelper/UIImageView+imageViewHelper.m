@@ -10,4 +10,10 @@
 
 @implementation UIImageView (imageViewHelper)
 
+- (void)changeTintColorOfUIImage:(UIImage *)image withColor:(UIColor *)color
+{
+    self.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self setTintColor:color];
+}
+
 @end
