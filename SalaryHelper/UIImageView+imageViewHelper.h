@@ -12,4 +12,6 @@
 
 - (void)changeTintColorOfUIImage:(UIImage *)image withColor:(UIColor *)color;
 
+- (void)rotateImage90Degrees;
+
 @end

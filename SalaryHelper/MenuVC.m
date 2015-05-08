@@ -12,9 +12,11 @@
 @interface MenuVC ()
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *menuWidth;
-@property (weak, nonatomic) IBOutlet UIButton *setupButton;
 @property (weak, nonatomic) IBOutlet UIImageView *rightArrow;
+@property (weak, nonatomic) IBOutlet UIImageView *dot1;
+@property (weak, nonatomic) IBOutlet UIImageView *dot2;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btn1Height;
 @end
 
 @implementation MenuVC
@@ -30,7 +32,13 @@
         [self.backgroundImageView setContentMode:UIViewContentModeTop];
     }
     
-    [self.rightArrow changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor whiteColor]];
+    [self.rightArrow changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor lightGrayColor]];
+    [self.dot1 changeTintColorOfUIImage:[UIImage imageNamed:@"dot_black"] withColor:[UIColor lightGrayColor]];
+    [self.dot1 rotateImage90Degrees];
+    [self.dot2 changeTintColorOfUIImage:[UIImage imageNamed:@"dot_black"] withColor:[UIColor lightGrayColor]];
+    [self.dot2 rotateImage90Degrees];
+    
+    [self.btn1Height setConstant:self.view.frame.size.height/2];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -43,6 +51,11 @@
     }];
 }
 
+#pragma mark - Actions
+- (IBAction)setup:(UIButton *)sender
+{
+    NSLog(@"test");
+}
 
 #pragma mark - Navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

@@ -16,4 +16,9 @@
     [self setTintColor:color];
 }
 
+- (void)rotateImage90Degrees
+{
+    self.transform = CGAffineTransformMakeRotation(M_PI/2);
+}
+
 @end
