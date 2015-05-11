@@ -20,4 +20,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTag;
 @property (weak, nonatomic) IBOutlet UIButton *left;
 @property (weak, nonatomic) IBOutlet UIButton *right;
+@property (weak, nonatomic) IBOutlet UIImageView *rightImage;
+@property (weak, nonatomic) IBOutlet UIImageView *leftImage;
 @end

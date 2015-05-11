@@ -14,4 +14,6 @@
 
 - (void)rotateImage90Degrees;
 
+- (void)rotateImage180Degrees;
+
 @end

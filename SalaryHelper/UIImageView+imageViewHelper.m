@@ -21,4 +21,9 @@
     self.transform = CGAffineTransformMakeRotation(M_PI/2);
 }
 
+- (void)rotateImage180Degrees
+{
+    self.transform = CGAffineTransformMakeRotation(M_PI);
+}
+
 @end

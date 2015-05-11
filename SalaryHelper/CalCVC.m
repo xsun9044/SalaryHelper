@@ -11,6 +11,7 @@
 #import "NSDate+DateHelper.h"
 #import "DayCVCell.h"
 #import "MenuVC.h"
+#import "UIImageView+imageViewHelper.h"
 
 @interface CalCVC ()
 @property (nonatomic) CGFloat fullHeight;
@@ -136,6 +137,13 @@
         cell.left.tag = indexPath.row - 1;
         cell.right.tag = indexPath.row + 1;
         
+        [cell.rightImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor blackColor]];
+        [cell.rightImage setContentMode:UIViewContentModeCenter];
+        
+        [cell.leftImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor blackColor]];
+        [cell.leftImage rotateImage180Degrees];
+        [cell.leftImage setContentMode:UIViewContentModeCenter];
+        
         return cell;
     } else {
         DayCVCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"day_cell" forIndexPath:indexPath];
@@ -151,6 +159,11 @@
                 cell.backgroundColor = [UIColor whiteColor];
                 cell.cover.hidden = YES;
                 cell.alpha = 1;
+                if (indexPath.row == 0 || indexPath.row == 6) {
+                    [cell.day setTextColor:[UIColor redColor]];
+                } else {
+                    [cell.day setTextColor:[UIColor blackColor]];
+                }
             } else {
                 cell.day.text = [NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfCurrentMonth - 2 - indexPath.row)];
                 self.dayText = cell.day.text;
@@ -159,6 +172,7 @@
                 cell.alpha = 1;
                 [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
                 cell.layer.borderWidth = 0;
+                [cell.day setTextColor:[UIColor blackColor]];
             }
         } else {
             if (7 + 7*(indexPath.section-1) + indexPath.row < self.startWeekDayOfCurrentMonth - 1 + self.daysOfCurrentMonth) {
@@ -167,6 +181,11 @@
                 cell.backgroundColor = [UIColor whiteColor];
                 cell.cover.hidden = YES;
                 cell.alpha = 1;
+                if (indexPath.row == 0 || indexPath.row == 6) {
+                    [cell.day setTextColor:[UIColor redColor]];
+                } else {
+                    [cell.day setTextColor:[UIColor blackColor]];
+                }
             } else {
                 cell.day.text = [NSString stringWithFormat:@"%ld", (long)self.count];
                 self.dayText = cell.day.text;
@@ -176,6 +195,7 @@
                 cell.alpha = 1;
                 [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
                 cell.layer.borderWidth = 0;
+                [cell.day setTextColor:[UIColor blackColor]];
             }
         }
         self.dayCell = cell;
