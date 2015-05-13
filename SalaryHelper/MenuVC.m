@@ -10,6 +10,9 @@
 #import "UIImageView+imageViewHelper.h"
 
 @interface MenuVC ()
+@property (weak, nonatomic) IBOutlet UIView *view1;
+@property (weak, nonatomic) IBOutlet UIView *view2;
+@property (weak, nonatomic) IBOutlet UIView *view3;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *menuWidth;
@@ -50,6 +53,10 @@
     [self.btnHeight setConstant:self.view.frame.size.height/3];
     [self.btnWidth setConstant:140.0f];
     
+    [self.view1 setHidden:YES];
+    [self.view2 setHidden:YES];
+    [self.view3 setHidden:YES];
+    
     UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandler:)];
     [gestureRecognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
     [self.menuView addGestureRecognizer:gestureRecognizer];
@@ -66,13 +73,38 @@
     [self.menuWidth setConstant:150.0f];
     [UIView animateWithDuration:0.3f animations:^{
         [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        [self.view1 setHidden:NO];
+        [self.view2 setHidden:NO];
+        [self.view3 setHidden:NO];
     }];
 }
 
 #pragma mark - Actions
-- (IBAction)setup:(UIButton *)sender
+#define ADD_INCOME 0
+#define ADD_OUTLAY 1
+#define CHECK_HISTORY 2
+- (IBAction)actions:(UIButton *)sender
 {
-    NSLog(@"test");
+    if (sender.tag == ADD_INCOME) {
+        UIAlertView *alert = [[UIAlertView alloc] init];
+        alert.title = @"1";
+        alert.message = @"1";
+        [alert addButtonWithTitle:@"OK"];
+        [alert show];
+    } else if (sender.tag == ADD_OUTLAY) {
+        UIAlertView *alert = [[UIAlertView alloc] init];
+        alert.title = @"2";
+        alert.message = @"2";
+        [alert addButtonWithTitle:@"OK"];
+        [alert show];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] init];
+        alert.title = @"3";
+        alert.message = @"3";
+        [alert addButtonWithTitle:@"OK"];
+        [alert show];
+    }
 }
 
 - (void)handleTap:(UITapGestureRecognizer *)gesture
@@ -89,6 +121,9 @@
     
     if(!inside){
         // Dismiss modal view
+        [self.view1 setHidden:YES];
+        [self.view2 setHidden:YES];
+        [self.view3 setHidden:YES];
         [self.menuWidth setConstant:0.0f];
         [UIView animateWithDuration:0.3f animations:^{
             [self.view layoutIfNeeded];
@@ -100,6 +135,9 @@
 
 - (void)swipeHandler:(UISwipeGestureRecognizer *)gesture
 {
+    [self.view1 setHidden:YES];
+    [self.view2 setHidden:YES];
+    [self.view3 setHidden:YES];
     [self.menuWidth setConstant:0.0f];
     [UIView animateWithDuration:0.3f animations:^{
         [self.view layoutIfNeeded];
