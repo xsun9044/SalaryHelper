@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22F8FD381B043A1600381F04 /* AddTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F8FD371B043A1600381F04 /* AddTVC.m */; };
 		B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */; };
 		B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */; };
 		B554CC8C1AFA59FB006E63F7 /* CalCVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */; };
@@ -33,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		22F8FD371B043A1600381F04 /* AddTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTVC.m; sourceTree = "<group>"; };
+		22F8FD391B043A3A00381F04 /* AddTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTVC.h; sourceTree = "<group>"; };
 		B535E1761AFC07200088FE42 /* UIColor+ColorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorHelper.h"; sourceTree = "<group>"; };
 		B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorHelper.m"; sourceTree = "<group>"; };
 		B535E1791AFC0DAD0088FE42 /* UIImageView+imageViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+imageViewHelper.h"; sourceTree = "<group>"; };
@@ -78,6 +81,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22F8FD351B0439C100381F04 /* InputViews */ = {
+			isa = PBXGroup;
+			children = (
+				22F8FD391B043A3A00381F04 /* AddTVC.h */,
+				22F8FD371B043A1600381F04 /* AddTVC.m */,
+			);
+			name = InputViews;
+			sourceTree = "<group>";
+		};
 		B58D7A5E1AF9522B0097A436 = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +118,7 @@
 				B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */,
 				B5F72C391AFBAE3B001544E7 /* Helper */,
 				B5F72C381AFBAE24001544E7 /* Calendar */,
+				22F8FD351B0439C100381F04 /* InputViews */,
 				B58D7A6A1AF9522B0097A436 /* Supporting Files */,
 			);
 			path = SalaryHelper;
@@ -270,6 +283,7 @@
 				B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */,
 				B58D7A6D1AF9522B0097A436 /* main.m in Sources */,
 				B554CC921AFA8EE6006E63F7 /* DayCVCell.m in Sources */,
+				22F8FD381B043A1600381F04 /* AddTVC.m in Sources */,
 				B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */,
 				B58D7A761AF9522B0097A436 /* CalCVC.m in Sources */,
 				B58D7A731AF9522B0097A436 /* SalaryHelper.xcdatamodeld in Sources */,

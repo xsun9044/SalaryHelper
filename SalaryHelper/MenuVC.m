@@ -14,10 +14,16 @@
 @property (weak, nonatomic) IBOutlet UIView *view2;
 @property (weak, nonatomic) IBOutlet UIView *view3;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
+@property (weak, nonatomic) IBOutlet UIView *popView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *menuWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnHeight;
+/*
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *popHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *popWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *popLeftPadding;
+ */
 
 @property (weak, nonatomic) IBOutlet UIImageView *rightArrow;
 @property (weak, nonatomic) IBOutlet UIImageView *dot1;
@@ -64,6 +70,13 @@
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapGestureRecognizer];
+    
+    /*
+    // Set frame for popup window
+    [self.popHeight setConstant:[[UIScreen mainScreen] bounds].size.height - 40];
+    [self.popWidth setConstant:[[UIScreen mainScreen] bounds].size.width - 16 - 150 + 32];
+    [self.popLeftPadding setConstant: [[UIScreen mainScreen] bounds].size.width];
+     */
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -87,11 +100,7 @@
 - (IBAction)actions:(UIButton *)sender
 {
     if (sender.tag == ADD_INCOME) {
-        UIAlertView *alert = [[UIAlertView alloc] init];
-        alert.title = @"1";
-        alert.message = @"1";
-        [alert addButtonWithTitle:@"OK"];
-        [alert show];
+        [self performSegueWithIdentifier:@"add_segue" sender:sender];
     } else if (sender.tag == ADD_OUTLAY) {
         UIAlertView *alert = [[UIAlertView alloc] init];
         alert.title = @"2";
