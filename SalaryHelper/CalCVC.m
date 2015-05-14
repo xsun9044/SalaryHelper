@@ -106,6 +106,9 @@
         [cell.CalView setBackgroundColor:[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0]];
         [cell.CalView reloadData];
         
+        [cell.pig setImage:[[UIImage imageNamed:@"piggy"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [cell.pig.imageView setTintColor:[UIColor whiteColor]];
+        
         cell.month.text = [NSString stringWithFormat:@"%@  %ld", [NSDate nameForMonth:indexPath.row%12 + 1], [[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12];
         
         self.startWeekDayOfCurrentMonth = [NSDate getNumberOfWeekdayFromStringInUTC:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,[NSDate nameForMonth:indexPath.row%12 + 1],1]];
@@ -137,10 +140,10 @@
         cell.left.tag = indexPath.row - 1;
         cell.right.tag = indexPath.row + 1;
         
-        [cell.rightImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor blackColor]];
+        [cell.rightImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor whiteColor]];
         [cell.rightImage setContentMode:UIViewContentModeCenter];
         
-        [cell.leftImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor blackColor]];
+        [cell.leftImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor whiteColor]];
         [cell.leftImage rotateImage180Degrees];
         [cell.leftImage setContentMode:UIViewContentModeCenter];
         

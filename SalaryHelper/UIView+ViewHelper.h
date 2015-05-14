@@ -10,4 +10,8 @@
 
 @interface UIView (ViewHelper)
 
+- (void)showAlertBorder;
+
+- (void)hideAlertBorder;
+
 @end

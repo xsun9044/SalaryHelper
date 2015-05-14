@@ -1,15 +1,23 @@
 //
-//  addExpTVCell.h
+//  InputTVCell.h
 //  Vaiden
 //
-//  Created by Turbo on 8/13/14.
-//  Copyright (c) 2014 James Chung. All rights reserved.
+//  Created by Xin on 5/14/15.
+//  Copyright (c) 2015 Xin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface addExpTVCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *title;
-@property (weak, nonatomic) IBOutlet UIButton *btn;
+@interface InputTVCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *icon1;
+@property (weak, nonatomic) IBOutlet UIImageView *icon2;
+
+@property (weak, nonatomic) IBOutlet UIDatePicker *picker;
+
+@property (weak, nonatomic) IBOutlet UITextField *input1;
+@property (weak, nonatomic) IBOutlet UITextField *input2;
+
+@property (weak, nonatomic) IBOutlet UILabel *label1;
 
 @end

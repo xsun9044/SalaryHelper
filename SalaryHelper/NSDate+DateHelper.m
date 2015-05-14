@@ -77,6 +77,22 @@
     return [DateFormatter stringFromDate:[NSDate date]];
 }
 
++ (NSString *)getCurrentDate
+{
+    NSDateFormatter *DateFormatter=[[NSDateFormatter alloc] init];
+    [DateFormatter setDateFormat:@"yyyy-MM-dd"];
+    return [DateFormatter stringFromDate:[NSDate date]];
+}
+
++ (NSString *)getDateStringFromDate:(NSDate *)date
+{
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
+    [formatter setTimeZone:timeZone];
+    return [formatter stringFromDate:date];
+}
+
 + (NSInteger)getNumberOfWeekdayFromStringInUTC:(NSString *)dateString
 {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

@@ -34,4 +34,8 @@
 
 + (NSInteger)getYearFromDate:(NSDate *)date;
 
++ (NSString *)getDateStringFromDate:(NSDate *)date;
+
++ (NSString *)getCurrentDate;
+
 @end

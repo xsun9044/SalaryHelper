@@ -1,14 +1,14 @@
 //
-//  addExpTVCell.m
+//  InputTVCell.m
 //  Vaiden
 //
-//  Created by Turbo on 8/13/14.
-//  Copyright (c) 2014 James Chung. All rights reserved.
+//  Created by Xin on 5/14/15.
+//  Copyright (c) 2015 Xin. All rights reserved.
 //
 
-#import "addExpTVCell.h"
+#import "InputTVCell.h"
 
-@implementation addExpTVCell
+@implementation InputTVCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
