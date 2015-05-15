@@ -25,6 +25,10 @@
         view.backgroundColor=[UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.9];
         [self.window.rootViewController.view addSubview:view];
     }
+    
+    // Change all tint color in navigation bars
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
     return YES;
 }
 

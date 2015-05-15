@@ -20,6 +20,7 @@
 		B58D7A791AF9522C0097A436 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A771AF9522C0097A436 /* Main.storyboard */; };
 		B58D7A7B1AF9522C0097A436 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A7A1AF9522C0097A436 /* Images.xcassets */; };
 		B58D7A8A1AF9522C0097A436 /* SalaryHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A891AF9522C0097A436 /* SalaryHelperTests.m */; };
+		B5B3709A1B06473B0042BB74 /* RepeatTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B370981B06473B0042BB74 /* RepeatTVC.m */; };
 		B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B835431B04F5EF003AB468 /* InputTVCell.m */; };
 		B5B835471B0558E8003AB468 /* UIView+ViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B835461B0558E8003AB468 /* UIView+ViewHelper.m */; };
 		B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F72C3B1AFBEC7F001544E7 /* MenuVC.m */; };
@@ -61,6 +62,8 @@
 		B58D7A831AF9522C0097A436 /* SalaryHelperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SalaryHelperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B58D7A881AF9522C0097A436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B58D7A891AF9522C0097A436 /* SalaryHelperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SalaryHelperTests.m; sourceTree = "<group>"; };
+		B5B370981B06473B0042BB74 /* RepeatTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepeatTVC.m; sourceTree = "<group>"; };
+		B5B370991B06473B0042BB74 /* RepeatTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepeatTVC.h; sourceTree = "<group>"; };
 		B5B835421B04F5EF003AB468 /* InputTVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputTVCell.h; sourceTree = "<group>"; };
 		B5B835431B04F5EF003AB468 /* InputTVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputTVCell.m; sourceTree = "<group>"; };
 		B5B835451B0558E8003AB468 /* UIView+ViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ViewHelper.h"; sourceTree = "<group>"; };
@@ -90,6 +93,8 @@
 		22F8FD351B0439C100381F04 /* InputViews */ = {
 			isa = PBXGroup;
 			children = (
+				B5B370981B06473B0042BB74 /* RepeatTVC.m */,
+				B5B370991B06473B0042BB74 /* RepeatTVC.h */,
 				22F8FD391B043A3A00381F04 /* AddTVC.h */,
 				22F8FD371B043A1600381F04 /* AddTVC.m */,
 				B5B835421B04F5EF003AB468 /* InputTVCell.h */,
@@ -288,6 +293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5B3709A1B06473B0042BB74 /* RepeatTVC.m in Sources */,
 				B58D7A701AF9522B0097A436 /* AppDelegate.m in Sources */,
 				B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */,
 				B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */,

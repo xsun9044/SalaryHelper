@@ -10,7 +10,7 @@
 
 @interface UIView (ViewHelper)
 
-- (void)showAlertBorder;
+- (void)showAlertBorderWithCornerRadius:(CGFloat)radius;
 
 - (void)hideAlertBorder;
 

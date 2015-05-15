@@ -7,23 +7,21 @@
 //
 
 #import "UIView+ViewHelper.h"
-@interface UIView ()
-
-@property (nonatomic, strong) UIColor *restoreColor;
-
-@end
 
 @implementation UIView (ViewHelper)
 
-- (void)showAlertBorder
+- (void)showAlertBorderWithCornerRadius:(CGFloat)radius
 {
-    self.restoreColor = [UIColor colorWithCGColor:self.layer.borderColor];
-    self.layer.borderColor = [[UIColor redColor] CGColor];
+    self.layer.borderColor=[[UIColor redColor]CGColor];
+    self.layer.borderWidth = 1;
+    self.layer.cornerRadius = radius;
+    self.layer.masksToBounds = YES;
 }
 
 - (void)hideAlertBorder
 {
-    self.layer.borderColor = [self.restoreColor CGColor];
+    self.layer.borderColor=[[UIColor clearColor]CGColor];
+    self.layer.borderWidth = 0;
 }
 
 @end

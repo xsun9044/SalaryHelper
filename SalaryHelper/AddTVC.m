@@ -10,8 +10,11 @@
 #import "InputTVCell.h"
 #import "UIImageView+imageViewHelper.h"
 #import "NSDate+DateHelper.h"
+#import "UIView+ViewHelper.h"
+#import <QuartzCore/QuartzCore.h>
+#import "RepeatTVC.h"
 
-@interface AddTVC() <UITextFieldDelegate>
+@interface AddTVC() <UITextFieldDelegate, RepeatDelegate>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *leftBarButtonItem;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rightBarButtonItem;
 
@@ -21,7 +24,12 @@
 @property (strong, nonatomic) UILabel *dateLabel;
 @property (strong, nonatomic) UILabel *repeatLabel;
 
+@property (strong, nonatomic) UIButton *clearButton1;
+@property (strong, nonatomic) UIButton *clearButton2;
+
 @property (nonatomic) BOOL showCal;
+
+@property (nonatomic) NSInteger repeatRow;
 @end
 
 @implementation AddTVC
@@ -42,6 +50,8 @@
                                            forState:UIControlStateNormal];
     [self.leftBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Hiragino Kaku Gothic ProN W3" size:13.0]}
                                            forState:UIControlStateNormal];
+    
+    self.repeatRow = 0;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -87,6 +97,9 @@
         self.currentTextField2 = cell.input2;
         cell.input1.delegate = self;
         cell.input2.delegate = self;
+        
+        self.clearButton1 = cell.btn1;
+        self.clearButton2 = cell.btn2;
     } else if (indexPath.row == 1) {
         cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"blank" forIndexPath:indexPath];
     } else if (indexPath.row == 2) {
@@ -171,6 +184,13 @@
             [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];
             [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
         }
+    } else if (self.showCal) {
+        InputTVCell *cell = (InputTVCell *)[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+        cell.icon2.image = [UIImage imageNamed:@"arrowdown"];
+        self.showCal = NO;
+        
+        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+        [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     }
 }
 
@@ -178,6 +198,28 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    if ([textField isEqual:self.currentTextField1]) {
+        self.clearButton1.hidden = NO;
+        self.clearButton2.hidden = YES;
+    } else {
+        self.clearButton1.hidden = YES;
+        self.clearButton2.hidden = NO;
+    }
+    return YES;
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    if ([textField isEqual:self.currentTextField1]) {
+        self.clearButton1.hidden = YES;
+    } else {
+        self.clearButton2.hidden = YES;
+    }
     return YES;
 }
 
@@ -198,15 +240,46 @@
 
 - (IBAction)done:(UIBarButtonItem *)sender
 {
-    if (self.currentTextField2.text.length == 0) {
-        NSLog(@"no amount");
+    if (self.currentTextField2.text.length == 0)
+    {
+        [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
     } else {
+        [self.currentTextField1 resignFirstResponder];
+        [self.currentTextField2 resignFirstResponder];
+        [self.currentTextField2 hideAlertBorder];
         NSLog(@"good");
+    }
+}
+
+- (IBAction)clearInput:(UIButton *)sender
+{
+    if (sender.tag == 0) {
+        self.currentTextField1.text = @"";
+    } else {
+        self.currentTextField2.text = @"";
     }
 }
 
 - (void)getDate:(UIDatePicker *)picker
 {
     self.dateLabel.text = [NSDate getDateStringFromDate:picker.date];
+}
+
+#pragma mark - Repeat Delegate
+- (void)getRepeatType:(NSString *)typeName withNumber:(NSInteger)num
+{
+    self.repeatLabel.text = typeName;
+    self.repeatRow = num;
+}
+
+#pragma mark - Navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"repeat_segue"]) {
+        RepeatTVC *controller = (RepeatTVC *)segue.destinationViewController;
+        controller.delegate = self;
+        controller.row = self.repeatRow;
+        controller.repeatString = self.repeatLabel.text;
+    }
 }
 @end

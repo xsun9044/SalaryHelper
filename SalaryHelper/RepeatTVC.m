@@ -1,35 +1,27 @@
 //
-//  AddTVC.m
+//  RepeatTVC.m
 //  SalaryHelper
 //
-//  Created by Xin Sun on 15/5/13.
+//  Created by Xin Sun on 15/5/15.
 //  Copyright (c) 2015年 Xin. All rights reserved.
 //
 
-#import "AddTVC.h"
+#import "RepeatTVC.h"
 #import "InputTVCell.h"
-#import "UIImageView+imageViewHelper.h"
-#import "NSDate+DateHelper.h"
-#import "UIView+ViewHelper.h"
-#import <QuartzCore/QuartzCore.h>
 
-@interface AddTVC() <UITextFieldDelegate>
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *leftBarButtonItem;
+@interface RepeatTVC() <UIPickerViewDataSource, UIPickerViewDelegate>
+@property (nonatomic) BOOL moreThanOne;
+@property (nonatomic) BOOL changed;
+@property (nonatomic) BOOL showPicker;
+
+@property (nonatomic,strong) NSArray *lastData;
+
+@property (weak, nonatomic) IBOutlet UILabel *customTitle;
+
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rightBarButtonItem;
-
-@property (strong, nonatomic) UITextField *currentTextField1;
-@property (strong, nonatomic) UITextField *currentTextField2;
-
-@property (strong, nonatomic) UILabel *dateLabel;
-@property (strong, nonatomic) UILabel *repeatLabel;
-
-@property (strong, nonatomic) UIButton *clearButton1;
-@property (strong, nonatomic) UIButton *clearButton2;
-
-@property (nonatomic) BOOL showCal;
 @end
 
-@implementation AddTVC
+@implementation RepeatTVC
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -41,38 +33,23 @@
     [self.navigationItem setBackBarButtonItem: backButton];
     
     // This will remove extra separators from tableview for iOS 8,7 and 6
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    //self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Hiragino Kaku Gothic ProN W3" size:13.0]}
                                            forState:UIControlStateNormal];
-    [self.leftBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Hiragino Kaku Gothic ProN W3" size:13.0]}
-                                           forState:UIControlStateNormal];
+    
+    dispatch_async(dispatch_get_main_queue(),^{
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.row inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    });
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    // unregister for keyboard notifications while not visible.
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-}
-
-- (void)keyboardWasShown:(NSNotification*)notification
-{
-    [self.tableView scrollsToTop];
 }
 
 #pragma mark - UITableView Delegate & Datasource
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -80,46 +57,74 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return 9;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    InputTVCell *cell;
-    if (indexPath.row == 0) {
-        cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"lv1" forIndexPath:indexPath];
-        self.currentTextField1 = cell.input1;
-        self.currentTextField2 = cell.input2;
-        cell.input1.delegate = self;
-        cell.input2.delegate = self;
+    if (indexPath.row == 6) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"blank" forIndexPath:indexPath];
+        return cell;
+    } else if (indexPath.row == 8) {
+        InputTVCell *cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"picker" forIndexPath:indexPath];
+        cell.picker2.delegate = self;
+        cell.picker2.dataSource = self;
         
-        self.clearButton1 = cell.btn1;
-        self.clearButton2 = cell.btn2;
-    } else if (indexPath.row == 1) {
-        cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"blank" forIndexPath:indexPath];
-    } else if (indexPath.row == 2) {
-        cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"lv2" forIndexPath:indexPath];
-        [cell.icon1 changeTintColorOfUIImage:[UIImage imageNamed:@"calendar"] withColor:[UIColor blackColor]];
-        self.dateLabel = cell.label1;
-        if ([self.dateLabel.text isEqualToString:@"--"]) {
-            self.dateLabel.text = [NSDate getCurrentDate];
-        }
-    } else if (indexPath.row == 3) {
-        cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"picker" forIndexPath:indexPath];
-        if (self.showCal) {
-            cell.picker.hidden = NO;
-            cell.picker.alpha = 0;
+        if (self.showPicker) {
+            cell.picker2.hidden = NO;
+            cell.picker2.alpha = 0;
             [UIView animateWithDuration:0.9 animations:^{
-                cell.picker.alpha = 1;
+                cell.picker2.alpha = 1;
             }];
+            if (self.lastData.count == 2) {
+                [cell.picker2 selectRow:[[self.lastData objectAtIndex:0] integerValue]-1
+                            inComponent:0
+                               animated:YES];
+                
+                if ([[self.lastData objectAtIndex:0] integerValue] > 1) {
+                    [cell.picker2 selectRow:[[self.lastData objectAtIndex:1] isEqualToString:@"Days"]?0:[[self.lastData objectAtIndex:1] isEqualToString:@"Weeks"]?1:[[self.lastData objectAtIndex:1] isEqualToString:@"Months"]?2:3
+                                inComponent:1
+                                   animated:YES];
+                    self.moreThanOne = YES;
+                    self.changed = YES;
+                } else {
+                    [cell.picker2 selectRow:[[self.lastData objectAtIndex:1] isEqualToString:@"Day"]?0:[[self.lastData objectAtIndex:1] isEqualToString:@"Week"]?1:[[self.lastData objectAtIndex:1] isEqualToString:@"Month"]?2:3
+                                inComponent:1
+                                   animated:YES];
+                    self.moreThanOne = NO;
+                    self.changed = NO;
+                }
+            }
+            [cell.picker2 reloadAllComponents];
         } else {
-            cell.picker.hidden = YES;
+            cell.picker2.hidden = YES;
         }
         
-        [cell.picker addTarget:self action:@selector(getDate:) forControlEvents:UIControlEventValueChanged];
+        return cell;
+    }
+    
+    InputTVCell *cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"repeat_cell" forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (indexPath.row == 0) {
+        cell.label1.text = @"Never";
+    } else if (indexPath.row == 1) {
+        cell.label1.text = @"Every Day";
+    } else if (indexPath.row == 2) {
+        cell.label1.text = @"Every Week";
+    } else if (indexPath.row == 3) {
+        cell.label1.text = @"Every 2 Weeks";
+    } else if (indexPath.row == 4) {
+        cell.label1.text = @"Every Month";
+    } else if (indexPath.row == 5) {
+        cell.label1.text = @"Every Year";
+    } else if (indexPath.row == 7) {
+        cell.label1.text = @"Custom";
+    }
+    
+    if (self.row == indexPath.row) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
-        cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"lv3" forIndexPath:indexPath];
-        self.repeatLabel = cell.label1;
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
     
     return cell;
@@ -127,21 +132,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0) {
-        return 61;
-    } else if (indexPath.row == 1) {
-        return 40;
-    } else if (indexPath.row == 2) {
-        return 43;
-    } else if (indexPath.row == 3) {
-        if (self.showCal) {
+    if (indexPath.row == 8) {
+        if (self.showPicker) {
             return 162;
         } else {
             return 0;
         }
-    } else {
-        return 43;
     }
+    return 44;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -164,99 +162,135 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 2) {
-        InputTVCell *cell = (InputTVCell *)[tableView cellForRowAtIndexPath:indexPath];
-        if (self.showCal) {
-            cell.icon2.image = [UIImage imageNamed:@"arrowdown"];
-            self.showCal = NO;
-            
-            [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
-            [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-        } else {
-            cell.icon2.image = [UIImage imageNamed:@"arrowup"];
-            self.showCal = YES;
-            
-            [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];
-            [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-        }
-    } else if (self.showCal) {
-        InputTVCell *cell = (InputTVCell *)[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
-        cell.icon2.image = [UIImage imageNamed:@"arrowdown"];
-        self.showCal = NO;
+    if (indexPath.row != 6 && indexPath.row != 7 && indexPath.row != 8 && indexPath.row != self.row) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        InputTVCell *cell = (InputTVCell *)[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.row inSection:0]];
+        cell.accessoryType = UITableViewCellAccessoryNone;
         
-        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
-        [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        cell = (InputTVCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        self.row = indexPath.row;
+        
+        self.showPicker = NO;
+        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:8 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+        
+        self.repeatString = cell.label1.text;
+    } else if (indexPath.row == 7) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        if (self.row != indexPath.row) {
+            InputTVCell *cell = (InputTVCell *)[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.row inSection:0]];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            //self.row = indexPath.row;
+        }
+        InputTVCell *cell = (InputTVCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        
+        if (self.showPicker) {
+            self.showPicker = NO;
+            [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:8 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+            [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:7 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        } else {
+            self.showPicker= YES;
+            if (self.row != 7) {
+                self.repeatString = @"Every Day";
+            } else {
+                NSLog(@"%@",[self getRepeat:self.repeatString]);
+                self.lastData = [self getRepeat:self.repeatString];
+            }
+            [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:8 inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];
+            [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:8 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        }
+        
+        self.row = indexPath.row;
+    } else if (indexPath.row != 8) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        self.showPicker = NO;
+        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:8 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+        [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     }
 }
 
-#pragma mark - UITextField Delegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
+- (NSArray *)getRepeat:(NSString *)string
 {
-    [textField resignFirstResponder];
-    return YES;
-}
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    if ([textField isEqual:self.currentTextField1]) {
-        self.clearButton1.hidden = NO;
-        self.clearButton2.hidden = YES;
+    NSArray *items = [string componentsSeparatedByString:@" "];
+    if (items.count == 2) {
+        // etc. Every Day
+        return [[NSArray alloc] initWithObjects:@"1", [items objectAtIndex:1],nil];
     } else {
-        self.clearButton1.hidden = YES;
-        self.clearButton2.hidden = NO;
+        // etc Every 5 Days
+        return [[NSArray alloc] initWithObjects:[items objectAtIndex:1], [items objectAtIndex:2],nil];
     }
-    return YES;
 }
 
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+#pragma mark - UIPickerView Delegate
+- (int)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-    if ([textField isEqual:self.currentTextField1]) {
-        self.clearButton1.hidden = YES;
+    if (pickerView.hidden) {
+        return 0;
+    }
+    return 2;
+}
+
+- (int)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    if (component == 0) {
+        return 40000;
+    }
+    return 4;
+}
+
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    if (component == 0) {
+        return [NSString stringWithFormat:@"%d",row + 1];
     } else {
-        self.clearButton2.hidden = YES;
+        if (self.moreThanOne) {
+            return row == 0?@"Days":row == 1?@"Weeks":row == 2?@"Months":@"Years";
+        } else {
+            return row == 0?@"Day":row == 1?@"Week":row == 2?@"Month":@"Year";
+        }
     }
-    return YES;
 }
 
-#pragma mark - UIScrollViewDelegate
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    [self.currentTextField1 resignFirstResponder];
-    [self.currentTextField2 resignFirstResponder];
+    NSLog(@"%d,%d", row, component);
+    if (component == 0 && row>0) {
+        self.moreThanOne = YES;
+        if (!self.changed) {
+            [pickerView reloadComponent:1];
+            self.changed = YES;
+        }
+    } else if (component == 0 && row==0) {
+        self.moreThanOne = NO;
+        if (self.changed) {
+            [pickerView reloadComponent:1];
+            self.changed = NO;
+        }
+    }
+    
+    if (self.moreThanOne) {
+        self.repeatString = [NSString stringWithFormat:@"Every %d %@",[pickerView selectedRowInComponent:0] + 1, [pickerView selectedRowInComponent:1]==0?@"Days":[pickerView selectedRowInComponent:1]==1?@"Weeks":[pickerView selectedRowInComponent:1] == 2?@"Months":@"Years"];
+    } else {
+        self.repeatString = [NSString stringWithFormat:@"Every %@", [pickerView selectedRowInComponent:1]==0?@"Day":[pickerView selectedRowInComponent:1]==1?@"Week":[pickerView selectedRowInComponent:1]==2?@"Month":@"Year"];
+    }
+    
+    self.customTitle.text = [NSString stringWithFormat:@"Event will repeat %@", [self.repeatString lowercaseString]];
 }
 
 #pragma mark - Actions
-- (IBAction)cacel:(UIBarButtonItem *)sender
+- (IBAction)done:(id)sender
 {
-    [self.currentTextField1 resignFirstResponder];
-    [self.currentTextField2 resignFirstResponder];
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (IBAction)done:(UIBarButtonItem *)sender
-{
-    if (self.currentTextField2.text.length == 0)
-    {
-        [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
-    } else {
-        [self.currentTextField1 resignFirstResponder];
-        [self.currentTextField2 resignFirstResponder];
-        [self.currentTextField2 hideAlertBorder];
-        NSLog(@"good");
+    if (self.repeatString.length == 0) {
+        self.repeatString = @"Never";
     }
+    //NSLog(@"%d - %@", self.row ,self.repeatString);
+    
+    [self.delegate getRepeatType:self.repeatString withNumber:self.row];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (IBAction)clearInput:(UIButton *)sender
-{
-    if (sender.tag == 0) {
-        self.currentTextField1.text = @"";
-    } else {
-        self.currentTextField2.text = @"";
-    }
-}
-
-- (void)getDate:(UIDatePicker *)picker
-{
-    self.dateLabel.text = [NSDate getDateStringFromDate:picker.date];
-}
 @end
