@@ -833,7 +833,7 @@
                             <rect key="frame" x="0.0" y="332" width="568" height="58"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Every 2 Weeks" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s6w-gn-tCn">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s6w-gn-tCn">
                                     <rect key="frame" x="16" y="0.0" width="536" height="22"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="22" id="Iyf-MF-E3M"/>
@@ -903,16 +903,9 @@
                             <outlet property="delegate" destination="bM9-eu-S4b" id="mii-jG-Ub0"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Repeat" id="waO-kQ-GH1">
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="HSV-1Y-4en">
-                            <connections>
-                                <action selector="done:" destination="bM9-eu-S4b" id="p2h-ul-BLg"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Repeat" id="waO-kQ-GH1"/>
                     <connections>
                         <outlet property="customTitle" destination="s6w-gn-tCn" id="sLZ-29-nW5"/>
-                        <outlet property="rightBarButtonItem" destination="HSV-1Y-4en" id="LiT-Lv-saD"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VDa-zT-q7c" userLabel="First Responder" sceneMemberID="firstResponder"/>

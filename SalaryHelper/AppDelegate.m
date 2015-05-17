@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "SystemHelper.h"
+#import "DBManager.h"
 
 @interface AppDelegate ()
 
@@ -14,7 +16,6 @@
 
 @implementation AppDelegate
 
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
@@ -28,6 +29,9 @@
     
     // Change all tint color in navigation bars
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    // Check database Connection
+    [[DBManager getSharedInstance] createDB];
     
     return YES;
 }

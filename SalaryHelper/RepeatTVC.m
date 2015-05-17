@@ -43,9 +43,22 @@
     });
 }
 
--(void)viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (self.repeatString.length == 0) {
+        self.repeatString = @"Never";
+    }
+    //NSLog(@"%d - %@", self.row ,self.repeatString);
+    
+    [self.delegate getRepeatType:self.repeatString withNumber:self.row];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - UITableView Delegate & Datasource
@@ -176,6 +189,8 @@
         [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:8 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
         
         self.repeatString = cell.label1.text;
+        
+        [self.navigationController popViewControllerAnimated:YES];
     } else if (indexPath.row == 7) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -282,15 +297,7 @@
 }
 
 #pragma mark - Actions
-- (IBAction)done:(id)sender
-{
-    if (self.repeatString.length == 0) {
-        self.repeatString = @"Never";
-    }
-    //NSLog(@"%d - %@", self.row ,self.repeatString);
-    
-    [self.delegate getRepeatType:self.repeatString withNumber:self.row];
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
+/*
+- (IBAction)done:(id)sender{}
+*/
 @end

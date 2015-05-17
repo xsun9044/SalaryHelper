@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22951CCC1B09324200AECA27 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22951CCB1B09324200AECA27 /* libsqlite3.dylib */; };
+		22951CD31B09333E00AECA27 /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22951CD21B09333E00AECA27 /* DBManager.m */; };
 		22F8FD381B043A1600381F04 /* AddTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F8FD371B043A1600381F04 /* AddTVC.m */; };
 		B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */; };
 		B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */; };
@@ -37,6 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		22951CCB1B09324200AECA27 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		22951CD11B09331000AECA27 /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
+		22951CD21B09333E00AECA27 /* DBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
+		22951CD41B093A2500AECA27 /* SystemHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemHelper.h; sourceTree = "<group>"; };
 		22F8FD371B043A1600381F04 /* AddTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTVC.m; sourceTree = "<group>"; };
 		22F8FD391B043A3A00381F04 /* AddTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTVC.h; sourceTree = "<group>"; };
 		B535E1761AFC07200088FE42 /* UIColor+ColorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorHelper.h"; sourceTree = "<group>"; };
@@ -77,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22951CCC1B09324200AECA27 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +97,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22951CCD1B09325A00AECA27 /* DB */ = {
+			isa = PBXGroup;
+			children = (
+				22951CD11B09331000AECA27 /* DBManager.h */,
+				22951CD21B09333E00AECA27 /* DBManager.m */,
+			);
+			name = DB;
+			sourceTree = "<group>";
+		};
 		22F8FD351B0439C100381F04 /* InputViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +122,7 @@
 		B58D7A5E1AF9522B0097A436 = {
 			isa = PBXGroup;
 			children = (
+				22951CCB1B09324200AECA27 /* libsqlite3.dylib */,
 				B58D7A691AF9522B0097A436 /* SalaryHelper */,
 				B58D7A861AF9522C0097A436 /* SalaryHelperTests */,
 				B58D7A681AF9522B0097A436 /* Products */,
@@ -129,6 +146,7 @@
 				B58D7A771AF9522C0097A436 /* Main.storyboard */,
 				B58D7A7A1AF9522C0097A436 /* Images.xcassets */,
 				B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */,
+				22951CCD1B09325A00AECA27 /* DB */,
 				B5F72C391AFBAE3B001544E7 /* Helper */,
 				B5F72C381AFBAE24001544E7 /* Calendar */,
 				22F8FD351B0439C100381F04 /* InputViews */,
@@ -181,6 +199,7 @@
 		B5F72C391AFBAE3B001544E7 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				22951CD41B093A2500AECA27 /* SystemHelper.h */,
 				B554CC8D1AFA6AB1006E63F7 /* NSDate+DateHelper.h */,
 				B554CC8E1AFA6AB1006E63F7 /* NSDate+DateHelper.m */,
 				B535E1761AFC07200088FE42 /* UIColor+ColorHelper.h */,
@@ -302,6 +321,7 @@
 				22F8FD381B043A1600381F04 /* AddTVC.m in Sources */,
 				B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */,
 				B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */,
+				22951CD31B09333E00AECA27 /* DBManager.m in Sources */,
 				B58D7A761AF9522B0097A436 /* CalCVC.m in Sources */,
 				B58D7A731AF9522B0097A436 /* SalaryHelper.xcdatamodeld in Sources */,
 				B5B835471B0558E8003AB468 /* UIView+ViewHelper.m in Sources */,
