@@ -22,6 +22,8 @@
 @property (nonatomic) NSInteger daysOfLastMonth;
 @property (nonatomic) NSInteger startWeekDayOfCurrentMonth;
 @property (nonatomic) NSInteger count;
+@property (nonatomic) NSInteger currentCheckingMonth;
+@property (nonatomic) NSInteger willDisplayPosition;
 
 @property (nonatomic) BOOL hasToday;
 
@@ -36,12 +38,14 @@
 @implementation CalCVC
 #define OUTTER 1
 #define INNER 2
+#define INIT_CHECKING_MONTH -1
 
 // 200 years
 #define startDate @"1914-01-01 00:00:00"
 #define endDate @"2113-12-31 23:59:59"
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     self.navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
     self.modalPresentationStyle = UIModalPresentationCurrentContext;
@@ -52,12 +56,20 @@
     
     self.collectionView.pagingEnabled = YES;
     self.collectionView.bounces = NO;
+    
+    self.currentCheckingMonth = INIT_CHECKING_MONTH;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSInteger months = [NSDate monthsBetweenDate:[NSDate getDateFromStringInUTC:startDate] andDate:[NSDate getDateFromStringInUTC:[NSDate getCurrentDateTime]]];
+    NSInteger months;
+    if (self.currentCheckingMonth == INIT_CHECKING_MONTH) {
+        months = [NSDate monthsBetweenDate:[NSDate getDateFromStringInUTC:startDate] andDate:[NSDate getDateFromStringInUTC:[NSDate getCurrentDateTime]]];
+    } else {
+        months = self.currentCheckingMonth;
+    }
+    
     NSIndexPath *path = [NSIndexPath indexPathForRow:(months) inSection:0];
     [self.collectionView scrollToItemAtIndexPath:path
                                 atScrollPosition:UICollectionViewScrollPositionNone
@@ -90,6 +102,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (collectionView.tag == OUTTER) {
+        self.willDisplayPosition = indexPath.row;
         CalCVCell *cell = (CalCVCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"month_cell" forIndexPath:indexPath];
         self.fullHeight = [[UIScreen mainScreen] bounds].size.height - [[UIApplication sharedApplication] statusBarFrame].size.height;
         self.fullWidth = [[UIScreen mainScreen] bounds].size.width;
@@ -150,7 +163,6 @@
         return cell;
     } else {
         DayCVCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"day_cell" forIndexPath:indexPath];
-        //cell.backgroundColor = [UIColor colorWithRed:215/255.0 green:215/255.0 blue:215/255.0 alpha:1.0];
         [cell.coverHeight setConstant:(self.heightBottom-6)/6];
         [cell.dayWidth setConstant:(_fullWidth-6)/7];
         
@@ -215,6 +227,13 @@
         return CGSizeMake(_fullWidth, _fullHeight);
     } else {
         return CGSizeMake((_fullWidth-6)/7, (self.heightBottom-6)/6);
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (collectionView.tag == OUTTER && self.willDisplayPosition != indexPath.row) {
+        self.currentCheckingMonth = self.willDisplayPosition;
     }
 }
 

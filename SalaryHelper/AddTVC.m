@@ -207,6 +207,7 @@
         self.clearButton1.hidden = NO;
         self.clearButton2.hidden = YES;
     } else {
+        [self.currentTextField2 setPlaceholder:@"Amount"];
         self.clearButton1.hidden = YES;
         self.clearButton2.hidden = NO;
     }
@@ -238,19 +239,6 @@
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)done:(UIBarButtonItem *)sender
-{
-    if (self.currentTextField2.text.length == 0)
-    {
-        [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
-    } else {
-        [self.currentTextField1 resignFirstResponder];
-        [self.currentTextField2 resignFirstResponder];
-        [self.currentTextField2 hideAlertBorder];
-        NSLog(@"good");
-    }
-}
-
 - (IBAction)clearInput:(UIButton *)sender
 {
     if (sender.tag == 0) {
@@ -263,6 +251,35 @@
 - (void)getDate:(UIDatePicker *)picker
 {
     self.dateLabel.text = [NSDate getDateStringFromDate:picker.date];
+}
+
+// Done Action
+- (IBAction)done:(UIBarButtonItem *)sender
+{
+    if (self.currentTextField2.text.length == 0) {
+        [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
+        [self.currentTextField2 setPlaceholder:@"Required"];
+    } else if (![self checkInputIfNumberic:self.currentTextField2.text]) {
+        [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
+        NSLog(@"Should be numbers");
+    } else {
+        [self.currentTextField1 resignFirstResponder];
+        [self.currentTextField2 resignFirstResponder];
+        [self.currentTextField2 hideAlertBorder];
+        NSLog(@"good");
+    }
+}
+
+- (BOOL)checkInputIfNumberic:(NSString *)text
+{
+    NSString *expression = @"^([0-9]+)(\\.([0-9]+)?)?$";
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:&error];
+    NSUInteger numberOfMatches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, [text length])];
+    if (numberOfMatches == 0) {
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark - Repeat Delegate
