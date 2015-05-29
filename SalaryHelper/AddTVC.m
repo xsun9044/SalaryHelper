@@ -13,8 +13,15 @@
 #import "UIView+ViewHelper.h"
 #import <QuartzCore/QuartzCore.h>
 #import "RepeatTVC.h"
+#import "MyPopupVC.h"
+#import "PreferencesHelper.h"
+#import "AppDelegate.h"
+
+#define HIDE_HUD_INTEVAL 5
 
 @interface AddTVC() <UITextFieldDelegate, RepeatDelegate>
+@property (nonatomic, strong) PreferencesHelper * preferences;
+
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *leftBarButtonItem;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rightBarButtonItem;
 
@@ -30,12 +37,27 @@
 @property (nonatomic) BOOL showCal;
 
 @property (nonatomic) NSInteger repeatRow;
+
+@property (nonatomic, strong) NSString *headerString;
+@property (nonatomic, strong) NSString *contentString;
 @end
 
 @implementation AddTVC
+
+- (PreferencesHelper *)preferences
+{
+    if (!_preferences) _preferences = [[PreferencesHelper alloc] init];
+    return _preferences;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    self.modalPresentationStyle = UIModalPresentationCurrentContext;
+    self.tabBarController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    
     // Hide back bar button title for next view
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
                                    initWithTitle: @""
@@ -259,15 +281,76 @@
     if (self.currentTextField2.text.length == 0) {
         [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
         [self.currentTextField2 setPlaceholder:@"Required"];
+        [self buildAlertPopupWithTitle:@"Amount Value Required" andContext:@"Please input your income amount."];
+        [self performSegueWithIdentifier:@"show_popup" sender:sender];
     } else if (![self checkInputIfNumberic:self.currentTextField2.text]) {
         [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
-        NSLog(@"Should be numbers");
+        [self buildAlertPopupWithTitle:@"Amount Format Error" andContext:@"Please input number for your income amount."];
+        [self performSegueWithIdentifier:@"show_popup" sender:sender];
     } else {
         [self.currentTextField1 resignFirstResponder];
         [self.currentTextField2 resignFirstResponder];
         [self.currentTextField2 hideAlertBorder];
-        NSLog(@"good");
+        
+        //Prepare data
+        BOOL willRepeat = NO;
+        NSArray *repeatData;
+        if (![self.repeatLabel.text isEqualToString:@"Never"]) {
+            BOOL willRepeat = YES;
+            
+            // Handle repeat data
+            NSString *qty;
+            NSString *measure;
+            NSArray *parts = [self.repeatLabel.text componentsSeparatedByString:@" "];
+            if (parts.count == 2) {
+                qty = @"1";
+                measure = parts[1];
+            } else {
+                qty = parts[1];
+                measure = parts[2];
+            }
+            
+            repeatData = [[NSArray alloc] initWithObjects:
+                                   [measure isEqualToString:@"Day"]||[measure isEqualToString:@"Days"]?qty:@"0", //0
+                                   [measure isEqualToString:@"Week"]||[measure isEqualToString:@"Weeks"]?qty:@"0", //1
+                                   [measure isEqualToString:@"Month"]||[measure isEqualToString:@"Months"]?qty:@"0", //2
+                                   [measure isEqualToString:@"Year"]||[measure isEqualToString:@"Years"]?qty:@"0", //3
+                                   nil];
+        } else {
+            repeatData = [[NSArray alloc] initWithObjects:@"0",@"0",@"0",@"0",nil];
+        }
+        
+        NSLog(@"%@", repeatData);
+        
+        HUD = [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
+        HUD.labelText = @"Saving...";
+        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [delegate.dbManger saveIncomeEvent:self.currentTextField1.text
+                                    amount:self.currentTextField2.text
+                                 startDate:self.dateLabel.text
+                                    repeat:willRepeat
+                                       day:[[repeatData objectAtIndex:0] integerValue]
+                                      week:[[repeatData objectAtIndex:1] integerValue]
+                                     month:[[repeatData objectAtIndex:2] integerValue]
+                                      year:[[repeatData objectAtIndex:3] integerValue]
+                      andCompletionHandler:^(BOOL finished, NSError *error) {
+                          [MBProgressHUD hideHUDForView:self.tableView animated:YES];
+                          if (finished) { // success
+                              [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
+                              [self dismissViewControllerAnimated:YES completion:nil];
+                          } else { // failure
+#warning TODO: ERROR HANDLE
+                              NSLog(@"%@", error.localizedDescription);
+                          }
+                      }];
+        [HUD hide:YES afterDelay:HIDE_HUD_INTEVAL];
     }
+}
+
+- (void)buildAlertPopupWithTitle:(NSString *)title andContext:(NSString *)content
+{
+    self.headerString = title;
+    self.contentString = content;
 }
 
 - (BOOL)checkInputIfNumberic:(NSString *)text
@@ -297,6 +380,19 @@
         controller.delegate = self;
         controller.row = self.repeatRow;
         controller.repeatString = self.repeatLabel.text;
+    } else if ([segue.identifier isEqualToString:@"show_popup"]) {
+        MyPopupVC *controller = (MyPopupVC *)segue.destinationViewController;
+        controller.contentString = self.contentString;
+        controller.header = self.headerString;
+        // If it's under IOS 8, then take the screenshot
+        NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
+        if (version == 8) {
+            UIGraphicsBeginImageContextWithOptions([[UIScreen mainScreen] bounds].size, self.view.opaque, 0.0);
+            [self.navigationController.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+            UIImage * sc = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            controller.backgroundImage = sc;
+        }
     }
 }
 @end

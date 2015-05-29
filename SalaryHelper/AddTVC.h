@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface AddTVC : UITableViewController
+@interface AddTVC : UITableViewController <MBProgressHUDDelegate>
+{
+    MBProgressHUD *HUD;
+}
+
 
 @end

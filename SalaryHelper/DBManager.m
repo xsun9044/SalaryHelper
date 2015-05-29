@@ -14,18 +14,20 @@ static DBManager *sharedInstance = nil;
 static sqlite3 *database = nil;
 static sqlite3_stmt *statement = nil;
 
+#define DATABASE_ERROR @"databaseErr"
+
 @implementation DBManager
 
 + (DBManager*)getSharedInstance
 {
     if (!sharedInstance) {
         sharedInstance = [[super allocWithZone:NULL] init];
-        //[sharedInstance removeDB];
+        //[sharedInstance removeDB]; // for test
     }
     return sharedInstance;
 }
 
-- (BOOL)createDB
+- (void)createDBwithCompletionHandler:(DatabaseCompletionHandler)completionHandler
 {
     NSString *docsDir;
     NSArray *dirPaths;
@@ -34,6 +36,7 @@ static sqlite3_stmt *statement = nil;
     docsDir = dirPaths[0];
     // Build the path to the database file
     databasePath = [[NSString alloc] initWithString:[docsDir stringByAppendingPathComponent:DB_NAME]];
+    NSLog(@"%@", databasePath);
     BOOL isSuccess = YES;
     NSFileManager *filemgr = [NSFileManager defaultManager];
     if ([filemgr fileExistsAtPath: databasePath] == NO) {
@@ -45,27 +48,31 @@ static sqlite3_stmt *statement = nil;
             const char *create_table_sql_stmt = "CREATE TABLE IF NOT EXISTS income_events(id integer PRIMARY KEY, title varchar(255), amount varchar(255) NOT NULL, start_date date NOT NULL, repeat integer DEFAULT 0, day integer DEFAULT 0, week integer DEFAULT 0, month integer DEFAULT 0, year integer DEFAULT 0)";
             if (sqlite3_exec(database, create_table_sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK) {
                 isSuccess = NO;
-                
-#warning TODO: DEBUG NOTIFICATIONS
-                NSLog(@"Failed to create table: %s", errMsg);
+                completionHandler(isSuccess,
+                                  [NSError errorWithDomain:DATABASE_ERROR
+                                                      code:500
+                                                  userInfo:[[NSDictionary alloc] initWithObjects:@[[NSString stringWithFormat:@"Failed to create table: %s",errMsg]]
+                                                                                         forKeys:@[NSLocalizedDescriptionKey]]]);
+            } else {
+                completionHandler(isSuccess,nil);
             }
             
             sqlite3_close(database);
-            
-            return  isSuccess;
         } else {
             isSuccess = NO;
-            
-#warning TODO: DEBUG NOTIFICATIONS
-            NSLog(@"Failed to open/create database");
+            completionHandler(isSuccess,
+                              [NSError errorWithDomain:DATABASE_ERROR
+                                                  code:500
+                                              userInfo:[[NSDictionary alloc] initWithObjects:@[@"Failed to open/create database"]
+                                                                                     forKeys:@[NSLocalizedDescriptionKey]]]);
         }
     } else {
-        NSLog(@"Exists");
+        completionHandler(isSuccess,nil);
     }
-    
-    return isSuccess;
 }
 
+
+// Remove database only for test purpose
 - (BOOL)removeDB
 {
     NSString *docsDir;
@@ -90,7 +97,8 @@ static sqlite3_stmt *statement = nil;
     return isSuccess;
 }
 
-- (BOOL)saveIncomeEvent:(NSString*)title
+
+- (void)saveIncomeEvent:(NSString*)title
                  amount:(NSString *)amount
               startDate:(NSString*)date
                  repeat:(BOOL)flag
@@ -98,25 +106,55 @@ static sqlite3_stmt *statement = nil;
                    week:(NSInteger)week
                   month:(NSInteger)month
                    year:(NSInteger)year
+   andCompletionHandler:(DatabaseCompletionHandler)completionHandler
 {
+
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO income_events(title,amount,start_date,repeat,day,week,month,year) VALUES (\"%@\",\"%@\",\"%@\",%d,%d,%d,%d,%d)",title,amount,date,flag,day,week,month,year];
+        NSLog(@"%@", insertSQL);
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(database, insert_stmt, -1, &statement, NULL);
         if (sqlite3_step(statement) == SQLITE_DONE) {
             sqlite3_reset(statement);
-            return YES;
+            completionHandler(YES, nil);
         } else {
-            NSLog(@"Insert failed.");
             sqlite3_reset(statement);
-            return NO;
+            completionHandler(NO,[NSError errorWithDomain:DATABASE_ERROR
+                                                     code:500
+                                                 userInfo:[[NSDictionary alloc] initWithObjects:@[@"Insert failed."]
+                                                                                        forKeys:@[NSLocalizedDescriptionKey]]]);
+        }
+        sqlite3_close (database);
+    } else {
+        completionHandler(NO,[NSError errorWithDomain:DATABASE_ERROR
+                                             code:500
+                                         userInfo:[[NSDictionary alloc] initWithObjects:@[@"Cannot open database."]
+                                                                                forKeys:@[NSLocalizedDescriptionKey]]]);
+    }
+}
+
+- (NSArray*)retrieveDataTestFunction
+{
+    const char *dbpath = [databasePath UTF8String];
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+        NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM income_events"];
+        const char *query_stmt = [querySQL UTF8String];
+        NSMutableArray *resultArray = [[NSMutableArray alloc]init];
+        if (sqlite3_prepare_v2(database,query_stmt, -1, &statement, NULL) == SQLITE_OK) {
+            while (sqlite3_step(statement) == SQLITE_ROW) {
+                NSString *name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                [resultArray addObject:name];
+                NSString *department = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                [resultArray addObject:department];
+                NSString *year = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                [resultArray addObject:year];
+                sqlite3_reset(statement);
+                return resultArray;
+            }
         }
     }
-    
-    NSLog(@"Cannot open database.");
-    
-    return NO;
+    return nil;
 }
 
 @end

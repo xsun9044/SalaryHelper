@@ -8,10 +8,8 @@
 
 #import "AppDelegate.h"
 #import "SystemHelper.h"
-#import "DBManager.h"
 
 @interface AppDelegate ()
-
 @end
 
 @implementation AppDelegate
@@ -31,7 +29,13 @@
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     
     // Check database Connection
-    [[DBManager getSharedInstance] createDB];
+    self.dbManger = [DBManager getSharedInstance];
+    [self.dbManger createDBwithCompletionHandler:^(BOOL finished, NSError *error) {
+        if (!finished) {
+#warning TODO:ERROR HANDLE
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
     
     return YES;
 }

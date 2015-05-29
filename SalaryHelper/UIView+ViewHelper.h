@@ -14,4 +14,8 @@
 
 - (void)hideAlertBorder;
 
+- (void)makeBorderWithCorner:(CGFloat)radius andWidth:(CGFloat)width andColor:(UIColor*)color;
+
+- (void)makeRoundedCornerWithoutBorder:(CGFloat)radius;
+
 @end

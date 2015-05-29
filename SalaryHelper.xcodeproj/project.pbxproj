@@ -25,6 +25,9 @@
 		B5B3709A1B06473B0042BB74 /* RepeatTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B370981B06473B0042BB74 /* RepeatTVC.m */; };
 		B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B835431B04F5EF003AB468 /* InputTVCell.m */; };
 		B5B835471B0558E8003AB468 /* UIView+ViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B835461B0558E8003AB468 /* UIView+ViewHelper.m */; };
+		B5CDFCA81B18A98000C8A7C2 /* MyPopupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CDFCA71B18A98000C8A7C2 /* MyPopupVC.m */; };
+		B5CDFCAB1B18BDCE00C8A7C2 /* PreferencesHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CDFCAA1B18BDCE00C8A7C2 /* PreferencesHelper.m */; };
+		B5CDFCB01B18F9FE00C8A7C2 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CDFCAF1B18F9FE00C8A7C2 /* MBProgressHUD.m */; };
 		B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F72C3B1AFBEC7F001544E7 /* MenuVC.m */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +77,12 @@
 		B5B835431B04F5EF003AB468 /* InputTVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputTVCell.m; sourceTree = "<group>"; };
 		B5B835451B0558E8003AB468 /* UIView+ViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ViewHelper.h"; sourceTree = "<group>"; };
 		B5B835461B0558E8003AB468 /* UIView+ViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ViewHelper.m"; sourceTree = "<group>"; };
+		B5CDFCA61B18A98000C8A7C2 /* MyPopupVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPopupVC.h; sourceTree = "<group>"; };
+		B5CDFCA71B18A98000C8A7C2 /* MyPopupVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPopupVC.m; sourceTree = "<group>"; };
+		B5CDFCA91B18BDCE00C8A7C2 /* PreferencesHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesHelper.h; sourceTree = "<group>"; };
+		B5CDFCAA1B18BDCE00C8A7C2 /* PreferencesHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesHelper.m; sourceTree = "<group>"; };
+		B5CDFCAE1B18F9FE00C8A7C2 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		B5CDFCAF1B18F9FE00C8A7C2 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		B5F72C3A1AFBEC7F001544E7 /* MenuVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuVC.h; sourceTree = "<group>"; };
 		B5F72C3B1AFBEC7F001544E7 /* MenuVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -146,6 +155,7 @@
 				B58D7A771AF9522C0097A436 /* Main.storyboard */,
 				B58D7A7A1AF9522C0097A436 /* Images.xcassets */,
 				B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */,
+				B5CDFCAC1B18F9CF00C8A7C2 /* API */,
 				22951CCD1B09325A00AECA27 /* DB */,
 				B5F72C391AFBAE3B001544E7 /* Helper */,
 				B5F72C381AFBAE24001544E7 /* Calendar */,
@@ -181,6 +191,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		B5CDFCAC1B18F9CF00C8A7C2 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				B5CDFCAD1B18F9EA00C8A7C2 /* MBProgressHUD */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		B5CDFCAD1B18F9EA00C8A7C2 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				B5CDFCAE1B18F9FE00C8A7C2 /* MBProgressHUD.h */,
+				B5CDFCAF1B18F9FE00C8A7C2 /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		B5F72C381AFBAE24001544E7 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +226,10 @@
 		B5F72C391AFBAE3B001544E7 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				B5CDFCA91B18BDCE00C8A7C2 /* PreferencesHelper.h */,
+				B5CDFCAA1B18BDCE00C8A7C2 /* PreferencesHelper.m */,
+				B5CDFCA61B18A98000C8A7C2 /* MyPopupVC.h */,
+				B5CDFCA71B18A98000C8A7C2 /* MyPopupVC.m */,
 				22951CD41B093A2500AECA27 /* SystemHelper.h */,
 				B554CC8D1AFA6AB1006E63F7 /* NSDate+DateHelper.h */,
 				B554CC8E1AFA6AB1006E63F7 /* NSDate+DateHelper.m */,
@@ -321,8 +352,11 @@
 				22F8FD381B043A1600381F04 /* AddTVC.m in Sources */,
 				B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */,
 				B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */,
+				B5CDFCAB1B18BDCE00C8A7C2 /* PreferencesHelper.m in Sources */,
+				B5CDFCA81B18A98000C8A7C2 /* MyPopupVC.m in Sources */,
 				22951CD31B09333E00AECA27 /* DBManager.m in Sources */,
 				B58D7A761AF9522B0097A436 /* CalCVC.m in Sources */,
+				B5CDFCB01B18F9FE00C8A7C2 /* MBProgressHUD.m in Sources */,
 				B58D7A731AF9522B0097A436 /* SalaryHelper.xcdatamodeld in Sources */,
 				B5B835471B0558E8003AB468 /* UIView+ViewHelper.m in Sources */,
 				B554CC8F1AFA6AB1006E63F7 /* NSDate+DateHelper.m in Sources */,

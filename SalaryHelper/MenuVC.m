@@ -8,22 +8,19 @@
 
 #import "MenuVC.h"
 #import "UIImageView+imageViewHelper.h"
+#import "PreferencesHelper.h"
 
 @interface MenuVC ()
+@property (nonatomic, strong) PreferencesHelper * preferences;
+
 @property (weak, nonatomic) IBOutlet UIView *view1;
 @property (weak, nonatomic) IBOutlet UIView *view2;
 @property (weak, nonatomic) IBOutlet UIView *view3;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
-@property (weak, nonatomic) IBOutlet UIView *popView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *menuWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnHeight;
-/*
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *popHeight;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *popWidth;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *popLeftPadding;
- */
 
 @property (weak, nonatomic) IBOutlet UIImageView *rightArrow;
 @property (weak, nonatomic) IBOutlet UIImageView *dot1;
@@ -35,6 +32,12 @@
 @end
 
 @implementation MenuVC
+
+- (PreferencesHelper *)preferences
+{
+    if (!_preferences) _preferences = [[PreferencesHelper alloc] init];
+    return _preferences;
+}
 
 - (void)viewDidLoad
 {
@@ -70,27 +73,40 @@
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapGestureRecognizer];
-    
-    /*
-    // Set frame for popup window
-    [self.popHeight setConstant:[[UIScreen mainScreen] bounds].size.height - 40];
-    [self.popWidth setConstant:[[UIScreen mainScreen] bounds].size.width - 16 - 150 + 32];
-    [self.popLeftPadding setConstant: [[UIScreen mainScreen] bounds].size.width];
-     */
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    [self.menuWidth setConstant:150.0f];
-    [UIView animateWithDuration:0.3f animations:^{
-        [self.view layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        [self.view1 setHidden:NO];
-        [self.view2 setHidden:NO];
-        [self.view3 setHidden:NO];
-    }];
+    
+    if ([self.preferences getSumbitSuccessFlag]) { // If save done, back to calendar instead of menu
+        [self.menuWidth setConstant:0.0f];
+        [self.view1 setHidden:YES];
+        [self.view2 setHidden:YES];
+        [self.view3 setHidden:YES];
+        [UIView animateWithDuration:0.1f animations:^{
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            [self dismissViewControllerAnimated:NO completion:^{
+                [self.preferences resetReturnFromSubmitSuccess];
+            }];
+        }];
+    } else {
+        [self.menuWidth setConstant:150.0f];
+        [UIView animateWithDuration:0.3f animations:^{
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            [self.view1 setHidden:NO];
+            [self.view2 setHidden:NO];
+            [self.view3 setHidden:NO];
+        }];
+    }
 }
 
 #pragma mark - Actions

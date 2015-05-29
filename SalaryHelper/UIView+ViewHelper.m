@@ -24,4 +24,18 @@
     self.layer.borderWidth = 0;
 }
 
+- (void)makeBorderWithCorner:(CGFloat)radius andWidth:(CGFloat)width andColor:(UIColor*)color
+{
+    self.layer.borderColor=[color CGColor];
+    self.layer.borderWidth = width;
+    self.layer.cornerRadius = radius;
+    self.layer.masksToBounds = YES;
+}
+
+- (void)makeRoundedCornerWithoutBorder:(CGFloat)radius
+{
+    self.layer.cornerRadius = radius;
+    self.layer.masksToBounds = YES;
+}
+
 @end
