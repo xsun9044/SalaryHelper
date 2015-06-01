@@ -10,11 +10,22 @@
 
 @implementation NSDate (DateHelper)
 
-+ (NSDate *)getDateFromStringInUTC:(NSString *)dateString
++ (NSDate *)getDateTimeFromStringInUTC:(NSString *)dateString
 {
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [formatter setTimeZone:timeZone];
+    NSDate *date = [formatter dateFromString:dateString];
+    
+    return date;
+}
+
++ (NSDate *)getDateFromStringInUTC:(NSString *)dateString
+{
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
     [formatter setTimeZone:timeZone];
     NSDate *date = [formatter dateFromString:dateString];
     
@@ -39,7 +50,7 @@
 
 + (NSString *)getYearFromStringInUTC:(NSString *)dateString
 {
-    NSDate *date = [self getDateFromStringInUTC:dateString];
+    NSDate *date = [self getDateTimeFromStringInUTC:dateString];
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"yyyy"];
@@ -50,7 +61,7 @@
 
 + (NSString *)getMonthFromStringInUTC:(NSString *)dateString
 {
-    NSDate *date = [self getDateFromStringInUTC:dateString];
+    NSDate *date = [self getDateTimeFromStringInUTC:dateString];
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"MM"];
@@ -61,7 +72,7 @@
 
 + (NSString *)getDayFromStringInUTC:(NSString *)dateString
 {
-    NSDate *date = [self getDateFromStringInUTC:dateString];
+    NSDate *date = [self getDateTimeFromStringInUTC:dateString];
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"dd"];

@@ -134,24 +134,30 @@ static sqlite3_stmt *statement = nil;
     }
 }
 
-- (NSArray*)retrieveDataTestFunction
+- (NSArray*)getEventsForDate:(NSString *)dateString
 {
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-        NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM income_events"];
+        //NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM income_events WHERE (repeat = 0 AND start_date = '2015-06-01') OR (SELECT * FROM income_events WHERE repeat = 1 AND day > 0 AND (julianday('2015-06-03')-julianday(start_date)) %% day = 0) OR (SELECT * FROM income_events WHERE repeat = 1 AND week > 0 AND (julianday('2015-06-03')-julianday(start_date)) %% day = 0)", dateString];
+        NSString *querySQL = @"SELECT (julianday('2015-06-17')-julianday('2015-05-29'))/7";
+        NSLog(@"%@", querySQL);
         const char *query_stmt = [querySQL UTF8String];
         NSMutableArray *resultArray = [[NSMutableArray alloc]init];
         if (sqlite3_prepare_v2(database,query_stmt, -1, &statement, NULL) == SQLITE_OK) {
             while (sqlite3_step(statement) == SQLITE_ROW) {
-                NSString *name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
-                [resultArray addObject:name];
-                NSString *department = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
-                [resultArray addObject:department];
-                NSString *year = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
-                [resultArray addObject:year];
-                sqlite3_reset(statement);
-                return resultArray;
+                NSString *rowID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                [resultArray addObject:rowID];
+                /*NSString *title = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                [resultArray addObject:title];
+                NSString *amount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                [resultArray addObject:amount];
+                NSString *start_date = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                [resultArray addObject:start_date];*/
+                //;
             }
+            
+            sqlite3_reset(statement);
+            return resultArray;
         }
     }
     return nil;

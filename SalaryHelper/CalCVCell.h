@@ -23,4 +23,5 @@
 @property (weak, nonatomic) IBOutlet UIImageView *rightImage;
 @property (weak, nonatomic) IBOutlet UIImageView *leftImage;
 @property (weak, nonatomic) IBOutlet UIButton *pig;
+@property (weak, nonatomic) IBOutlet UIButton *todayBtn;
 @end

@@ -155,6 +155,21 @@
                                                         <action selector="setting:" destination="OxH-QG-PuU" eventType="touchUpInside" id="bJI-5L-RmF"/>
                                                     </connections>
                                                 </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h5b-y8-BVq">
+                                                    <rect key="frame" x="23" y="4" width="46" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="46" id="7PY-Uc-jwD"/>
+                                                        <constraint firstAttribute="height" constant="30" id="kjM-A7-xdJ"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                                    <state key="normal" title="Today">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="checkToday:" destination="OxH-QG-PuU" eventType="touchUpInside" id="I9X-Ut-Zzy"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
@@ -165,6 +180,7 @@
                                                 <constraint firstItem="y17-cp-HJ4" firstAttribute="centerY" secondItem="Yar-Y6-1vm" secondAttribute="centerY" id="Aou-P2-CFS"/>
                                                 <constraint firstItem="e9C-AG-8wY" firstAttribute="height" secondItem="AFU-Ej-6tT" secondAttribute="height" id="AuN-eP-Fne"/>
                                                 <constraint firstItem="pI7-k1-BIu" firstAttribute="centerY" secondItem="Pbp-Ze-FxU" secondAttribute="centerY" id="BdS-Xw-XLf"/>
+                                                <constraint firstItem="h5b-y8-BVq" firstAttribute="centerX" secondItem="Yar-Y6-1vm" secondAttribute="centerX" constant="5.5" id="Cvp-aP-boM"/>
                                                 <constraint firstItem="T9S-6n-Zjb" firstAttribute="leading" secondItem="zbk-F4-DTx" secondAttribute="trailing" constant="-46" id="DS5-lb-PcN"/>
                                                 <constraint firstAttribute="bottom" secondItem="Yar-Y6-1vm" secondAttribute="bottom" id="EGD-oz-6P4"/>
                                                 <constraint firstItem="pI7-k1-BIu" firstAttribute="centerY" secondItem="PGy-DC-7nf" secondAttribute="centerY" id="Fjg-4R-M7K"/>
@@ -190,6 +206,7 @@
                                                 <constraint firstItem="4rt-q8-hja" firstAttribute="leading" secondItem="PGy-DC-7nf" secondAttribute="trailing" constant="1" id="XaB-Fq-Z8h"/>
                                                 <constraint firstItem="3qN-ZF-waU" firstAttribute="centerY" secondItem="Pbp-Ze-FxU" secondAttribute="centerY" id="XcE-ob-Z2S"/>
                                                 <constraint firstItem="3qN-ZF-waU" firstAttribute="height" secondItem="y17-cp-HJ4" secondAttribute="height" id="YCm-vQ-jvr"/>
+                                                <constraint firstItem="h5b-y8-BVq" firstAttribute="centerY" secondItem="MpO-ap-0MY" secondAttribute="centerY" constant="0.5" id="ZiO-8C-3d8"/>
                                                 <constraint firstItem="y17-cp-HJ4" firstAttribute="leading" secondItem="Yar-Y6-1vm" secondAttribute="trailing" constant="1" id="a9l-Vb-66X"/>
                                                 <constraint firstItem="PGy-DC-7nf" firstAttribute="height" secondItem="4rt-q8-hja" secondAttribute="height" id="b4y-Vo-Trv"/>
                                                 <constraint firstItem="PGy-DC-7nf" firstAttribute="width" secondItem="4rt-q8-hja" secondAttribute="width" id="dWJ-zO-cZh"/>
@@ -280,6 +297,7 @@
                                     <outlet property="pig" destination="eP5-Xu-aa4" id="xp4-md-295"/>
                                     <outlet property="right" destination="zbk-F4-DTx" id="esu-0e-Crx"/>
                                     <outlet property="rightImage" destination="T9S-6n-Zjb" id="4sn-0R-5aL"/>
+                                    <outlet property="todayBtn" destination="h5b-y8-BVq" id="gMe-n4-bXS"/>
                                     <outlet property="topView" destination="8Sr-Fa-yNZ" id="9z8-uv-XXH"/>
                                     <outlet property="widthTag" destination="HGx-I7-zOe" id="Rng-vL-XbD"/>
                                     <outlet property="widthTop" destination="nL4-bR-Nyw" id="K3b-eT-o23"/>
@@ -589,7 +607,7 @@
                                             <constraint firstAttribute="width" constant="283" id="NaT-Mu-f4M"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.78039215689999997" green="0.62745098040000002" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit Error" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uwc-DL-Gud">
@@ -600,11 +618,11 @@
                                             <constraint firstAttribute="height" relation="lessThanOrEqual" constant="42" id="uuX-7U-4md"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                        <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="KwJ-Um-G4S" firstAttribute="leading" secondItem="H24-JL-crc" secondAttribute="leading" id="KaC-wQ-Ihl"/>
                                     <constraint firstItem="KwJ-Um-G4S" firstAttribute="centerX" secondItem="Uwc-DL-Gud" secondAttribute="centerX" constant="0.5" id="Lfp-wX-bIR"/>
@@ -678,7 +696,7 @@
                                                 <constraint firstAttribute="width" constant="33" id="wmB-Rf-6rv"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="HiraKakuProN-W6" family="Hiragino Kaku Gothic ProN" pointSize="18"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Title (Optional)" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3LV-8t-9vW">
@@ -770,7 +788,7 @@
                                                 <constraint firstAttribute="height" constant="21" id="S2E-Pd-W7w"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="HiraKakuProN-W6" family="Hiragino Kaku Gothic ProN" pointSize="13"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="crp-PW-nXl">
@@ -780,7 +798,7 @@
                                                 <constraint firstAttribute="width" constant="206" id="WYN-g4-MkY"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="HiraKakuProN-W3" family="Hiragino Kaku Gothic ProN" pointSize="14"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="calendar" translatesAutoresizingMaskIntoConstraints="NO" id="l7d-hp-pjC">
@@ -845,7 +863,7 @@
                                                 <constraint firstAttribute="height" constant="20" id="Viq-rg-bSx"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="HiraKakuProN-W3" family="Hiragino Kaku Gothic ProN" pointSize="14"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -954,7 +972,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Every 2 Weeks" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mBK-VR-ftZ">
                                             <rect key="frame" x="16" y="11" width="283" height="21"/>
                                             <fontDescription key="fontDescription" name="HiraKakuProN-W6" family="Hiragino Kaku Gothic ProN" pointSize="14"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>

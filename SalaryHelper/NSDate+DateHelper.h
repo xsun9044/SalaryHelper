@@ -10,6 +10,8 @@
 
 @interface NSDate (DateHelper)
 
++ (NSDate *)getDateTimeFromStringInUTC:(NSString *)dateString;
+
 + (NSDate *)getDateFromStringInUTC:(NSString *)dateString;
 
 + (NSInteger)monthsBetweenDate:(NSDate *)date1 andDate:(NSDate *)date2;

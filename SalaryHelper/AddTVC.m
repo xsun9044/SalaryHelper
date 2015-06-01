@@ -296,7 +296,7 @@
         BOOL willRepeat = NO;
         NSArray *repeatData;
         if (![self.repeatLabel.text isEqualToString:@"Never"]) {
-            BOOL willRepeat = YES;
+            willRepeat = YES;
             
             // Handle repeat data
             NSString *qty;

@@ -26,6 +26,7 @@
 @property (nonatomic) NSInteger currentCheckingMonth;
 @property (nonatomic) NSInteger willDisplayPosition;
 @property (nonatomic) NSInteger monthForToday;
+@property (nonatomic) NSInteger lastSelectionMonth;
 
 @property (nonatomic) BOOL hasToday;
 
@@ -62,7 +63,8 @@
     self.currentCheckingMonth = INIT_CHECKING_MONTH;
     
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSArray *test = [delegate.dbManger retrieveDataTestFunction];
+    NSLog(@"%.0f",[[NSDate getDateFromStringInUTC:@"2015-06-01"] timeIntervalSince1970]);
+    NSArray *test = [delegate.dbManger getEventsForDate:@"2015-06-01 00:00:00"];
     NSLog(@"%@", test);
 }
 
@@ -71,7 +73,7 @@
     [super viewWillAppear:animated];
     NSInteger months;
     if (self.currentCheckingMonth == INIT_CHECKING_MONTH) {
-        months = [NSDate monthsBetweenDate:[NSDate getDateFromStringInUTC:startDate] andDate:[NSDate getDateFromStringInUTC:[NSDate getCurrentDateTime]]];
+        months = [NSDate monthsBetweenDate:[NSDate getDateTimeFromStringInUTC:startDate] andDate:[NSDate getDateTimeFromStringInUTC:[NSDate getCurrentDateTime]]];
         self.currentCheckingMonth = months;
         self.monthForToday = months;
     } else {
@@ -101,7 +103,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (collectionView.tag == OUTTER) {
-        return [NSDate monthsBetweenDate:[NSDate getDateFromStringInUTC:startDate] andDate:[NSDate getDateFromStringInUTC:endDate]];
+        return [NSDate monthsBetweenDate:[NSDate getDateTimeFromStringInUTC:startDate] andDate:[NSDate getDateTimeFromStringInUTC:endDate]];
     } else {
         return 7;
     }
@@ -167,6 +169,12 @@
         [cell.leftImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor whiteColor]];
         [cell.leftImage rotateImage180Degrees];
         [cell.leftImage setContentMode:UIViewContentModeCenter];
+        
+        if (self.monthForToday == indexPath.row) {
+            cell.todayBtn.hidden = YES;
+        } else {
+            cell.todayBtn.hidden = NO;
+        }
         
         return cell;
     } else {
@@ -290,7 +298,7 @@
 {
     if (collectionView.tag != OUTTER) {
         UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        if (cell.tag != 0 && ![indexPath isEqual:self.lastSelect]) {
+        if (cell.tag != 0 && !([indexPath isEqual:self.lastSelect] && self.currentCheckingMonth == self.lastSelectionMonth)) {
             cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
             
             // Clear Today
@@ -300,10 +308,13 @@
             }
             
             // Clear last selection
-            cell = [collectionView cellForItemAtIndexPath:self.lastSelect];
-            cell.backgroundColor = [UIColor whiteColor];
+            if (self.currentCheckingMonth == self.lastSelectionMonth) {
+                cell = [collectionView cellForItemAtIndexPath:self.lastSelect];
+                cell.backgroundColor = [UIColor whiteColor];
+            }
             
             self.lastSelect = indexPath;
+            self.lastSelectionMonth = self.currentCheckingMonth;
         }
     }
 }
@@ -323,6 +334,13 @@
                                         animated:YES];
 }
 
+- (IBAction)checkToday:(UIButton *)sender
+{
+    NSIndexPath *path = [NSIndexPath indexPathForRow:self.monthForToday inSection:0];
+    [self.collectionView scrollToItemAtIndexPath:path
+                                atScrollPosition:UICollectionViewScrollPositionNone
+                                        animated:YES];
+}
 
 - (IBAction)setting:(UIButton *)sender
 {

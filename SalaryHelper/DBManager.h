@@ -30,6 +30,6 @@ typedef void(^DatabaseCompletionHandler)(BOOL finished, NSError *error);
                    year:(NSInteger)year
    andCompletionHandler:(DatabaseCompletionHandler)completionHandler;
 
-- (NSArray*)retrieveDataTestFunction;
+- (NSArray*)getEventsForDate:(NSString *)dateString;
 
 @end
