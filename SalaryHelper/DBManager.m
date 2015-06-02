@@ -138,8 +138,18 @@ static sqlite3_stmt *statement = nil;
 {
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+#warning TODO: NEED TEST
         //NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM income_events WHERE (repeat = 0 AND start_date = '2015-06-01') OR (SELECT * FROM income_events WHERE repeat = 1 AND day > 0 AND (julianday('2015-06-03')-julianday(start_date)) %% day = 0) OR (SELECT * FROM income_events WHERE repeat = 1 AND week > 0 AND (julianday('2015-06-03')-julianday(start_date)) %% day = 0)", dateString];
-        NSString *querySQL = @"SELECT (julianday('2015-06-17')-julianday('2015-05-29'))/7";
+        
+        // week
+        NSString *querySQL = @"SELECT * FROM income_events WHERE repeat = 1 AND week > 0 AND (julianday('2015-06-12')-julianday('2015-05-29'))%7 = 0 AND ((julianday('2015-06-12')-julianday('2015-05-29'))/7)%week = 0";
+        
+        // month
+        querySQL = @"SELECT * FROM income_events WHERE repeat = 1 AND month > 0 AND strftime('%d','2015-06-12') = strftime('%d','2015-05-29') AND (strftime('%Y','2015-06-12')-strftime('%Y','2015-05-29'))*12+strftime('%m','2015-05-29')%month = 0";
+        
+        // year
+        querySQL = @"SELECT * FROM income_events WHERE repeat = 1 AND year > 0 AND strftime('%m','2015-06-12') = strftime('%m','2015-05-29') AND strftime('%d','2015-06-12') = strftime('%d','2015-05-29') AND (strftime('%Y','2015-06-12')-strftime('%Y','2015-05-29'))%year = 0";
+        
         NSLog(@"%@", querySQL);
         const char *query_stmt = [querySQL UTF8String];
         NSMutableArray *resultArray = [[NSMutableArray alloc]init];
