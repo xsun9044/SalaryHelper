@@ -138,7 +138,7 @@ static sqlite3_stmt *statement = nil;
 {
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-#warning TODO: NEED TEST
+#warning TODO: NEED TEST
         //NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM income_events WHERE (repeat = 0 AND start_date = '2015-06-01') OR (SELECT * FROM income_events WHERE repeat = 1 AND day > 0 AND (julianday('2015-06-03')-julianday(start_date)) %% day = 0) OR (SELECT * FROM income_events WHERE repeat = 1 AND week > 0 AND (julianday('2015-06-03')-julianday(start_date)) %% day = 0)", dateString];
         
         // week
