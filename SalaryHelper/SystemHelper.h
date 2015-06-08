@@ -12,6 +12,10 @@
 // detect if system verison is above a specfic version
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
+// 200 years， don't ask me why
+#define startDate @"1914-01-01 00:00:00"
+#define endDate @"2113-12-31 23:59:59"
+
 #endif
 
 

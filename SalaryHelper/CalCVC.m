@@ -13,6 +13,8 @@
 #import "MenuVC.h"
 #import "UIImageView+imageViewHelper.h"
 #import "AppDelegate.h"
+#import "SystemHelper.h"
+#import "CalendarObject.h"
 
 @interface CalCVC ()
 @property (nonatomic) CGFloat fullHeight;
@@ -45,10 +47,6 @@
 #define INNER 2
 #define INIT_CHECKING_MONTH -1
 
-// 200 years， don't ask me why
-#define startDate @"1914-01-01 00:00:00"
-#define endDate @"2113-12-31 23:59:59"
-
 - (DBManager *)dbManger
 {
     if (!_dbManger) {
@@ -73,12 +71,6 @@
     self.collectionView.bounces = NO;
     
     self.currentCheckingMonth = INIT_CHECKING_MONTH;
-    
-    [_dbManger getEventsForDate:@"2015-06-12" withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
-        if (finished) {
-            NSLog(@"%@", result);
-        }
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -97,6 +89,7 @@
     [self.collectionView scrollToItemAtIndexPath:path
                                 atScrollPosition:UICollectionViewScrollPositionNone
                                         animated:NO];
+    CalendarObject *test = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:months];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -136,11 +129,8 @@
         cell.widthTag.constant = (_fullWidth-6)/7;
         
         self.heightBottom = cell.heightCal.constant;
-        cell.CalView.delegate = self;
-        cell.CalView.dataSource = self;
         cell.CalView.bounces = NO;
         [cell.CalView setBackgroundColor:[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0]];
-        [cell.CalView reloadData];
         
         [cell.pig setImage:[[UIImage imageNamed:@"piggy"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [cell.pig.imageView setTintColor:[UIColor whiteColor]];
@@ -215,14 +205,14 @@
                                        andDay:[cell.day.text integerValue]];
                 NSLog(@"%@", dateString);
                 
-                [self.dbManger getEventsForDate:dateString
+                /*[self.dbManger getEventsForDate:dateString
                           withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
                               if (finished) {
                                   if (result.count > 0) {
                                       NSLog(@"%@", result);
                                   }
                               }
-                          }];
+                          }];*/
                 
             } else { // days in last month
                 cell.day.text = [NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfCurrentMonth - 2 - indexPath.row)];
@@ -254,14 +244,14 @@
                                                               andDay:[cell.day.text integerValue]];
                 NSLog(@"%@", dateString);
                 
-                [self.dbManger getEventsForDate:dateString
+                /*[self.dbManger getEventsForDate:dateString
                           withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
                               if (finished) {
                                   if (result.count > 0) {
                                       NSLog(@"%@", result);
                                   }
                               }
-                          }];
+                          }];*/
             } else { // days in next month
                 cell.day.text = [NSString stringWithFormat:@"%ld", (long)self.count];
                 self.dayText = cell.day.text;
@@ -309,6 +299,18 @@
         } else {
             self.hasToday = NO;
         }
+        
+        //dispatch_queue_t concurrentQueue = dispatch_queue_create("Reload CollectionView In Cell", NULL);
+        //dispatch_async(concurrentQueue, ^{
+            //while (1) {
+                //NSLog(@"fuck");
+            //}
+            //dispatch_async(dispatch_get_main_queue(), ^{
+                ((CalCVCell *)cell).CalView.delegate = self;
+                ((CalCVCell *)cell).CalView.dataSource = self;
+                [((CalCVCell *)cell).CalView reloadData];
+            //});
+        //});
     } else {
         if (cell.tag != 0) {
             if (self.hasToday && [self.dayText integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
@@ -381,7 +383,7 @@
     NSIndexPath *path = [NSIndexPath indexPathForRow:self.monthForToday inSection:0];
     [self.collectionView scrollToItemAtIndexPath:path
                                 atScrollPosition:UICollectionViewScrollPositionNone
-                                        animated:YES];
+                                        animated:NO];
 }
 
 - (IBAction)setting:(UIButton *)sender

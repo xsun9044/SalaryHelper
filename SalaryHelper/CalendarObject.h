@@ -1,5 +1,5 @@
 //
-//  ReturnData.h
+//  CalendarObject.h
 //  SalaryHelper
 //
 //  Created by Xin Sun on 15/6/6.
@@ -9,10 +9,18 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface ReturnData : NSObject
+@interface CalendarObject : NSObject
 
-@property (nonatomic) NSInteger rowID;
+@property (nonatomic, strong) NSString *monthName;
 
-- (ReturnData *)initDataWithRowID:(NSInteger)rowID;
+@property (nonatomic) NSInteger year;
+@property (nonatomic) NSInteger daysOfLastMonth;
+@property (nonatomic) NSInteger daysOfCurrentMonth;
+@property (nonatomic) NSInteger currentMonthIndex;
+@property (nonatomic) NSInteger month;
+
+@property (nonatomic, strong) NSMutableArray *daysArray;
+
+- (CalendarObject *)initDataWithCurrentMonthIndexRow:(NSInteger)row;
 
 @end

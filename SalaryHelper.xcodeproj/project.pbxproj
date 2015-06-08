@@ -12,6 +12,8 @@
 		22951CCC1B09324200AECA27 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22951CCB1B09324200AECA27 /* libsqlite3.dylib */; };
 		22951CD31B09333E00AECA27 /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22951CD21B09333E00AECA27 /* DBManager.m */; };
 		22F8FD381B043A1600381F04 /* AddTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F8FD371B043A1600381F04 /* AddTVC.m */; };
+		B505DB9F1B263B4900CA79B7 /* CalendarObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B505DB9E1B263B4900CA79B7 /* CalendarObject.m */; };
+		B505DBA21B2642F300CA79B7 /* DayObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B505DBA11B2642F300CA79B7 /* DayObject.m */; };
 		B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */; };
 		B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */; };
 		B554CC8C1AFA59FB006E63F7 /* CalCVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */; };
@@ -54,6 +56,10 @@
 		22951CD41B093A2500AECA27 /* SystemHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemHelper.h; sourceTree = "<group>"; };
 		22F8FD371B043A1600381F04 /* AddTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTVC.m; sourceTree = "<group>"; };
 		22F8FD391B043A3A00381F04 /* AddTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTVC.h; sourceTree = "<group>"; };
+		B505DB9D1B263B4900CA79B7 /* CalendarObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarObject.h; sourceTree = "<group>"; };
+		B505DB9E1B263B4900CA79B7 /* CalendarObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarObject.m; sourceTree = "<group>"; };
+		B505DBA01B2642F300CA79B7 /* DayObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayObject.h; sourceTree = "<group>"; };
+		B505DBA11B2642F300CA79B7 /* DayObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayObject.m; sourceTree = "<group>"; };
 		B535E1761AFC07200088FE42 /* UIColor+ColorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorHelper.h"; sourceTree = "<group>"; };
 		B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorHelper.m"; sourceTree = "<group>"; };
 		B535E1791AFC0DAD0088FE42 /* UIImageView+imageViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+imageViewHelper.h"; sourceTree = "<group>"; };
@@ -115,6 +121,10 @@
 		224D4CAB1B238FEC00FF4D9A /* Instance */ = {
 			isa = PBXGroup;
 			children = (
+				B505DB9D1B263B4900CA79B7 /* CalendarObject.h */,
+				B505DB9E1B263B4900CA79B7 /* CalendarObject.m */,
+				B505DBA01B2642F300CA79B7 /* DayObject.h */,
+				B505DBA11B2642F300CA79B7 /* DayObject.m */,
 				224D4CB01B23928200FF4D9A /* Event.h */,
 				224D4CB11B23928200FF4D9A /* Event.m */,
 				224D4CAC1B23903500FF4D9A /* ReturnData.m */,
@@ -365,8 +375,10 @@
 				B58D7A701AF9522B0097A436 /* AppDelegate.m in Sources */,
 				B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */,
 				B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */,
+				B505DB9F1B263B4900CA79B7 /* CalendarObject.m in Sources */,
 				B58D7A6D1AF9522B0097A436 /* main.m in Sources */,
 				B554CC921AFA8EE6006E63F7 /* DayCVCell.m in Sources */,
+				B505DBA21B2642F300CA79B7 /* DayObject.m in Sources */,
 				22F8FD381B043A1600381F04 /* AddTVC.m in Sources */,
 				B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */,
 				B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */,
