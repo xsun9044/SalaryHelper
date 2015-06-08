@@ -36,6 +36,8 @@
 @property (nonatomic) NSString *dayText;
 
 @property (nonatomic, strong) DayCVCell *dayCell;
+
+@property (nonatomic, strong) DBManager *dbManger; // Required for database operations
 @end
 
 @implementation CalCVC
@@ -43,9 +45,19 @@
 #define INNER 2
 #define INIT_CHECKING_MONTH -1
 
-// 200 years
+// 200 years， don't ask me why
 #define startDate @"1914-01-01 00:00:00"
 #define endDate @"2113-12-31 23:59:59"
+
+- (DBManager *)dbManger
+{
+    if (!_dbManger) {
+        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        _dbManger = delegate.dbManger;
+    }
+    
+    return _dbManger;
+}
 
 - (void)viewDidLoad
 {
@@ -62,10 +74,11 @@
     
     self.currentCheckingMonth = INIT_CHECKING_MONTH;
     
-    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSLog(@"%.0f",[[NSDate getDateFromStringInUTC:@"2015-06-01"] timeIntervalSince1970]);
-    NSArray *test = [delegate.dbManger getEventsForDate:@"2015-06-01 00:00:00"];
-    NSLog(@"%@", test);
+    [_dbManger getEventsForDate:@"2015-06-12" withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
+        if (finished) {
+            NSLog(@"%@", result);
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -111,7 +124,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag == OUTTER) {
+    if (collectionView.tag == OUTTER) { // Month collection cell
         self.willDisplayPosition = indexPath.row;
         CalCVCell *cell = (CalCVCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"month_cell" forIndexPath:indexPath];
         self.fullHeight = [[UIScreen mainScreen] bounds].size.height - [[UIApplication sharedApplication] statusBarFrame].size.height;
@@ -177,14 +190,14 @@
         }
         
         return cell;
-    } else {
+    } else { // Collection cell for everyday in a single month
         DayCVCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"day_cell" forIndexPath:indexPath];
         [cell.coverHeight setConstant:(self.heightBottom-6)/6];
         [cell.dayWidth setConstant:(_fullWidth-6)/7];
         
         if (indexPath.section == 0) {
             self.count = 1;
-            if (indexPath.row >=  self.startWeekDayOfCurrentMonth - 1) {
+            if (indexPath.row >=  self.startWeekDayOfCurrentMonth - 1) { // day in month
                 cell.day.text = [NSString stringWithFormat:@"%ld", (indexPath.row + 1) - (self.startWeekDayOfCurrentMonth-1)];
                 self.dayText = cell.day.text;
                 cell.backgroundColor = [UIColor whiteColor];
@@ -196,7 +209,22 @@
                     [cell.day setTextColor:[UIColor blackColor]];
                 }
                 cell.tag = 1;
-            } else {
+                
+                NSString *dateString = [NSDate getDateStringWithYear:[[NSDate getYearFromStringInUTC:startDate] integerValue] + self.willDisplayPosition / 12
+                                     andMonth:self.willDisplayPosition%12 + 1
+                                       andDay:[cell.day.text integerValue]];
+                NSLog(@"%@", dateString);
+                
+                [self.dbManger getEventsForDate:dateString
+                          withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
+                              if (finished) {
+                                  if (result.count > 0) {
+                                      NSLog(@"%@", result);
+                                  }
+                              }
+                          }];
+                
+            } else { // days in last month
                 cell.day.text = [NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfCurrentMonth - 2 - indexPath.row)];
                 self.dayText = cell.day.text;
                 cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
@@ -208,7 +236,7 @@
                 cell.tag = 0;
             }
         } else {
-            if (7 + 7*(indexPath.section-1) + indexPath.row < self.startWeekDayOfCurrentMonth - 1 + self.daysOfCurrentMonth) {
+            if (7 + 7*(indexPath.section-1) + indexPath.row < self.startWeekDayOfCurrentMonth - 1 + self.daysOfCurrentMonth) { // day in month
                 cell.day.text = [NSString stringWithFormat:@"%ld", (7 - self.startWeekDayOfCurrentMonth + 1) + 7*(indexPath.section-1) + (indexPath.row + 1)];
                 self.dayText = cell.day.text;
                 cell.backgroundColor = [UIColor whiteColor];
@@ -220,7 +248,21 @@
                     [cell.day setTextColor:[UIColor blackColor]];
                 }
                 cell.tag = 1;
-            } else {
+                
+                NSString *dateString = [NSDate getDateStringWithYear:[[NSDate getYearFromStringInUTC:startDate] integerValue] + self.willDisplayPosition / 12
+                                                            andMonth:self.willDisplayPosition%12 + 1
+                                                              andDay:[cell.day.text integerValue]];
+                NSLog(@"%@", dateString);
+                
+                [self.dbManger getEventsForDate:dateString
+                          withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
+                              if (finished) {
+                                  if (result.count > 0) {
+                                      NSLog(@"%@", result);
+                                  }
+                              }
+                          }];
+            } else { // days in next month
                 cell.day.text = [NSString stringWithFormat:@"%ld", (long)self.count];
                 self.dayText = cell.day.text;
                 self.count++;

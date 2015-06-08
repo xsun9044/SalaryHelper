@@ -10,34 +10,48 @@
 
 @interface NSDate (DateHelper)
 
+/*
+ * Translate date string into NSDate
+ */
+// Datetime from date string
 + (NSDate *)getDateTimeFromStringInUTC:(NSString *)dateString;
-
+// Date from date string
 + (NSDate *)getDateFromStringInUTC:(NSString *)dateString;
 
+/*
+ * Date compute
+ */
+// Month between two dates
 + (NSInteger)monthsBetweenDate:(NSDate *)date1 andDate:(NSDate *)date2;
++ (NSInteger)getNumberOfWeekdayFromStringInUTC:(NSString *)dateString;
++ (NSInteger)getNumberOfDaysInWeek:(NSDate *)date;
+
+// Get current date
++ (NSString *)getCurrentDate;
+// Get current date time
++ (NSString *)getCurrentDateTime;
 
 + (NSString *)nameForMonth:(NSInteger)month;
 
+/*
+ * Parse the date string
+ */
 + (NSString *)getYearFromStringInUTC:(NSString *)dateString;
-
-+ (NSString *)getCurrentDateTime;
-
 + (NSString *)getMonthFromStringInUTC:(NSString *)dateString;
-
 + (NSString *)getDayFromStringInUTC:(NSString *)dateString;
 
-+ (NSInteger)getNumberOfWeekdayFromStringInUTC:(NSString *)dateString;
-
-+ (NSInteger)getNumberOfDaysInWeek:(NSDate *)date;
-
+/*
+ * Parse the NSDate
+ */
 + (NSInteger)getDayFromDate:(NSDate *)date;
-
 + (NSInteger)getMonthFromDate:(NSDate *)date;
-
 + (NSInteger)getYearFromDate:(NSDate *)date;
 
-+ (NSString *)getDateStringFromDate:(NSDate *)date;
 
-+ (NSString *)getCurrentDate;
+/*
+ * Translate date to date string
+ */
++ (NSString *)getDateStringFromDate:(NSDate *)date;
++ (NSString *)getDateStringWithYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day;
 
 @end

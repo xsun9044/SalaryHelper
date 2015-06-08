@@ -9,6 +9,7 @@
 #ifndef SalaryHelper_SystemHelper_h
 #define SalaryHelper_SystemHelper_h
 
+// detect if system verison is above a specfic version
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 #endif

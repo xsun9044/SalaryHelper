@@ -9,7 +9,17 @@
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
 
+
+/*
+ * All block used in database operations
+ * Used for database creation and data insertion
+ */
 typedef void(^DatabaseCompletionHandler)(BOOL finished, NSError *error);
+
+/*
+ * Used for database retrieve, return with flag, result array and error
+ */
+typedef void(^DataRetrieveCompletionHandler)(BOOL finished, NSArray *result, NSError *error);
 
 @interface DBManager : NSObject
 {
@@ -30,6 +40,6 @@ typedef void(^DatabaseCompletionHandler)(BOOL finished, NSError *error);
                    year:(NSInteger)year
    andCompletionHandler:(DatabaseCompletionHandler)completionHandler;
 
-- (NSArray*)getEventsForDate:(NSString *)dateString;
+- (void)getEventsForDate:(NSString *)dateString withCompletionHandler:(DataRetrieveCompletionHandler)completionHandler;
 
 @end

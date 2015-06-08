@@ -7,6 +7,7 @@
 //
 
 #import "DBManager.h"
+#import "Event.h"
 
 #define DB_NAME @"salaryHelper.db"
 
@@ -27,6 +28,11 @@ static sqlite3_stmt *statement = nil;
     return sharedInstance;
 }
 
+/*
+ *
+ * Create Database and All the tables in it
+ * Tables: income_events - Record all the income events saved by user
+ */
 - (void)createDBwithCompletionHandler:(DatabaseCompletionHandler)completionHandler
 {
     NSString *docsDir;
@@ -72,7 +78,11 @@ static sqlite3_stmt *statement = nil;
 }
 
 
-// Remove database only for test purpose
+/*
+ *
+ * Remove Database
+ * This function only for the test purpose, will not use in release build
+ */
 - (BOOL)removeDB
 {
     NSString *docsDir;
@@ -98,6 +108,9 @@ static sqlite3_stmt *statement = nil;
 }
 
 
+/*
+ * Save income events in income event table
+ */
 - (void)saveIncomeEvent:(NSString*)title
                  amount:(NSString *)amount
               startDate:(NSString*)date
@@ -134,43 +147,51 @@ static sqlite3_stmt *statement = nil;
     }
 }
 
-- (NSArray*)getEventsForDate:(NSString *)dateString
+/*
+ * Retrieve income events
+ * parms: date string
+ *
+ * Retrieve all the income events based on the date string
+ */
+- (void)getEventsForDate:(NSString *)dateString withCompletionHandler:(DataRetrieveCompletionHandler)completionHandler
 {
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-#warning TODO: NEED TEST
-        //NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM income_events WHERE (repeat = 0 AND start_date = '2015-06-01') OR (SELECT * FROM income_events WHERE repeat = 1 AND day > 0 AND (julianday('2015-06-03')-julianday(start_date)) %% day = 0) OR (SELECT * FROM income_events WHERE repeat = 1 AND week > 0 AND (julianday('2015-06-03')-julianday(start_date)) %% day = 0)", dateString];
+        NSString *querySQL = [NSString stringWithFormat:
+                              @"SELECT * FROM income_events WHERE (repeat = 0 AND start_date = '%@') OR (repeat = 1 AND day > 0 AND (julianday('%@')-julianday(start_date)) %% day = 0) OR (repeat = 1 AND week > 0 AND (julianday('%@')-julianday(start_date))%%7 = 0 AND ((julianday('%@')-julianday(start_date))/7)%%week = 0) OR (repeat = 1 AND month > 0 AND strftime('%%d','%@') = strftime('%%d',start_date) AND ((strftime('%%Y','%@')-strftime('%%Y',start_date))*12 - strftime('%%m',start_date) + strftime('%%m','%@'))%%month = 0) OR (repeat = 1 AND year > 0 AND strftime('%%m','%@') = strftime('%%m',start_date) AND strftime('%%d','%@') = strftime('%%d',start_date) AND (strftime('%%Y','%@')-strftime('%%Y',start_date))%%year = 0)",
+                              dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString];
         
-        // week
-        NSString *querySQL = @"SELECT * FROM income_events WHERE repeat = 1 AND week > 0 AND (julianday('2015-06-12')-julianday('2015-05-29'))%7 = 0 AND ((julianday('2015-06-12')-julianday('2015-05-29'))/7)%week = 0";
-        
-        // month
-        querySQL = @"SELECT * FROM income_events WHERE repeat = 1 AND month > 0 AND strftime('%d','2015-06-12') = strftime('%d','2015-05-29') AND (strftime('%Y','2015-06-12')-strftime('%Y','2015-05-29'))*12+strftime('%m','2015-05-29')%month = 0";
-        
-        // year
-        querySQL = @"SELECT * FROM income_events WHERE repeat = 1 AND year > 0 AND strftime('%m','2015-06-12') = strftime('%m','2015-05-29') AND strftime('%d','2015-06-12') = strftime('%d','2015-05-29') AND (strftime('%Y','2015-06-12')-strftime('%Y','2015-05-29'))%year = 0";
-        
-        NSLog(@"%@", querySQL);
+        //querySQL = [NSString stringWithFormat:@"SELECT * FROM income_events WHERE repeat = 1 AND week > 0 AND (julianday('%@')-julianday(start_date)) %% week = 0",dateString];
+        //NSLog(@"%@", querySQL);
         const char *query_stmt = [querySQL UTF8String];
         NSMutableArray *resultArray = [[NSMutableArray alloc]init];
         if (sqlite3_prepare_v2(database,query_stmt, -1, &statement, NULL) == SQLITE_OK) {
             while (sqlite3_step(statement) == SQLITE_ROW) {
                 NSString *rowID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
-                [resultArray addObject:rowID];
-                /*NSString *title = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
-                [resultArray addObject:title];
+                NSString *title = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
                 NSString *amount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
-                [resultArray addObject:amount];
-                NSString *start_date = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
-                [resultArray addObject:start_date];*/
-                //;
+                NSString *startDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                
+                Event *event = [[Event alloc] initEventWithDetail:[rowID integerValue] Title:title andAmount:amount andStarDate:startDate];
+                [resultArray addObject:event];
             }
             
             sqlite3_reset(statement);
-            return resultArray;
+            completionHandler(YES, resultArray, nil);
+        } else {
+            sqlite3_reset(statement);
+            completionHandler(NO, nil, [NSError errorWithDomain:DATABASE_ERROR
+                                                           code:500
+                                                       userInfo:[[NSDictionary alloc] initWithObjects:@[@"Retrieve failed."]
+                                                                                              forKeys:@[NSLocalizedDescriptionKey]]]);
         }
+        sqlite3_close (database);
+    } else {
+        completionHandler (NO, nil, [NSError errorWithDomain:DATABASE_ERROR
+                                                        code:404
+                                                    userInfo:[[NSDictionary alloc] initWithObjects:@[@"Cannot open database."]
+                                                                                           forKeys:@[NSLocalizedDescriptionKey]]]);
     }
-    return nil;
 }
 
 @end

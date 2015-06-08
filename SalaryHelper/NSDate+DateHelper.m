@@ -40,14 +40,6 @@
                                              options: 0] month];
 }
 
-+ (NSString *)nameForMonth:(NSInteger)month
-{
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    NSString *monthName = [[df monthSymbols] objectAtIndex:(month - 1)];
-    
-    return monthName;
-}
-
 + (NSString *)getYearFromStringInUTC:(NSString *)dateString
 {
     NSDate *date = [self getDateTimeFromStringInUTC:dateString];
@@ -145,6 +137,32 @@
     NSInteger year = [components year];
     
     return year;
+}
+
++ (NSString *)nameForMonth:(NSInteger)month
+{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    NSString *monthName = [[df monthSymbols] objectAtIndex:(month - 1)];
+    
+    return monthName;
+}
+
++ (NSString *)getDateStringWithYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day
+{
+    NSString *dateString = [NSString stringWithFormat:@"%ld", (long)year];
+    if (month<=9) {
+        dateString = [NSString stringWithFormat:@"%@-0%ld", dateString, (long)month];
+    } else {
+        dateString = [NSString stringWithFormat:@"%@-%ld", dateString, (long)month];
+    }
+    
+    if (day<=9) {
+        dateString = [NSString stringWithFormat:@"%@-0%ld", dateString, (long)day];
+    } else {
+        dateString = [NSString stringWithFormat:@"%@-%ld", dateString, (long)day];
+    }
+    
+    return dateString;
 }
 
 @end

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		224D4CAD1B23903500FF4D9A /* ReturnData.m in Sources */ = {isa = PBXBuildFile; fileRef = 224D4CAC1B23903500FF4D9A /* ReturnData.m */; };
+		224D4CB21B23928200FF4D9A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 224D4CB11B23928200FF4D9A /* Event.m */; };
 		22951CCC1B09324200AECA27 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22951CCB1B09324200AECA27 /* libsqlite3.dylib */; };
 		22951CD31B09333E00AECA27 /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22951CD21B09333E00AECA27 /* DBManager.m */; };
 		22F8FD381B043A1600381F04 /* AddTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F8FD371B043A1600381F04 /* AddTVC.m */; };
@@ -42,6 +44,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		224D4CAC1B23903500FF4D9A /* ReturnData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReturnData.m; sourceTree = "<group>"; };
+		224D4CAE1B23904400FF4D9A /* ReturnData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReturnData.h; sourceTree = "<group>"; };
+		224D4CB01B23928200FF4D9A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		224D4CB11B23928200FF4D9A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		22951CCB1B09324200AECA27 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		22951CD11B09331000AECA27 /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
 		22951CD21B09333E00AECA27 /* DBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
@@ -106,6 +112,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		224D4CAB1B238FEC00FF4D9A /* Instance */ = {
+			isa = PBXGroup;
+			children = (
+				224D4CB01B23928200FF4D9A /* Event.h */,
+				224D4CB11B23928200FF4D9A /* Event.m */,
+				224D4CAC1B23903500FF4D9A /* ReturnData.m */,
+				224D4CAE1B23904400FF4D9A /* ReturnData.h */,
+			);
+			name = Instance;
+			sourceTree = "<group>";
+		};
 		22951CCD1B09325A00AECA27 /* DB */ = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +172,7 @@
 				B58D7A771AF9522C0097A436 /* Main.storyboard */,
 				B58D7A7A1AF9522C0097A436 /* Images.xcassets */,
 				B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */,
+				224D4CAB1B238FEC00FF4D9A /* Instance */,
 				B5CDFCAC1B18F9CF00C8A7C2 /* API */,
 				22951CCD1B09325A00AECA27 /* DB */,
 				B5F72C391AFBAE3B001544E7 /* Helper */,
@@ -354,6 +372,8 @@
 				B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */,
 				B5CDFCAB1B18BDCE00C8A7C2 /* PreferencesHelper.m in Sources */,
 				B5CDFCA81B18A98000C8A7C2 /* MyPopupVC.m in Sources */,
+				224D4CAD1B23903500FF4D9A /* ReturnData.m in Sources */,
+				224D4CB21B23928200FF4D9A /* Event.m in Sources */,
 				22951CD31B09333E00AECA27 /* DBManager.m in Sources */,
 				B58D7A761AF9522B0097A436 /* CalCVC.m in Sources */,
 				B5CDFCB01B18F9FE00C8A7C2 /* MBProgressHUD.m in Sources */,
