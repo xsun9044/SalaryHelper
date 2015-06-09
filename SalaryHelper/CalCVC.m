@@ -15,6 +15,7 @@
 #import "AppDelegate.h"
 #import "SystemHelper.h"
 #import "CalendarObject.h"
+#import "DayObject.h"
 
 @interface CalCVC ()
 @property (nonatomic) CGFloat fullHeight;
@@ -40,6 +41,7 @@
 @property (nonatomic, strong) DayCVCell *dayCell;
 
 @property (nonatomic, strong) DBManager *dbManger; // Required for database operations
+@property (nonatomic, strong) CalendarObject *cal;
 @end
 
 @implementation CalCVC
@@ -89,7 +91,9 @@
     [self.collectionView scrollToItemAtIndexPath:path
                                 atScrollPosition:UICollectionViewScrollPositionNone
                                         animated:NO];
-    CalendarObject *test = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:months];
+    if (self.cal == nil) {
+        self.cal = [[CalendarObject alloc] initThereMonthsWithCurrentMonthIndexRow:months];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -102,7 +106,7 @@
     if (collectionView.tag == OUTTER) {
         return 1;
     } else {
-        return 6;
+        return self.cal.daysArray.count / 7;
     }
 }
 
@@ -119,49 +123,32 @@
 {
     if (collectionView.tag == OUTTER) { // Month collection cell
         self.willDisplayPosition = indexPath.row;
+        
         CalCVCell *cell = (CalCVCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"month_cell" forIndexPath:indexPath];
+        
         self.fullHeight = [[UIScreen mainScreen] bounds].size.height - [[UIApplication sharedApplication] statusBarFrame].size.height;
         self.fullWidth = [[UIScreen mainScreen] bounds].size.width;
-        
         [cell.widthTop setConstant:_fullWidth];
         [cell.heightTop setConstant:_fullHeight / 5];
         [cell.heightCal setConstant:4*_fullHeight / 5];
         cell.widthTag.constant = (_fullWidth-6)/7;
-        
         self.heightBottom = cell.heightCal.constant;
+        
         cell.CalView.bounces = NO;
         [cell.CalView setBackgroundColor:[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0]];
         
         [cell.pig setImage:[[UIImage imageNamed:@"piggy"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [cell.pig.imageView setTintColor:[UIColor whiteColor]];
         
-        cell.month.text = [NSString stringWithFormat:@"%@  %ld", [NSDate nameForMonth:indexPath.row%12 + 1], [[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12];
-        
-        self.startWeekDayOfCurrentMonth = [NSDate getNumberOfWeekdayFromStringInUTC:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,[NSDate nameForMonth:indexPath.row%12 + 1],1]];
-        //NSLog(@"%ld",(long)self.startWeekDayOfCurrentMonth);
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-        dateFormatter.dateFormat = @"yyyy-MM-dd";
-        [dateFormatter setTimeZone:timeZone];
-        NSDate *date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%ld-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,indexPath.row%12 + 1,1]];
-        self.daysOfLastMonth = [NSDate getNumberOfDaysInWeek:date];
-        //NSLog(@"%@",date);
-        
-        NSInteger nextMonth = indexPath.row%12 + 2;
-        if (nextMonth > 12) {
-            nextMonth = 1;
-        } else if (nextMonth < 2) {
-            nextMonth = 1;
-        }
-        
-        if (nextMonth == 1) {
-            date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%ld-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12 + 1,(long)nextMonth,1]];
+        if (self.cal.currentMonthIndex == indexPath.row) {
+            cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, self.cal.year];
+        } else if (self.cal.currentMonthIndex > indexPath.row) {
+            self.cal = self.cal.priorMonth;
+            cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, self.cal.year];
         } else {
-            date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%ld-%ld-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12,(long)nextMonth,1]];
+            self.cal = self.cal.nextMonth;
+            cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, self.cal.year];
         }
-        self.daysOfCurrentMonth = [NSDate getNumberOfDaysInWeek:date];
-        //NSLog(@"%@",date);
         
         cell.left.tag = indexPath.row - 1;
         cell.right.tag = indexPath.row + 1;
@@ -179,93 +166,53 @@
             cell.todayBtn.hidden = NO;
         }
         
+        cell.CalView.delegate = self;
+        cell.CalView.dataSource = self;
+        [cell.CalView reloadData];
+        
         return cell;
     } else { // Collection cell for everyday in a single month
         DayCVCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"day_cell" forIndexPath:indexPath];
-        [cell.coverHeight setConstant:(self.heightBottom-6)/6];
+        [cell.coverHeight setConstant:(self.heightBottom-	self.cal.daysArray.count/7)/(self.cal.daysArray.count/7)];
         [cell.dayWidth setConstant:(_fullWidth-6)/7];
         
-        if (indexPath.section == 0) {
-            self.count = 1;
-            if (indexPath.row >=  self.startWeekDayOfCurrentMonth - 1) { // day in month
-                cell.day.text = [NSString stringWithFormat:@"%ld", (indexPath.row + 1) - (self.startWeekDayOfCurrentMonth-1)];
-                self.dayText = cell.day.text;
-                cell.backgroundColor = [UIColor whiteColor];
-                cell.cover.hidden = YES;
-                cell.alpha = 1;
-                if (indexPath.row == 0 || indexPath.row == 6) {
-                    [cell.day setTextColor:[UIColor redColor]];
-                } else {
-                    [cell.day setTextColor:[UIColor blackColor]];
-                }
-                cell.tag = 1;
-                
-                NSString *dateString = [NSDate getDateStringWithYear:[[NSDate getYearFromStringInUTC:startDate] integerValue] + self.willDisplayPosition / 12
-                                     andMonth:self.willDisplayPosition%12 + 1
-                                       andDay:[cell.day.text integerValue]];
-                NSLog(@"%@", dateString);
-                
-                /*[self.dbManger getEventsForDate:dateString
-                          withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
-                              if (finished) {
-                                  if (result.count > 0) {
-                                      NSLog(@"%@", result);
-                                  }
-                              }
-                          }];*/
-                
-            } else { // days in last month
-                cell.day.text = [NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfCurrentMonth - 2 - indexPath.row)];
-                self.dayText = cell.day.text;
-                cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
-                cell.cover.hidden = NO;
-                cell.alpha = 1;
-                [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
-                cell.layer.borderWidth = 0;
+        DayObject *day = [self.cal.daysArray objectAtIndex:indexPath.section * 7 + indexPath.row];
+        cell.day.text = day.day;
+        self.dayText = cell.day.text;
+        cell.cover.hidden = day.inThisMonth;
+        cell.alpha = 1;
+        [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
+        [cell.day setTextColor:[UIColor blackColor]];
+        cell.layer.borderWidth = 0;
+        if (day.inThisMonth) {
+            if (indexPath.row == 0 || indexPath.row == 6) {
+                [cell.day setTextColor:[UIColor redColor]];
+            } else {
                 [cell.day setTextColor:[UIColor blackColor]];
-                cell.tag = 0;
             }
+            cell.tag = 1;
+            
+            cell.backgroundColor = [UIColor whiteColor];
         } else {
-            if (7 + 7*(indexPath.section-1) + indexPath.row < self.startWeekDayOfCurrentMonth - 1 + self.daysOfCurrentMonth) { // day in month
-                cell.day.text = [NSString stringWithFormat:@"%ld", (7 - self.startWeekDayOfCurrentMonth + 1) + 7*(indexPath.section-1) + (indexPath.row + 1)];
-                self.dayText = cell.day.text;
-                cell.backgroundColor = [UIColor whiteColor];
-                cell.cover.hidden = YES;
-                cell.alpha = 1;
-                if (indexPath.row == 0 || indexPath.row == 6) {
-                    [cell.day setTextColor:[UIColor redColor]];
-                } else {
-                    [cell.day setTextColor:[UIColor blackColor]];
-                }
-                cell.tag = 1;
-                
-                NSString *dateString = [NSDate getDateStringWithYear:[[NSDate getYearFromStringInUTC:startDate] integerValue] + self.willDisplayPosition / 12
-                                                            andMonth:self.willDisplayPosition%12 + 1
-                                                              andDay:[cell.day.text integerValue]];
-                NSLog(@"%@", dateString);
-                
-                /*[self.dbManger getEventsForDate:dateString
-                          withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
-                              if (finished) {
-                                  if (result.count > 0) {
-                                      NSLog(@"%@", result);
-                                  }
-                              }
-                          }];*/
-            } else { // days in next month
-                cell.day.text = [NSString stringWithFormat:@"%ld", (long)self.count];
-                self.dayText = cell.day.text;
-                self.count++;
-                cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
-                cell.cover.hidden = NO;
-                cell.alpha = 1;
-                [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
-                cell.layer.borderWidth = 0;
-                [cell.day setTextColor:[UIColor blackColor]];
-                cell.tag = 0;
-            }
+            cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
         }
+        
+        
         self.dayCell = cell;
+        
+        /*NSString *dateString = [NSDate getDateStringWithYear:[[NSDate getYearFromStringInUTC:startDate] integerValue] + self.willDisplayPosition / 12
+         andMonth:self.willDisplayPosition%12 + 1
+         andDay:[cell.day.text integerValue]];
+         NSLog(@"%@", dateString);
+         
+         [self.dbManger getEventsForDate:dateString
+         withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
+         if (finished) {
+         if (result.count > 0) {
+         NSLog(@"%@", result);
+         }
+         }
+         }];*/
         
         return cell;
     }
@@ -278,7 +225,7 @@
     if (collectionView.tag == OUTTER) {
         return CGSizeMake(_fullWidth, _fullHeight);
     } else {
-        return CGSizeMake((_fullWidth-6)/7, (self.heightBottom-6)/6);
+        return CGSizeMake((_fullWidth-6)/7, (self.heightBottom-self.cal.daysArray.count/7)/(self.cal.daysArray.count/7));
     }
 }
 
@@ -299,18 +246,6 @@
         } else {
             self.hasToday = NO;
         }
-        
-        //dispatch_queue_t concurrentQueue = dispatch_queue_create("Reload CollectionView In Cell", NULL);
-        //dispatch_async(concurrentQueue, ^{
-            //while (1) {
-                //NSLog(@"fuck");
-            //}
-            //dispatch_async(dispatch_get_main_queue(), ^{
-                ((CalCVCell *)cell).CalView.delegate = self;
-                ((CalCVCell *)cell).CalView.dataSource = self;
-                [((CalCVCell *)cell).CalView reloadData];
-            //});
-        //});
     } else {
         if (cell.tag != 0) {
             if (self.hasToday && [self.dayText integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {

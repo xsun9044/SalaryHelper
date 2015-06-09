@@ -70,6 +70,37 @@
     return self;
 }
 
+- (CalendarObject *)initThereMonthsWithCurrentMonthIndexRow:(NSInteger)row
+
+{
+    self = [self initDataWithCurrentMonthIndexRow:row];
+    self.priorMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:row-1];
+    self.nextMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:row+1];
+    
+    return self;
+}
+
+- (CalendarObject *)initDataWhenMoveRight:(CalendarObject *)leftObject
+{
+    
+    self = [self initDataWithCurrentMonthIndexRow:leftObject.currentMonthIndex+1];
+    self.priorMonth = leftObject;
+    self.nextMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:leftObject.currentMonthIndex+2];
+    
+    return self;
+}
+
+- (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)rightObject
+{
+    
+    self = [self initDataWithCurrentMonthIndexRow:rightObject.currentMonthIndex-1];
+    self.priorMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:rightObject.currentMonthIndex-2];
+    self.nextMonth = rightObject;
+    
+    return self;
+}
+
+
 - (void)createDaysInMonth
 {
     for (int i=0; i<self.startWeekDayOfMonth-1; i++) { // days of last month
@@ -80,8 +111,10 @@
         DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", i + 1] InThisMonth:YES];
         [self.daysArray addObject:day];
     }
-    
-    self.daysArray.count % 7
+    for (int i=0; i<self.daysArray.count % 7; i++) { // days of next month
+        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", i + 1] InThisMonth:NO];
+        [self.daysArray addObject:day];
+    }
 }
 
 @end

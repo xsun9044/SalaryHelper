@@ -21,6 +21,13 @@
 
 @property (nonatomic, strong) NSMutableArray *daysArray;
 
+@property (nonatomic, strong) CalendarObject *priorMonth;
+@property (nonatomic, strong) CalendarObject *nextMonth;
+
+
+- (CalendarObject *)initThereMonthsWithCurrentMonthIndexRow:(NSInteger)row;
 - (CalendarObject *)initDataWithCurrentMonthIndexRow:(NSInteger)row;
+- (CalendarObject *)initDataWhenMoveRight:(CalendarObject *)leftObject;
+- (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)rightObject;
 
 @end
