@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSString *day;
 
 @property (nonatomic) BOOL inThisMonth;
+@property (nonatomic) BOOL isToday;
 
 - (DayObject *)initDataWithDay:(NSString *)day InThisMonth:(BOOL)flag;
 

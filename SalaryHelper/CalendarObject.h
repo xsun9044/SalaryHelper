@@ -27,7 +27,7 @@
 
 - (CalendarObject *)initThereMonthsWithCurrentMonthIndexRow:(NSInteger)row;
 - (CalendarObject *)initDataWithCurrentMonthIndexRow:(NSInteger)row;
-- (CalendarObject *)initDataWhenMoveRight:(CalendarObject *)leftObject;
-- (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)rightObject;
+- (CalendarObject *)initDataWhenMoveRight:(CalendarObject *)obj and:(CalendarObject *)leftObj;
+- (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)obj and:(CalendarObject *)rightObj;
 
 @end

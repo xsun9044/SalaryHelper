@@ -16,6 +16,9 @@
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 
 @property (nonatomic) NSInteger startWeekDayOfMonth;
+@property (nonatomic) NSInteger todayDay;
+
+@property (nonatomic) BOOL hasToday;
 
 @end
 
@@ -63,6 +66,13 @@
         
         _startWeekDayOfMonth = [NSDate getNumberOfWeekdayFromStringInUTC:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + row / 12,[NSDate nameForMonth:row%12 + 1],1]];
         
+        if (self.month == [[NSDate getMonthFromStringInUTC:[NSDate getCurrentDateTime]] integerValue] && self.year == [[NSDate getYearFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
+            self.hasToday = YES;
+            self.todayDay = [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue];
+        } else {
+            self.hasToday = NO;
+        }
+        
         _daysArray = [[NSMutableArray alloc] init];
         
         [self createDaysInMonth];
@@ -71,7 +81,6 @@
 }
 
 - (CalendarObject *)initThereMonthsWithCurrentMonthIndexRow:(NSInteger)row
-
 {
     self = [self initDataWithCurrentMonthIndexRow:row];
     self.priorMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:row-1];
@@ -80,22 +89,22 @@
     return self;
 }
 
-- (CalendarObject *)initDataWhenMoveRight:(CalendarObject *)leftObject
+- (CalendarObject *)initDataWhenMoveRight:(CalendarObject *)obj and:(CalendarObject *)leftObj
 {
     
-    self = [self initDataWithCurrentMonthIndexRow:leftObject.currentMonthIndex+1];
-    self.priorMonth = leftObject;
-    self.nextMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:leftObject.currentMonthIndex+2];
+    self = obj;
+    self.priorMonth = leftObj;
+    self.nextMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:obj.currentMonthIndex+1];
     
     return self;
 }
 
-- (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)rightObject
+- (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)obj and:(CalendarObject *)rightObj
 {
     
-    self = [self initDataWithCurrentMonthIndexRow:rightObject.currentMonthIndex-1];
-    self.priorMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:rightObject.currentMonthIndex-2];
-    self.nextMonth = rightObject;
+    self = obj;
+    self.priorMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:obj.currentMonthIndex-1];
+    self.nextMonth = rightObj;
     
     return self;
 }
@@ -109,6 +118,11 @@
     }
     for (int i=0; i<self.daysOfCurrentMonth; i++) { // days in month
         DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", i + 1] InThisMonth:YES];
+        if (self.todayDay && i+1 == self.todayDay) {
+            day.isToday = YES;
+        } else {
+            day.isToday = NO;
+        }
         [self.daysArray addObject:day];
     }
     for (int i=0; i<self.daysArray.count % 7; i++) { // days of next month

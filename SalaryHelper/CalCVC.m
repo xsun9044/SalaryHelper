@@ -32,6 +32,7 @@
 @property (nonatomic) NSInteger lastSelectionMonth;
 
 @property (nonatomic) BOOL hasToday;
+@property (nonatomic) BOOL checkToday;
 
 @property (nonatomic, strong) NSIndexPath *todayIndex;
 @property (nonatomic, strong) NSIndexPath *lastSelect;
@@ -41,7 +42,11 @@
 @property (nonatomic, strong) DayCVCell *dayCell;
 
 @property (nonatomic, strong) DBManager *dbManger; // Required for database operations
+
 @property (nonatomic, strong) CalendarObject *cal;
+@property (nonatomic, strong) CalendarObject *todayObject;
+
+@property (nonatomic, strong) UIView *menuBtnView;
 @end
 
 @implementation CalCVC
@@ -73,6 +78,18 @@
     self.collectionView.bounces = NO;
     
     self.currentCheckingMonth = INIT_CHECKING_MONTH;
+    
+    self.menuBtnView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-6)/7 * 6, 0, [UIScreen mainScreen].bounds.size.width, 38+[[UIApplication sharedApplication] statusBarFrame].size.height)];
+    [self.menuBtnView setBackgroundColor:[UIColor clearColor]];
+    
+    UIButton *menuButton = [[UIButton alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-6)/7/2 - 12, 8 + [[UIApplication sharedApplication] statusBarFrame].size.height, 24, 24)];
+    
+    [menuButton setImage:[[UIImage imageNamed:@"piggy"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    [menuButton.imageView setTintColor:[UIColor whiteColor]];
+    [menuButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBtnView addSubview:menuButton];
+    
+    [self.navigationController.view addSubview:self.menuBtnView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -93,6 +110,7 @@
                                         animated:NO];
     if (self.cal == nil) {
         self.cal = [[CalendarObject alloc] initThereMonthsWithCurrentMonthIndexRow:months];
+        self.todayObject = self.cal;
     }
 }
 
@@ -137,28 +155,32 @@
         cell.CalView.bounces = NO;
         [cell.CalView setBackgroundColor:[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0]];
         
-        [cell.pig setImage:[[UIImage imageNamed:@"piggy"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        [cell.pig.imageView setTintColor:[UIColor whiteColor]];
+        if (self.checkToday) {
+            [UIView animateWithDuration:0.3f animations:^{
+                cell.month.alpha = 1;
+            }];
+        }
+        self.checkToday = NO;
         
         if (self.cal.currentMonthIndex == indexPath.row) {
             cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, self.cal.year];
         } else if (self.cal.currentMonthIndex > indexPath.row) {
+            CalendarObject *object = self.cal;
             self.cal = self.cal.priorMonth;
             cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, self.cal.year];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                //Do background work
+                self.cal = [[CalendarObject alloc] initDataWhenMoveLeft:object.priorMonth and:object];
+            });
         } else {
+            CalendarObject *object = self.cal;
             self.cal = self.cal.nextMonth;
             cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, self.cal.year];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                //Do background work
+                self.cal = [[CalendarObject alloc] initDataWhenMoveRight:object.nextMonth and:object];
+            });
         }
-        
-        cell.left.tag = indexPath.row - 1;
-        cell.right.tag = indexPath.row + 1;
-        
-        [cell.rightImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor whiteColor]];
-        [cell.rightImage setContentMode:UIViewContentModeCenter];
-        
-        [cell.leftImage changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor whiteColor]];
-        [cell.leftImage rotateImage180Degrees];
-        [cell.leftImage setContentMode:UIViewContentModeCenter];
         
         if (self.monthForToday == indexPath.row) {
             cell.todayBtn.hidden = YES;
@@ -190,15 +212,25 @@
             } else {
                 [cell.day setTextColor:[UIColor blackColor]];
             }
-            cell.tag = 1;
             
             cell.backgroundColor = [UIColor whiteColor];
+            
+            cell.tag = 1;
         } else {
             cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
+            cell.tag = 0;
         }
         
-        
-        self.dayCell = cell;
+        if (day.isToday) {
+            [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
+            cell.layer.borderWidth = 1.0f;
+            self.todayIndex = indexPath;
+            cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
+        } else {
+            [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
+            cell.layer.borderWidth = 0;
+            cell.backgroundColor = [UIColor whiteColor];
+        }
         
         /*NSString *dateString = [NSDate getDateStringWithYear:[[NSDate getYearFromStringInUTC:startDate] integerValue] + self.willDisplayPosition / 12
          andMonth:self.willDisplayPosition%12 + 1
@@ -233,32 +265,6 @@
 {
     if (collectionView.tag == OUTTER && self.willDisplayPosition != indexPath.row) {
         self.currentCheckingMonth = self.willDisplayPosition;
-    }
-}
-
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (collectionView.tag == OUTTER) {
-        if (indexPath.row%12 + 1 == [[NSDate getMonthFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]
-            &&
-            [[NSDate getYearFromStringInUTC:startDate] integerValue] + indexPath.row / 12 == [[NSDate getYearFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
-            self.hasToday = YES;
-        } else {
-            self.hasToday = NO;
-        }
-    } else {
-        if (cell.tag != 0) {
-            if (self.hasToday && [self.dayText integerValue] == [[NSDate getDayFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
-                [self.dayCell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
-                self.dayCell.layer.borderWidth = 1.0f;
-                self.todayIndex = indexPath;
-                self.dayCell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
-            } else {
-                [self.dayCell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
-                self.dayCell.layer.borderWidth = 0;
-                self.dayCell.backgroundColor = [UIColor whiteColor];
-            }
-        }
     }
 }
 
@@ -298,24 +304,33 @@
     }
 }
 
+#pragma mark - UIScrollView Delegate
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [UIView animateWithDuration:0.3f animations:^{
+        self.menuBtnView.alpha = 0;
+    }];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [UIView animateWithDuration:0.3f animations:^{
+        self.menuBtnView.alpha = 1;
+    }];
+}
+
 #pragma mark - Actions
-- (IBAction)goLeft:(UIButton *)sender
-{
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:sender.tag inSection:0]
-                                atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                        animated:YES];
-}
-
-- (IBAction)goRight:(UIButton *)sender
-{
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:sender.tag inSection:0]
-                                atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                        animated:YES];
-}
-
 - (IBAction)checkToday:(UIButton *)sender
 {
-    NSIndexPath *path = [NSIndexPath indexPathForRow:self.monthForToday inSection:0];
+    NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
+    CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
+    [UIView animateWithDuration:0.3 animations:^{
+        cell.month.alpha = 0;
+    }];
+    
+    self.checkToday = YES;
+    self.cal = self.todayObject;
+    path = [NSIndexPath indexPathForRow:self.monthForToday inSection:0];
     [self.collectionView scrollToItemAtIndexPath:path
                                 atScrollPosition:UICollectionViewScrollPositionNone
                                         animated:NO];

@@ -18,10 +18,5 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightCal;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTag;
-@property (weak, nonatomic) IBOutlet UIButton *left;
-@property (weak, nonatomic) IBOutlet UIButton *right;
-@property (weak, nonatomic) IBOutlet UIImageView *rightImage;
-@property (weak, nonatomic) IBOutlet UIImageView *leftImage;
-@property (weak, nonatomic) IBOutlet UIButton *pig;
 @property (weak, nonatomic) IBOutlet UIButton *todayBtn;
 @end
