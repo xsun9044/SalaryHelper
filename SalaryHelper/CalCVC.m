@@ -71,7 +71,7 @@
     self.modalPresentationStyle = UIModalPresentationCurrentContext;
     self.tabBarController.modalPresentationStyle = UIModalPresentationCurrentContext;
     
-    self.fullHeight = [[UIScreen mainScreen] bounds].size.height - [[UIApplication sharedApplication] statusBarFrame].size.height;
+    self.fullHeight = [[UIScreen mainScreen] bounds].size.height;
     self.fullWidth = [[UIScreen mainScreen] bounds].size.width;
     
     self.collectionView.pagingEnabled = YES;
@@ -79,10 +79,10 @@
     
     self.currentCheckingMonth = INIT_CHECKING_MONTH;
     
-    self.menuBtnView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-6)/7 * 6, 0, [UIScreen mainScreen].bounds.size.width, 38+[[UIApplication sharedApplication] statusBarFrame].size.height)];
+    self.menuBtnView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-6)/7 * 6, 0, [UIScreen mainScreen].bounds.size.width, 38)];
     [self.menuBtnView setBackgroundColor:[UIColor clearColor]];
     
-    UIButton *menuButton = [[UIButton alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-6)/7/2 - 12, 8 + [[UIApplication sharedApplication] statusBarFrame].size.height, 24, 24)];
+    UIButton *menuButton = [[UIButton alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-6)/7/2 - 12, 8, 24, 24)];
     
     [menuButton setImage:[[UIImage imageNamed:@"piggy"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [menuButton.imageView setTintColor:[UIColor whiteColor]];
@@ -187,6 +187,8 @@
         } else {
             cell.todayBtn.hidden = NO;
         }
+        
+        if (self.cal)
         
         cell.CalView.delegate = self;
         cell.CalView.dataSource = self;
@@ -330,6 +332,7 @@
     
     self.checkToday = YES;
     self.cal = self.todayObject;
+    self.currentCheckingMonth = self.monthForToday;
     path = [NSIndexPath indexPathForRow:self.monthForToday inSection:0];
     [self.collectionView scrollToItemAtIndexPath:path
                                 atScrollPosition:UICollectionViewScrollPositionNone

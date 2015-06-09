@@ -18,8 +18,6 @@
 @property (nonatomic) NSInteger startWeekDayOfMonth;
 @property (nonatomic) NSInteger todayDay;
 
-@property (nonatomic) BOOL hasToday;
-
 @end
 
 @implementation CalendarObject

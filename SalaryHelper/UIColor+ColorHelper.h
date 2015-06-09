@@ -12,4 +12,6 @@
 
 + (UIColor *)goldColor;
 
++ (UIColor *)themeBlueColor;
+
 @end

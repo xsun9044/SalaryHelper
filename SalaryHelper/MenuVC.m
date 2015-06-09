@@ -8,6 +8,7 @@
 
 #import "MenuVC.h"
 #import "UIImageView+imageViewHelper.h"
+#import "UIView+ViewHelper.h"
 #import "PreferencesHelper.h"
 
 @interface MenuVC ()
@@ -18,17 +19,20 @@
 @property (weak, nonatomic) IBOutlet UIView *view3;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *menuWidth;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnWidth;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *menuHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imagePaddingTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *menuPaddingTop;
 
-@property (weak, nonatomic) IBOutlet UIImageView *rightArrow;
-@property (weak, nonatomic) IBOutlet UIImageView *dot1;
-@property (weak, nonatomic) IBOutlet UIImageView *dot2;
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *icon1;
 @property (weak, nonatomic) IBOutlet UIImageView *icon2;
 @property (weak, nonatomic) IBOutlet UIImageView *icon3;
+
+@property (weak, nonatomic) IBOutlet UIButton *btn1;
+@property (weak, nonatomic) IBOutlet UIButton *btn2;
+@property (weak, nonatomic) IBOutlet UIButton *btn3;
+
+@property (strong, nonatomic) UIButton *currentLight;
 @end
 
 @implementation MenuVC
@@ -50,21 +54,13 @@
         [self.backgroundImageView setContentMode:UIViewContentModeTop];
     }
     
-    [self.rightArrow changeTintColorOfUIImage:[UIImage imageNamed:@"right_arrow"] withColor:[UIColor lightGrayColor]];
-    [self.dot1 changeTintColorOfUIImage:[UIImage imageNamed:@"dot_black"] withColor:[UIColor lightGrayColor]];
-    [self.dot1 rotateImage90Degrees];
-    [self.dot2 changeTintColorOfUIImage:[UIImage imageNamed:@"dot_black"] withColor:[UIColor lightGrayColor]];
-    [self.dot2 rotateImage90Degrees];
     [self.icon1 changeTintColorOfUIImage:[UIImage imageNamed:@"money"] withColor:[UIColor whiteColor]];
     [self.icon2 changeTintColorOfUIImage:[UIImage imageNamed:@"cash"] withColor:[UIColor whiteColor]];
     [self.icon3 changeTintColorOfUIImage:[UIImage imageNamed:@"graph"] withColor:[UIColor whiteColor]];
     
-    [self.btnHeight setConstant:self.view.frame.size.height/3];
-    [self.btnWidth setConstant:140.0f];
-    
-    [self.view1 setHidden:YES];
-    [self.view2 setHidden:YES];
-    [self.view3 setHidden:YES];
+    [self.btn1 makeRoundedCornerWithoutBorder:4.0f];
+    [self.btn2 makeRoundedCornerWithoutBorder:4.0f];
+    [self.btn3 makeRoundedCornerWithoutBorder:4.0f];
     
     UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandler:)];
     [gestureRecognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
@@ -73,6 +69,9 @@
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapGestureRecognizer];
+    
+    [self.imagePaddingTop setConstant:0];
+    [self.menuPaddingTop setConstant:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -84,13 +83,10 @@
 {
     [super viewDidAppear:animated];
     
-    
     if ([self.preferences getSumbitSuccessFlag]) { // If save done, back to calendar instead of menu
-        [self.menuWidth setConstant:0.0f];
-        [self.view1 setHidden:YES];
-        [self.view2 setHidden:YES];
-        [self.view3 setHidden:YES];
-        [UIView animateWithDuration:0.1f animations:^{
+        [self.menuHeight setConstant:0.0f];
+        [self.imagePaddingTop setConstant:0];
+        [UIView animateWithDuration:0.2f animations:^{
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
             [self dismissViewControllerAnimated:NO completion:^{
@@ -98,13 +94,11 @@
             }];
         }];
     } else {
-        [self.menuWidth setConstant:150.0f];
-        [UIView animateWithDuration:0.3f animations:^{
+        [self.menuHeight setConstant:50];
+        [self.imagePaddingTop setConstant:50];
+        [UIView animateWithDuration:0.2f animations:^{
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            [self.view1 setHidden:NO];
-            [self.view2 setHidden:NO];
-            [self.view3 setHidden:NO];
         }];
     }
 }
@@ -115,6 +109,12 @@
 #define CHECK_HISTORY 2
 - (IBAction)actions:(UIButton *)sender
 {
+    if (self.currentLight != nil) {
+        [self.currentLight setBackgroundColor:[UIColor clearColor]];
+    }
+    sender.backgroundColor = [UIColor colorWithRed:99/255.0 green:172/255.0 blue:233/255.0 alpha:1.0];
+    self.currentLight = sender;
+    
     if (sender.tag == ADD_INCOME) {
         [self performSegueWithIdentifier:@"add_segue" sender:sender];
     } else if (sender.tag == ADD_OUTLAY) {
@@ -146,11 +146,9 @@
     
     if(!inside){
         // Dismiss modal view
-        [self.view1 setHidden:YES];
-        [self.view2 setHidden:YES];
-        [self.view3 setHidden:YES];
-        [self.menuWidth setConstant:0.0f];
-        [UIView animateWithDuration:0.3f animations:^{
+        [self.menuHeight setConstant:0.0f];
+        [self.imagePaddingTop setConstant:0.0f];
+        [UIView animateWithDuration:0.2f animations:^{
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
             [self dismissViewControllerAnimated:NO completion:nil];
@@ -160,11 +158,9 @@
 
 - (void)swipeHandler:(UISwipeGestureRecognizer *)gesture
 {
-    [self.view1 setHidden:YES];
-    [self.view2 setHidden:YES];
-    [self.view3 setHidden:YES];
-    [self.menuWidth setConstant:0.0f];
-    [UIView animateWithDuration:0.3f animations:^{
+    [self.menuHeight setConstant:0.0f];
+    [self.imagePaddingTop setConstant:0.0f];
+    [UIView animateWithDuration:0.2f animations:^{
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
         [self dismissViewControllerAnimated:NO completion:nil];

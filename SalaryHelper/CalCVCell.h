@@ -19,4 +19,12 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTag;
 @property (weak, nonatomic) IBOutlet UIButton *todayBtn;
+
+@property (weak, nonatomic) IBOutlet UILabel *sunday;
+@property (weak, nonatomic) IBOutlet UILabel *saturday;
+@property (weak, nonatomic) IBOutlet UILabel *monday;
+@property (weak, nonatomic) IBOutlet UILabel *tuesday;
+@property (weak, nonatomic) IBOutlet UILabel *wednesday;
+@property (weak, nonatomic) IBOutlet UILabel *thursday;
+@property (weak, nonatomic) IBOutlet UILabel *friday;
 @end
