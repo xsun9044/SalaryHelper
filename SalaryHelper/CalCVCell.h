@@ -10,12 +10,14 @@
 
 @interface CalCVCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIView *topView;
+@property (weak, nonatomic) IBOutlet UIView *monthCover;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTop;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightTop;
 @property (weak, nonatomic) IBOutlet UILabel *month;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *CalView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightCal;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightCover;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthTag;
 @property (weak, nonatomic) IBOutlet UIButton *todayBtn;
@@ -27,4 +29,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *wednesday;
 @property (weak, nonatomic) IBOutlet UILabel *thursday;
 @property (weak, nonatomic) IBOutlet UILabel *friday;
+@property (weak, nonatomic) IBOutlet UILabel *monthTitle;
 @end

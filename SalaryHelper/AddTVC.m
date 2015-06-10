@@ -72,6 +72,7 @@
                                            forState:UIControlStateNormal];
     [self.leftBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Hiragino Kaku Gothic ProN W3" size:13.0]}
                                            forState:UIControlStateNormal];
+    [self.navigationController.navigationBar setTitleTextAttributes:[[NSDictionary alloc] initWithObjects:@[[UIFont fontWithName:@"Arial" size:15.0]] forKeys:@[NSFontAttributeName]]];
     
     self.repeatRow = 0;
 }
@@ -281,11 +282,11 @@
     if (self.currentTextField2.text.length == 0) {
         [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
         [self.currentTextField2 setPlaceholder:@"Required"];
-        [self buildAlertPopupWithTitle:@"Amount Value Required" andContext:@"Please input your income amount."];
+        [self buildAlertPopupWithTitle:@"AMOUNT REQUIRED" andContext:@"Please input your income amount."];
         [self performSegueWithIdentifier:@"show_popup" sender:sender];
     } else if (![self checkInputIfNumberic:self.currentTextField2.text]) {
         [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
-        [self buildAlertPopupWithTitle:@"Amount Format Error" andContext:@"Please input number for your income amount."];
+        [self buildAlertPopupWithTitle:@"AMOUNT FORMAT ERROR" andContext:@"Please input number for your income amount."];
         [self performSegueWithIdentifier:@"show_popup" sender:sender];
     } else {
         [self.currentTextField1 resignFirstResponder];

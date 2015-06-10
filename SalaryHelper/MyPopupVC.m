@@ -30,7 +30,8 @@
         [self.backgroundImageView setContentMode:UIViewContentModeTop];
     }
     
-    [self.outterView makeBorderWithCorner:7 andWidth:1 andColor:[UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1.0]];
+    [self.outterView makeRoundedCornerWithoutBorder:7.0f]
+    ;
     self.outterView.alpha = 0;
     
     self.titleLabel.text = self.header;

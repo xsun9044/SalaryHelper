@@ -16,8 +16,6 @@
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 
 @property (nonatomic) NSInteger startWeekDayOfMonth;
-@property (nonatomic) NSInteger todayDay;
-
 @end
 
 @implementation CalendarObject
@@ -110,14 +108,18 @@
 
 - (void)createDaysInMonth
 {
+    NSInteger count = 0;
     for (int i=0; i<self.startWeekDayOfMonth-1; i++) { // days of last month
         DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfMonth - 2 - i)] InThisMonth:NO];
         [self.daysArray addObject:day];
     }
+    count = self.daysArray.count;
     for (int i=0; i<self.daysOfCurrentMonth; i++) { // days in month
+        count ++;
         DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", i + 1] InThisMonth:YES];
         if (self.todayDay && i+1 == self.todayDay) {
             day.isToday = YES;
+            self.todayWeekDay = count;
         } else {
             day.isToday = NO;
         }

@@ -25,6 +25,8 @@
 @property (nonatomic, strong) CalendarObject *nextMonth;
 
 @property (nonatomic) BOOL hasToday;
+@property (nonatomic) NSInteger todayDay;
+@property (nonatomic) NSInteger todayWeekDay;
 
 
 - (CalendarObject *)initThereMonthsWithCurrentMonthIndexRow:(NSInteger)row;

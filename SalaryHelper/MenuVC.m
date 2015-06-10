@@ -63,8 +63,8 @@
     [self.btn3 makeRoundedCornerWithoutBorder:4.0f];
     
     UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandler:)];
-    [gestureRecognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
-    [self.menuView addGestureRecognizer:gestureRecognizer];
+    [gestureRecognizer setDirection:(UISwipeGestureRecognizerDirectionUp)];
+    [self.view addGestureRecognizer:gestureRecognizer];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     tapGestureRecognizer.numberOfTapsRequired = 1;
@@ -98,7 +98,6 @@
         [self.imagePaddingTop setConstant:50];
         [UIView animateWithDuration:0.2f animations:^{
             [self.view layoutIfNeeded];
-        } completion:^(BOOL finished) {
         }];
     }
 }
@@ -113,6 +112,10 @@
         [self.currentLight setBackgroundColor:[UIColor clearColor]];
     }
     sender.backgroundColor = [UIColor colorWithRed:99/255.0 green:172/255.0 blue:233/255.0 alpha:1.0];
+    [UIView animateWithDuration:0.2f animations:^{
+        [UIView setAnimationRepeatCount:2];
+        sender.backgroundColor = [UIColor clearColor];
+    }];
     self.currentLight = sender;
     
     if (sender.tag == ADD_INCOME) {
