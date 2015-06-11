@@ -12,7 +12,7 @@
 #import "DayCVCell.h"
 #import "MenuVC.h"
 #import "UIImageView+imageViewHelper.h"
-#import "AppDelegate.h"
+//#import "AppDelegate.h"
 #import "SystemHelper.h"
 #import "CalendarObject.h"
 #import "DayObject.h"
@@ -37,7 +37,7 @@
 @property (nonatomic, strong) NSIndexPath *todayIndex;
 @property (nonatomic, strong) NSIndexPath *lastSelect;
 
-@property (nonatomic, strong) DBManager *dbManger; // Required for database operations
+//@property (nonatomic, strong) DBManager *dbManger; // Required for database operations
 
 @property (nonatomic, strong) CalendarObject *cal;
 @property (nonatomic, strong) CalendarObject *todayObject;
@@ -50,6 +50,7 @@
 #define INNER 2
 #define INIT_CHECKING_MONTH -1
 
+/*
 - (DBManager *)dbManger
 {
     if (!_dbManger) {
@@ -59,6 +60,7 @@
     
     return _dbManger;
 }
+ */
 
 - (void)viewDidLoad
 {
@@ -109,7 +111,6 @@
                                 atScrollPosition:UICollectionViewScrollPositionNone
                                         animated:NO];
     if (self.cal == nil) {
-        CalendarObject *test = [[CalendarObject alloc] initThereMonthsWithCurrentMonthIndexRow:months];
         self.cal = [[CalendarObject alloc] initThereMonthsWithCurrentMonthIndexRow:months];
         self.todayObject = self.cal;
     }
@@ -275,26 +276,21 @@
             [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
             cell.layer.borderWidth = 1.0f;
             self.todayIndex = indexPath;
-            cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
+            cell.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
         } else {
             [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
             cell.layer.borderWidth = 0;
             cell.backgroundColor = [UIColor whiteColor];
         }
         
-        /*NSString *dateString = [NSDate getDateStringWithYear:[[NSDate getYearFromStringInUTC:startDate] integerValue] + self.willDisplayPosition / 12
-         andMonth:self.willDisplayPosition%12 + 1
-         andDay:[cell.day.text integerValue]];
-         NSLog(@"%@", dateString);
-         
-         [self.dbManger getEventsForDate:dateString
-         withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
-         if (finished) {
-         if (result.count > 0) {
-         NSLog(@"%@", result);
-         }
-         }
-         }];*/
+        // Load data
+        if (day.incomeEvents.count > 0) {
+            cell.increaseBar.hidden = NO;
+            cell.decreaseBar.hidden = NO;
+        } else {
+            cell.increaseBar.hidden = YES;
+            cell.decreaseBar.hidden = YES;
+        }
         
         return cell;
     }
@@ -345,7 +341,7 @@
     if (collectionView.tag != OUTTER) {
         UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
         if (cell.tag != 0 && !([indexPath isEqual:self.lastSelect] && self.currentCheckingMonth == self.lastSelectionMonth)) {
-            cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0];
+            cell.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
             
             // Clear Today
             if (![indexPath isEqual:self.todayIndex] && self.currentCheckingMonth == self.monthForToday) {
@@ -416,10 +412,12 @@
     self.checkToday = YES;
     self.cal = self.todayObject;
     self.currentCheckingMonth = self.monthForToday;
+    self.willDisplayPosition = self.monthForToday;
     path = [NSIndexPath indexPathForRow:self.monthForToday inSection:0];
     [self.collectionView scrollToItemAtIndexPath:path
                                 atScrollPosition:UICollectionViewScrollPositionNone
                                         animated:NO];
+    
     [self performSelector:@selector(hideMonthCover) withObject:nil afterDelay:0.5];
 }
 

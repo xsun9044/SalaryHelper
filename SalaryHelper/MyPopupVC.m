@@ -46,7 +46,7 @@
 {
     [super viewDidAppear:animated];
     
-    [UIView animateWithDuration:0.2f animations:^{
+    [UIView animateWithDuration:0.5f animations:^{
         self.outterView.alpha = 1;
     }];
 }

@@ -94,8 +94,8 @@
             }];
         }];
     } else {
-        [self.menuHeight setConstant:50];
-        [self.imagePaddingTop setConstant:50];
+        [self.menuHeight setConstant:[[UIScreen mainScreen] bounds].size.height/6];
+        [self.imagePaddingTop setConstant:[[UIScreen mainScreen] bounds].size.height/6];
         [UIView animateWithDuration:0.2f animations:^{
             [self.view layoutIfNeeded];
         }];

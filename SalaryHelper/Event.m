@@ -18,6 +18,7 @@
                          Title:(NSString *)title
                      andAmount:(NSString *)amount
                    andStarDate:(NSString *)startDate
+                     andRepeat:(NSString *)repeat
 
 {
     self = [super initDataWithRowID:rowID];
@@ -26,6 +27,7 @@
         _title = title;
         _amount = amount;
         _startDate = startDate==nil?@"0000-00-00":startDate;
+        _repeat = repeat;
     }
     return self;
 }

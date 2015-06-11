@@ -171,8 +171,8 @@ static sqlite3_stmt *statement = nil;
                 NSString *title = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
                 NSString *amount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
                 NSString *startDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
-                
-                Event *event = [[Event alloc] initEventWithDetail:[rowID integerValue] Title:title andAmount:amount andStarDate:startDate];
+                NSString *repeat = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                Event *event = [[Event alloc] initEventWithDetail:[rowID integerValue] Title:title andAmount:amount andStarDate:startDate andRepeat:repeat];
                 [resultArray addObject:event];
             }
             

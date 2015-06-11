@@ -12,10 +12,14 @@
 @interface DayObject : NSObject
 
 @property (nonatomic, strong) NSString *day;
+@property (nonatomic, strong) NSString *fullDate;
 
 @property (nonatomic) BOOL inThisMonth;
 @property (nonatomic) BOOL isToday;
 
+@property (nonatomic) NSArray *incomeEvents;
+
 - (DayObject *)initDataWithDay:(NSString *)day InThisMonth:(BOOL)flag;
+- (DayObject *)initDataWithDay:(NSString *)day InThisMonth:(BOOL)flag andFullDate:(NSString *)dateString;
 
 @end

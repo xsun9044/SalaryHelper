@@ -23,9 +23,9 @@
 		B58D7A701AF9522B0097A436 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A6F1AF9522B0097A436 /* AppDelegate.m */; };
 		B58D7A731AF9522B0097A436 /* SalaryHelper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */; };
 		B58D7A761AF9522B0097A436 /* CalCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A751AF9522B0097A436 /* CalCVC.m */; };
-		B58D7A791AF9522C0097A436 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A771AF9522C0097A436 /* Main.storyboard */; };
 		B58D7A7B1AF9522C0097A436 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A7A1AF9522C0097A436 /* Images.xcassets */; };
 		B58D7A8A1AF9522C0097A436 /* SalaryHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A891AF9522C0097A436 /* SalaryHelperTests.m */; };
+		B5A177B91B29D32C001E8D5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A771AF9522C0097A436 /* Main.storyboard */; };
 		B5B3709A1B06473B0042BB74 /* RepeatTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B370981B06473B0042BB74 /* RepeatTVC.m */; };
 		B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B835431B04F5EF003AB468 /* InputTVCell.m */; };
 		B5B835471B0558E8003AB468 /* UIView+ViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B835461B0558E8003AB468 /* UIView+ViewHelper.m */; };
@@ -352,7 +352,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B58D7A791AF9522C0097A436 /* Main.storyboard in Resources */,
+				B5A177B91B29D32C001E8D5A /* Main.storyboard in Resources */,
 				B58D7A7B1AF9522C0097A436 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

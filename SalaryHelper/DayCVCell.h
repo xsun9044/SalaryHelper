@@ -15,4 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIView *cover;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *coverHeight;
 
+@property (weak, nonatomic) IBOutlet UIView *increaseBar;
+@property (weak, nonatomic) IBOutlet UIView *decreaseBar;
 @end

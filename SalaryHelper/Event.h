@@ -12,10 +12,12 @@
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *startDate;
 @property (nonatomic, strong) NSString* amount;
+@property (nonatomic, strong) NSString* repeat;
 
 - (Event *)initEventWithDetail:(NSInteger)rowID
                          Title:(NSString *)title
                      andAmount:(NSString *)amount
-                   andStarDate:(NSString *)startDate;
+                   andStarDate:(NSString *)startDate
+                     andRepeat:(NSString *)repeat;
 
 @end

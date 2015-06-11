@@ -60,7 +60,7 @@
         }
         _daysOfCurrentMonth = [NSDate getNumberOfDaysInWeek:date];
         
-        _startWeekDayOfMonth = [NSDate getNumberOfWeekdayFromStringInUTC:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + row / 12,[NSDate nameForMonth:row%12 + 1],1]];
+        _startWeekDayOfMonth = [NSDate getNumberOfWeekdayFromStringInUTC:[NSString stringWithFormat:@"%ld-%@-%d",[[NSDate getYearFromStringInUTC:startDate] integerValue] + row / 12,(row%12 + 1)<10?[NSString stringWithFormat:@"0%ld",row%12 + 1]:[NSString stringWithFormat:@"%ld",row%12 + 1],1]];
         
         if (self.month == [[NSDate getMonthFromStringInUTC:[NSDate getCurrentDateTime]] integerValue] && self.year == [[NSDate getYearFromStringInUTC:[NSDate getCurrentDateTime]] integerValue]) {
             self.hasToday = YES;
@@ -110,23 +110,26 @@
 {
     NSInteger count = 0;
     for (int i=0; i<self.startWeekDayOfMonth-1; i++) { // days of last month
-        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfMonth - 2 - i)] InThisMonth:NO];
+        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%d", self.daysOfLastMonth - (self.startWeekDayOfMonth - 2 - i)] InThisMonth:NO];
         [self.daysArray addObject:day];
     }
     count = self.daysArray.count;
     for (int i=0; i<self.daysOfCurrentMonth; i++) { // days in month
         count ++;
-        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", i + 1] InThisMonth:YES];
+        NSString *dateString = [NSDate getDateStringWithYear:self.year andMonth:self.month andDay:i+1]; //full date for day, using for query event
+        
+        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%d", i + 1] InThisMonth:YES andFullDate:dateString];
         if (self.todayDay && i+1 == self.todayDay) {
             day.isToday = YES;
             self.todayWeekDay = count;
         } else {
             day.isToday = NO;
         }
+        
         [self.daysArray addObject:day];
     }
     for (int i=0; i<self.daysArray.count % 7; i++) { // days of next month
-        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", i + 1] InThisMonth:NO];
+        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%d", i + 1] InThisMonth:NO];
         [self.daysArray addObject:day];
     }
 }
