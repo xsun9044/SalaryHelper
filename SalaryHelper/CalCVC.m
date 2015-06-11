@@ -199,10 +199,13 @@
         cell.monthCover.hidden = YES;
     } else {
         cell.monthCover.hidden = NO;
-        cell.monthCover.alpha = 1;
+        cell.monthCover.alpha = 0;
         cell.monthCover.layer.borderWidth = 0.25f;
         cell.monthCover.layer.borderColor = [[UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.85] CGColor];
         cell.monthTitle.text = [NSString stringWithFormat:@"%@ %d", self.cal.monthName, self.cal.year];
+        [UIView animateWithDuration:0.5f animations:^{
+            cell.monthCover.alpha = 1;
+        }];
     }
     
     if (self.checkToday) {
@@ -284,7 +287,7 @@
         cell.monthCover.layer.borderColor = [[UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.85] CGColor];
         cell.monthTitle.text = [NSString stringWithFormat:@"%@ %d", self.cal.monthName, self.cal.year];
         
-        [UIView animateWithDuration:0.3f animations:^{
+        [UIView animateWithDuration:0.5f animations:^{
             self.menuBtnView.alpha = 0;
             cell.monthCover.alpha = 1;
         }];
