@@ -1,5 +1,5 @@
 //
-//  ReturnData.h
+//  DayView.h
 //  SalaryHelper
 //
 //  Created by Xin Sun on 15/6/6.
@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface ReturnData : NSObject
+@interface DayView : UIView
 
-@property (nonatomic) NSInteger rowID;
+- (void)setWeekendDayTitle;
+- (void)setDayText:(NSString *)day hideCover:(BOOL)willHide isToday:(BOOL)isToday willShowIncomeBar:(BOOL)willShowIncomeBar willShowOutlayBar:(BOOL)willShowOutlayBar;
 
-- (ReturnData *)initDataWithRowID:(NSInteger)rowID;
+- (DayView *)initDayViewWithFrame:(CGRect)frame;
+
+- (BOOL)isInThisMonth;
 
 @end

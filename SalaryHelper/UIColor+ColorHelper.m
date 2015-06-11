@@ -20,4 +20,14 @@
     return [UIColor colorWithRed:99/255.0 green:172/255.0 blue:233/255.0 alpha:1.0];
 }
 
++ (UIColor *)increaseColor
+{
+    return [UIColor colorWithRed:102/255.0 green:212/255.0 blue:80/255.0 alpha:1.0];
+}
+
++ (UIColor *)decreaseColor
+{
+    return [UIColor colorWithRed:255/255.0 green:99/255.0 blue:64/255.0 alpha:1.0];
+}
+
 @end

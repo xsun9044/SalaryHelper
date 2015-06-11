@@ -14,4 +14,8 @@
 
 + (UIColor *)themeBlueColor;
 
++ (UIColor *)increaseColor;
+
++ (UIColor *)decreaseColor;
+
 @end

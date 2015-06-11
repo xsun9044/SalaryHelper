@@ -12,10 +12,10 @@
 #import "DayCVCell.h"
 #import "MenuVC.h"
 #import "UIImageView+imageViewHelper.h"
-//#import "AppDelegate.h"
 #import "SystemHelper.h"
 #import "CalendarObject.h"
 #import "DayObject.h"
+#import "DayView.h"
 #import "UIColor+ColorHelper.h"
 
 @interface CalCVC ()
@@ -34,10 +34,8 @@
 @property (nonatomic) BOOL didStop;
 @property (nonatomic) BOOL didDisplayCell;
 
-@property (nonatomic, strong) NSIndexPath *todayIndex;
-@property (nonatomic, strong) NSIndexPath *lastSelect;
-
-//@property (nonatomic, strong) DBManager *dbManger; // Required for database operations
+@property (nonatomic, strong) UIView *todayView;
+@property (nonatomic, strong) UIView *lastSelect;
 
 @property (nonatomic, strong) CalendarObject *cal;
 @property (nonatomic, strong) CalendarObject *todayObject;
@@ -50,18 +48,6 @@
 #define INNER 2
 #define INIT_CHECKING_MONTH -1
 
-/*
-- (DBManager *)dbManger
-{
-    if (!_dbManger) {
-        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        _dbManger = delegate.dbManger;
-    }
-    
-    return _dbManger;
-}
- */
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -71,6 +57,8 @@
     
     self.fullHeight = [[UIScreen mainScreen] bounds].size.height;
     self.fullWidth = [[UIScreen mainScreen] bounds].size.width;
+    
+    self.heightBottom = 4*_fullHeight / 5;
     
     self.collectionView.pagingEnabled = YES;
     self.collectionView.bounces = NO;
@@ -83,6 +71,10 @@
     UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandler:)];
     [gestureRecognizer setDirection:(UISwipeGestureRecognizerDirectionDown)];
     [self.view addGestureRecognizer:gestureRecognizer];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
+    [tapGestureRecognizer setNumberOfTouchesRequired:1];
+    [self.view addGestureRecognizer:tapGestureRecognizer];
     
     self.menuBtnView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-6)/7 * 6, 0, [UIScreen mainScreen].bounds.size.width, _fullHeight / 5 - 21)];
     [self.menuBtnView setBackgroundColor:[UIColor clearColor]];
@@ -123,205 +115,152 @@
 #pragma mark - UICollectionView Delegate & DataSource
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    if (collectionView.tag == OUTTER) {
-        return 1;
-    } else {
-        return self.cal.daysArray.count / 7;
-    }
+    return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (collectionView.tag == OUTTER) {
-        return [NSDate monthsBetweenDate:[NSDate getDateTimeFromStringInUTC:startDate] andDate:[NSDate getDateTimeFromStringInUTC:endDate]];
-    } else {
-        return 7;
-    }
+    return [NSDate monthsBetweenDate:[NSDate getDateTimeFromStringInUTC:startDate] andDate:[NSDate getDateTimeFromStringInUTC:endDate]];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag == OUTTER) { // Month collection cell
-        self.willDisplayPosition = indexPath.row;
-        
-        CalCVCell *cell = (CalCVCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"month_cell" forIndexPath:indexPath];
-        
-        self.fullHeight = [[UIScreen mainScreen] bounds].size.height - [[UIApplication sharedApplication] statusBarFrame].size.height;
-        self.fullWidth = [[UIScreen mainScreen] bounds].size.width;
-        [cell.widthTop setConstant:_fullWidth];
-        [cell.heightTop setConstant:_fullHeight / 5];
-        [cell.heightCal setConstant:4*_fullHeight / 5];
-        [cell.heightCover setConstant:4*_fullHeight / 5];
-        cell.widthTag.constant = (_fullWidth-6)/7;
-        self.heightBottom = cell.heightCal.constant;
-        
-        cell.CalView.bounces = NO;
-        [cell.CalView setBackgroundColor:[UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1.0]];
-        
-        if (self.checkToday) {
-            [UIView animateWithDuration:0.3f animations:^{
-                cell.month.alpha = 1;
-            }];
+    self.willDisplayPosition = indexPath.row;
+    
+    CalCVCell *cell = (CalCVCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"month_cell" forIndexPath:indexPath];
+    
+    [cell.heightTop setConstant:_fullHeight / 5];
+    cell.widthTag.constant = (_fullWidth-6)/7;
+    
+    if (self.cal.currentMonthIndex == indexPath.row) {
+        cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, (long)self.cal.year];
+    } else if (self.cal.currentMonthIndex > indexPath.row) {
+        CalendarObject *object = self.cal;
+        self.cal = self.cal.priorMonth;
+        cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, (long)self.cal.year];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            //Do background work
+            self.cal = [[CalendarObject alloc] initDataWhenMoveLeft:object.priorMonth and:object];
+        });
+    } else {
+        CalendarObject *object = self.cal;
+        self.cal = self.cal.nextMonth;
+        cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, (long)self.cal.year];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            //Do background work
+            self.cal = [[CalendarObject alloc] initDataWhenMoveRight:object.nextMonth and:object];
+        });
+    }
+    
+    if (self.monthForToday == indexPath.row) {
+        cell.todayBtn.hidden = YES;
+    } else {
+        cell.todayBtn.hidden = NO;
+    }
+    
+    if (self.cal.hasToday) {
+        if (self.cal.todayWeekDay % 7 == 2) {
+            [cell.monday setTextColor:[UIColor themeBlueColor]];
+            [cell.monday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
+        } else if (self.cal.todayWeekDay % 7 == 3) {
+            [cell.tuesday setTextColor:[UIColor themeBlueColor]];
+            [cell.tuesday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
+        } else if (self.cal.todayWeekDay % 7 == 4) {
+            [cell.wednesday setTextColor:[UIColor themeBlueColor]];
+            [cell.wednesday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
+        } else if (self.cal.todayWeekDay % 7 == 5) {
+            [cell.thursday setTextColor:[UIColor themeBlueColor]];
+            [cell.thursday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
+        } else if (self.cal.todayWeekDay % 7 == 6) {
+            [cell.friday setTextColor:[UIColor themeBlueColor]];
+            [cell.friday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
+        } else if (self.cal.todayWeekDay % 7 == 0) {
+            [cell.saturday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
+        } else if (self.cal.todayWeekDay % 7 == 1) {
+            [cell.sunday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
         }
-        self.checkToday = NO;
-        
-        if (self.cal.currentMonthIndex == indexPath.row) {
-            cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, (long)self.cal.year];
-        } else if (self.cal.currentMonthIndex > indexPath.row) {
-            CalendarObject *object = self.cal;
-            self.cal = self.cal.priorMonth;
-            cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, (long)self.cal.year];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                //Do background work
-                self.cal = [[CalendarObject alloc] initDataWhenMoveLeft:object.priorMonth and:object];
-            });
-        } else {
-            CalendarObject *object = self.cal;
-            self.cal = self.cal.nextMonth;
-            cell.month.text = [NSString stringWithFormat:@"%@  %ld", self.cal.monthName, (long)self.cal.year];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                //Do background work
-                self.cal = [[CalendarObject alloc] initDataWhenMoveRight:object.nextMonth and:object];
-            });
+    } else {
+        [cell.monday setTextColor:[UIColor whiteColor]];
+        [cell.monday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+        [cell.thursday setTextColor:[UIColor whiteColor]];
+        [cell.thursday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+        [cell.wednesday setTextColor:[UIColor whiteColor]];
+        [cell.wednesday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+        [cell.tuesday setTextColor:[UIColor whiteColor]];
+        [cell.tuesday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+        [cell.friday setTextColor:[UIColor whiteColor]];
+        [cell.friday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+        [cell.sunday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+        [cell.saturday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+    }
+    
+    if (self.shouldShowCover) {
+        self.shouldShowCover = NO;
+        cell.monthCover.hidden = YES;
+    } else {
+        cell.monthCover.hidden = NO;
+        cell.monthCover.alpha = 1;
+        cell.monthCover.layer.borderWidth = 0.25f;
+        cell.monthCover.layer.borderColor = [[UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.85] CGColor];
+        cell.monthTitle.text = [NSString stringWithFormat:@"%@ %d", self.cal.monthName, self.cal.year];
+    }
+    
+    if (self.checkToday) {
+        [UIView animateWithDuration:0.5f animations:^{
+            cell.month.alpha = 1;
+        }];
+    }
+    self.checkToday = NO;
+    
+    // Load day
+    [[cell.bottomView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    for(int i=1; i<=self.cal.daysArray.count; i++) {
+        DayObject *day = [self.cal.daysArray objectAtIndex:i-1];
+        DayView *dayView = [[DayView alloc] initDayViewWithFrame:
+                        CGRectMake(i%7-1==-1?6*(_fullWidth/7):(i%7-1)*(_fullWidth/7),
+                                   (i%7 == 0?(i/7 - 1):i/7)*self.heightBottom/(self.cal.daysArray.count/7),
+                                   _fullWidth/7,
+                                   self.heightBottom/(self.cal.daysArray.count/7))];
+        if (i%7 == 1 || i%7 == 0) {
+            [dayView setWeekendDayTitle];
         }
-        
-        if (self.shouldShowCover) {
-            self.shouldShowCover = NO;
-            cell.monthCover.hidden = YES;
-        } else {
-            cell.monthCover.hidden = NO;
-            [cell.monthCover setBackgroundColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:0.9]];
-            cell.monthCover.alpha = 1;
-            cell.monthCover.layer.borderWidth = 0.25f;
-            cell.monthCover.layer.borderColor = [[UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.85] CGColor];
-            cell.monthTitle.text = [NSString stringWithFormat:@"%@ %d", self.cal.monthName, self.cal.year];
-        }
-        
-        if (self.monthForToday == indexPath.row) {
-            cell.todayBtn.hidden = YES;
-        } else {
-            cell.todayBtn.hidden = NO;
-        }
-        
-        
-        if (self.cal.hasToday) {
-            if (self.cal.todayWeekDay % 7 == 2) {
-                [cell.monday setTextColor:[UIColor themeBlueColor]];
-                [cell.monday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
-            } else if (self.cal.todayWeekDay % 7 == 3) {
-                [cell.tuesday setTextColor:[UIColor themeBlueColor]];
-                [cell.tuesday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
-            } else if (self.cal.todayWeekDay % 7 == 4) {
-                [cell.wednesday setTextColor:[UIColor themeBlueColor]];
-                [cell.wednesday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
-            } else if (self.cal.todayWeekDay % 7 == 5) {
-                [cell.thursday setTextColor:[UIColor themeBlueColor]];
-                [cell.thursday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
-            } else if (self.cal.todayWeekDay % 7 == 6) {
-                [cell.friday setTextColor:[UIColor themeBlueColor]];
-                [cell.friday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
-            } else if (self.cal.todayWeekDay % 7 == 0) {
-                [cell.saturday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
-            } else if (self.cal.todayWeekDay % 7 == 1) {
-                [cell.sunday setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f]];
-            }
-        } else {
-            [cell.monday setTextColor:[UIColor whiteColor]];
-            [cell.monday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-            [cell.thursday setTextColor:[UIColor whiteColor]];
-            [cell.thursday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-            [cell.wednesday setTextColor:[UIColor whiteColor]];
-            [cell.wednesday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-            [cell.tuesday setTextColor:[UIColor whiteColor]];
-            [cell.tuesday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-            [cell.friday setTextColor:[UIColor whiteColor]];
-            [cell.friday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-            [cell.sunday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-            [cell.saturday setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-        }
-        
-        cell.CalView.delegate = self;
-        cell.CalView.dataSource = self;
-        [cell.CalView reloadData];
-        
-        return cell;
-    } else { // Collection cell for everyday in a single month
-        DayCVCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"day_cell" forIndexPath:indexPath];
-        [cell.coverHeight setConstant:(self.heightBottom-	self.cal.daysArray.count/7)/(self.cal.daysArray.count/7)];
-        [cell.dayWidth setConstant:(_fullWidth-6)/7];
-        
-        DayObject *day = [self.cal.daysArray objectAtIndex:indexPath.section * 7 + indexPath.row];
-        cell.day.text = day.day;
-        cell.cover.hidden = day.inThisMonth;
-        cell.alpha = 1;
-        [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
-        [cell.day setTextColor:[UIColor blackColor]];
-        cell.layer.borderWidth = 0;
-        if (day.inThisMonth) {
-            if (indexPath.row == 0 || indexPath.row == 6) {
-                [cell.day setTextColor:[UIColor redColor]];
-            } else {
-                [cell.day setTextColor:[UIColor blackColor]];
-            }
-            
-            cell.backgroundColor = [UIColor whiteColor];
-            
-            cell.tag = 1;
-        } else {
-            cell.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1.0];
-            cell.tag = 0;
-        }
+        [dayView setDayText:day.day
+                  hideCover:day.inThisMonth
+                    isToday:day.isToday
+          willShowIncomeBar:day.incomeEvents.count>0?YES:NO
+          willShowOutlayBar:day.incomeEvents.count>0?YES:NO];
         
         if (day.isToday) {
-            [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
-            cell.layer.borderWidth = 1.0f;
-            self.todayIndex = indexPath;
-            cell.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
-        } else {
-            [cell.day setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0f]];
-            cell.layer.borderWidth = 0;
-            cell.backgroundColor = [UIColor whiteColor];
+            self.todayView = dayView;
+            dayView.tag = 1;
         }
         
-        // Load data
-        if (day.incomeEvents.count > 0) {
-            cell.increaseBar.hidden = NO;
-            cell.decreaseBar.hidden = NO;
-        } else {
-            cell.increaseBar.hidden = YES;
-            cell.decreaseBar.hidden = YES;
-        }
-        
-        return cell;
+        [cell.bottomView addSubview:dayView];
     }
+    
+    return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag == OUTTER) {
-        return CGSizeMake(_fullWidth, _fullHeight);
-    } else {
-        return CGSizeMake((_fullWidth-6)/7, (self.heightBottom-self.cal.daysArray.count/7)/(self.cal.daysArray.count/7));
-    }
+    return CGSizeMake(_fullWidth, _fullHeight);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag == OUTTER) {
-        if (self.willDisplayPosition != indexPath.row) {
-            self.currentCheckingMonth = self.willDisplayPosition;
-        }
-        self.didDisplayCell = YES;
-        if (self.didStop) { // scroll already stops
-            CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0]];
-            [UIView animateWithDuration:0.3 animations:^{
-                cell.monthCover.alpha = 0;
-            } completion:^(BOOL finished) {
-                cell.monthCover.hidden = YES;
-            }];
-        }
+    if (self.willDisplayPosition != indexPath.row) {
+        self.currentCheckingMonth = self.willDisplayPosition;
+    }
+    self.didDisplayCell = YES;
+    if (self.didStop) { // scroll already stops
+        CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0]];
+        [UIView animateWithDuration:0.5 animations:^{
+            cell.monthCover.alpha = 0;
+        } completion:^(BOOL finished) {
+            cell.monthCover.hidden = YES;
+        }];
     }
 }
 
@@ -329,36 +268,7 @@
                         layout:(UICollectionViewLayout*)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section
 {
-    if (collectionView.tag == OUTTER) {
-        return UIEdgeInsetsMake(0, 0, 0, 0);
-    } else {
-        return UIEdgeInsetsMake(1, 0, 0, 0);
-    }
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (collectionView.tag != OUTTER) {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        if (cell.tag != 0 && !([indexPath isEqual:self.lastSelect] && self.currentCheckingMonth == self.lastSelectionMonth)) {
-            cell.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
-            
-            // Clear Today
-            if (![indexPath isEqual:self.todayIndex] && self.currentCheckingMonth == self.monthForToday) {
-                cell = [collectionView cellForItemAtIndexPath:self.todayIndex];
-                cell.backgroundColor = [UIColor whiteColor];
-            }
-            
-            // Clear last selection
-            if (self.currentCheckingMonth == self.lastSelectionMonth) {
-                cell = [collectionView cellForItemAtIndexPath:self.lastSelect];
-                cell.backgroundColor = [UIColor whiteColor];
-            }
-            
-            self.lastSelect = indexPath;
-            self.lastSelectionMonth = self.currentCheckingMonth;
-        }
-    }
+    return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 #pragma mark - UIScrollView Delegate
@@ -370,12 +280,11 @@
         CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0]];
         cell.monthCover.hidden = NO;
         cell.monthCover.alpha = 0;
-        [cell.monthCover setBackgroundColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:0.9]];cell.monthCover.alpha = 1;
         cell.monthCover.layer.borderWidth = 0.25f;
         cell.monthCover.layer.borderColor = [[UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.85] CGColor];
         cell.monthTitle.text = [NSString stringWithFormat:@"%@ %d", self.cal.monthName, self.cal.year];
         
-        [UIView animateWithDuration:0.2f animations:^{
+        [UIView animateWithDuration:0.3f animations:^{
             self.menuBtnView.alpha = 0;
             cell.monthCover.alpha = 1;
         }];
@@ -387,7 +296,7 @@
     self.didStop = YES;
     if (self.didDisplayCell) { // already change current cell to next cell
         CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0]];
-        [UIView animateWithDuration:0.3f animations:^{
+        [UIView animateWithDuration:0.5f animations:^{
             cell.monthCover.alpha = 0;
             self.menuBtnView.alpha = 1;
         } completion:^(BOOL finished) {
@@ -405,7 +314,7 @@
 {
     NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
     CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         cell.month.alpha = 0;
     }];
     
@@ -435,11 +344,42 @@
 {
     NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
     CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         cell.monthCover.alpha = 0;
     } completion:^(BOOL finished) {
         cell.monthCover.hidden = YES;
     }];
+}
+
+- (void)tapHandler:(UITapGestureRecognizer *)gesture
+{
+    NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
+    CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
+    CGPoint touchLocation = [gesture locationInView:cell.bottomView];
+    NSLog(@"%f,%f", touchLocation.x, touchLocation.y);
+    
+    for (UIView *view in cell.bottomView.subviews)
+    {
+        if ([view isKindOfClass:[DayView class]] && CGRectContainsPoint(view.frame, touchLocation))
+        {
+            if ([(DayView *)view isInThisMonth] && (self.currentCheckingMonth != self.lastSelectionMonth || (![view isEqual:self.lastSelect] && self.currentCheckingMonth == self.lastSelectionMonth))) {
+                view.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
+                
+                // Clear Today
+                if (![view isEqual:self.todayView] && self.currentCheckingMonth == self.monthForToday) {
+                    self.todayView.backgroundColor = [UIColor whiteColor];
+                }
+                
+                // Clear last selection
+                if (self.currentCheckingMonth == self.lastSelectionMonth && self.lastSelect != nil) {
+                    self.lastSelect.backgroundColor = [UIColor whiteColor];
+                }
+                
+                self.lastSelect = view;
+                self.lastSelectionMonth = self.currentCheckingMonth;
+            }
+        }
+    }
 }
 
 #pragma mark - Navigation

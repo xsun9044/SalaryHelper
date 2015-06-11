@@ -81,7 +81,7 @@
     self = [self initDataWithCurrentMonthIndexRow:row];
     self.priorMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:row-1];
     self.nextMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:row+1];
-    
+
     return self;
 }
 
@@ -110,7 +110,7 @@
 {
     NSInteger count = 0;
     for (int i=0; i<self.startWeekDayOfMonth-1; i++) { // days of last month
-        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%d", self.daysOfLastMonth - (self.startWeekDayOfMonth - 2 - i)] InThisMonth:NO];
+        DayObject *day = [[DayObject alloc] initDataWithDay:[NSString stringWithFormat:@"%ld", self.daysOfLastMonth - (self.startWeekDayOfMonth - 2 - i)] InThisMonth:NO];
         [self.daysArray addObject:day];
     }
     count = self.daysArray.count;

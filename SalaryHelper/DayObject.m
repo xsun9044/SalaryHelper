@@ -48,7 +48,7 @@
         _inThisMonth = flag;
         _fullDate = dateString;
         
-        [self getEventForDay];
+        //[self getEventForDay];
     }
     return self;
 }

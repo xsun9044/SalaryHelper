@@ -25,7 +25,8 @@
 		B58D7A761AF9522B0097A436 /* CalCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A751AF9522B0097A436 /* CalCVC.m */; };
 		B58D7A7B1AF9522C0097A436 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A7A1AF9522C0097A436 /* Images.xcassets */; };
 		B58D7A8A1AF9522C0097A436 /* SalaryHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A891AF9522C0097A436 /* SalaryHelperTests.m */; };
-		B5A177B91B29D32C001E8D5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B58D7A771AF9522C0097A436 /* Main.storyboard */; };
+		B5A177BC1B29D435001E8D5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5A177BB1B29D435001E8D5A /* Main.storyboard */; };
+		B5A177BF1B2A0879001E8D5A /* DayView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A177BE1B2A0879001E8D5A /* DayView.m */; };
 		B5B3709A1B06473B0042BB74 /* RepeatTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B370981B06473B0042BB74 /* RepeatTVC.m */; };
 		B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B835431B04F5EF003AB468 /* InputTVCell.m */; };
 		B5B835471B0558E8003AB468 /* UIView+ViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B835461B0558E8003AB468 /* UIView+ViewHelper.m */; };
@@ -78,11 +79,13 @@
 		B58D7A721AF9522B0097A436 /* SalaryHelper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SalaryHelper.xcdatamodel; sourceTree = "<group>"; };
 		B58D7A741AF9522B0097A436 /* CalCVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CalCVC.h; sourceTree = "<group>"; };
 		B58D7A751AF9522B0097A436 /* CalCVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CalCVC.m; sourceTree = "<group>"; };
-		B58D7A781AF9522C0097A436 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B58D7A7A1AF9522C0097A436 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B58D7A831AF9522C0097A436 /* SalaryHelperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SalaryHelperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B58D7A881AF9522C0097A436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B58D7A891AF9522C0097A436 /* SalaryHelperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SalaryHelperTests.m; sourceTree = "<group>"; };
+		B5A177BB1B29D435001E8D5A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		B5A177BD1B2A0879001E8D5A /* DayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayView.h; sourceTree = "<group>"; };
+		B5A177BE1B2A0879001E8D5A /* DayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayView.m; sourceTree = "<group>"; };
 		B5B370981B06473B0042BB74 /* RepeatTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepeatTVC.m; sourceTree = "<group>"; };
 		B5B370991B06473B0042BB74 /* RepeatTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepeatTVC.h; sourceTree = "<group>"; };
 		B5B835421B04F5EF003AB468 /* InputTVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputTVCell.h; sourceTree = "<group>"; };
@@ -121,6 +124,8 @@
 		224D4CAB1B238FEC00FF4D9A /* Instance */ = {
 			isa = PBXGroup;
 			children = (
+				B5A177BD1B2A0879001E8D5A /* DayView.h */,
+				B5A177BE1B2A0879001E8D5A /* DayView.m */,
 				B505DB9D1B263B4900CA79B7 /* CalendarObject.h */,
 				B505DB9E1B263B4900CA79B7 /* CalendarObject.m */,
 				B505DBA01B2642F300CA79B7 /* DayObject.h */,
@@ -179,7 +184,7 @@
 			children = (
 				B58D7A6E1AF9522B0097A436 /* AppDelegate.h */,
 				B58D7A6F1AF9522B0097A436 /* AppDelegate.m */,
-				B58D7A771AF9522C0097A436 /* Main.storyboard */,
+				B5A177BB1B29D435001E8D5A /* Main.storyboard */,
 				B58D7A7A1AF9522C0097A436 /* Images.xcassets */,
 				B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */,
 				224D4CAB1B238FEC00FF4D9A /* Instance */,
@@ -352,8 +357,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5A177B91B29D32C001E8D5A /* Main.storyboard in Resources */,
 				B58D7A7B1AF9522C0097A436 /* Images.xcassets in Resources */,
+				B5A177BC1B29D435001E8D5A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +382,7 @@
 				B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */,
 				B505DB9F1B263B4900CA79B7 /* CalendarObject.m in Sources */,
 				B58D7A6D1AF9522B0097A436 /* main.m in Sources */,
+				B5A177BF1B2A0879001E8D5A /* DayView.m in Sources */,
 				B554CC921AFA8EE6006E63F7 /* DayCVCell.m in Sources */,
 				B505DBA21B2642F300CA79B7 /* DayObject.m in Sources */,
 				22F8FD381B043A1600381F04 /* AddTVC.m in Sources */,
@@ -413,17 +419,6 @@
 			targetProxy = B58D7A841AF9522C0097A436 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		B58D7A771AF9522C0097A436 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B58D7A781AF9522C0097A436 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		B58D7A8B1AF9522C0097A436 /* Debug */ = {
@@ -512,7 +507,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = SalaryHelper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -525,7 +520,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = SalaryHelper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
