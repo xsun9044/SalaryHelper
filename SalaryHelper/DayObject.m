@@ -18,13 +18,11 @@
 - (DBManager *)dbManger
 {
     if (!_dbManger) {
-        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        _dbManger = delegate.dbManger;
+        _dbManger = [[DBManager alloc] init];
     }
     
     return _dbManger;
 }
-
 
 - (DayObject *)initDataWithDay:(NSString *)day InThisMonth:(BOOL)flag
 
@@ -58,9 +56,9 @@
     [self.dbManger getEventsForDate:self.fullDate
               withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
                   if (finished) {
-                      if (result.count > 0) {
-                          self.incomeEvents = result;
-                      }
+                      self.incomeEvents = result;
+                  } else {
+                      NSLog(@"%d-%@",error.code, error.localizedDescription);
                   }
               }];
 }

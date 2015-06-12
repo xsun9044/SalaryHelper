@@ -176,10 +176,10 @@ static sqlite3_stmt *statement = nil;
                 [resultArray addObject:event];
             }
             
-            sqlite3_reset(statement);
+            sqlite3_finalize(statement);
             completionHandler(YES, resultArray, nil);
         } else {
-            sqlite3_reset(statement);
+            sqlite3_finalize(statement);
             completionHandler(NO, nil, [NSError errorWithDomain:DATABASE_ERROR
                                                            code:500
                                                        userInfo:[[NSDictionary alloc] initWithObjects:@[@"Retrieve failed."]

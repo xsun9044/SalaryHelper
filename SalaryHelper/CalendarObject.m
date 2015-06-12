@@ -97,11 +97,11 @@
 
 - (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)obj and:(CalendarObject *)rightObj
 {
-    
+    NSLog(@"----->in left");
     self = obj;
     self.priorMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:obj.currentMonthIndex-1];
     self.nextMonth = rightObj;
-    
+    NSLog(@"return self");
     return self;
 }
 
