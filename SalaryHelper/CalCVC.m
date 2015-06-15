@@ -17,6 +17,7 @@
 #import "DayObject.h"
 #import "DayView.h"
 #import "UIColor+ColorHelper.h"
+#import "Event.h"
 
 @interface CalCVC ()
 @property (nonatomic) CGFloat fullHeight;
@@ -138,6 +139,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CalendarObject *data;
+#warning NEED TEST IF IT WILL CRASH WHEN SWITCH PAGES RAPIDLY IN CELL PHONE CPU SPEED
     if (self.cal.currentMonthIndex == indexPath.row || self.checkToday) {
         data = self.cal;
     } else if (self.cal.currentMonthIndex > indexPath.row) {
@@ -235,15 +237,20 @@
         if (i%7 == 1 || i%7 == 0) {
             [dayView setWeekendDayTitle];
         }
-        [dayView setDayText:day.day
-                  hideCover:day.inThisMonth
-                    isToday:day.isToday
-          willShowIncomeBar:day.incomeEvents.count>0?YES:NO
-          willShowOutlayBar:NO];
+        
+        [dayView setDayText:day.day hideCover:day.inThisMonth isToday:day.isToday willShowIncomeBar:day.incomeEvents.count>0?YES:NO willShowOutlayBar:NO];
+#warning NEED TEST PERFORMANCE IN IPHONE 4
+        if (day.incomeEvents.count > 0) {
+            CGFloat totalAmount = 0;
+            for (Event *event in day.incomeEvents) {
+                totalAmount += (CGFloat)[event.amount doubleValue];
+            }
+            
+            [dayView setIncomeTitle:[NSString stringWithFormat:@"+ $%.2f", totalAmount]];
+        }
         
         if (day.isToday) {
             self.todayView = dayView;
-            dayView.tag = 1;
         }
         
         [cell.bottomView addSubview:dayView];
@@ -370,7 +377,6 @@
     NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
     CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
     CGPoint touchLocation = [gesture locationInView:cell.bottomView];
-    NSLog(@"%f,%f", touchLocation.x, touchLocation.y);
     
     for (UIView *view in cell.bottomView.subviews)
     {

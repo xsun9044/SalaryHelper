@@ -18,7 +18,7 @@
 - (DBManager *)dbManger
 {
     if (!_dbManger) {
-        _dbManger = [[DBManager alloc] init];
+        _dbManger = [DBManager getSharedInstance];
     }
     
     return _dbManger;
@@ -46,7 +46,7 @@
         _inThisMonth = flag;
         _fullDate = dateString;
         
-        //[self getEventForDay];
+        [self getEventForDay];
     }
     return self;
 }
@@ -57,6 +57,7 @@
               withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
                   if (finished) {
                       self.incomeEvents = result;
+                      NSLog(@"%@ load finished", self.fullDate);
                   } else {
                       NSLog(@"%d-%@",error.code, error.localizedDescription);
                   }

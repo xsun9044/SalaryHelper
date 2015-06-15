@@ -80,6 +80,11 @@
     }
 }
 
+- (void)setIncomeTitle:(NSString *)title
+{
+    self.incomeAmount.text = title;
+}
+
 - (void)setWeekendDayTitle
 {
     [self.day setTextColor:[UIColor redColor]];

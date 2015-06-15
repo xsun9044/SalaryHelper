@@ -26,7 +26,7 @@
     if (self) {
         _title = title;
         _amount = amount;
-        _startDate = startDate==nil?@"0000-00-00":startDate;
+        _eventStartDate = startDate==nil?@"0000-00-00":startDate;
         _repeat = repeat;
     }
     return self;

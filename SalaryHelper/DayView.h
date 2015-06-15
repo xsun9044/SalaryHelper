@@ -18,4 +18,6 @@
 
 - (BOOL)isInThisMonth;
 
+- (void)setIncomeTitle:(NSString *)title;
+
 @end
