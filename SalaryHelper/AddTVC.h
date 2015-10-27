@@ -14,5 +14,6 @@
     MBProgressHUD *HUD;
 }
 
+@property (nonatomic) NSInteger type;
 
 @end

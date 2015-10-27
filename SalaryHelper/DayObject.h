@@ -17,9 +17,11 @@
 @property (nonatomic) BOOL inThisMonth;
 @property (nonatomic) BOOL isToday;
 
-@property (nonatomic) NSArray *incomeEvents;
+@property (nonatomic) NSArray *events;
 
 - (DayObject *)initDataWithDay:(NSString *)day InThisMonth:(BOOL)flag;
 - (DayObject *)initDataWithDay:(NSString *)day InThisMonth:(BOOL)flag andFullDate:(NSString *)dateString;
+
+- (void)getEventForDay;
 
 @end

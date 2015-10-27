@@ -10,6 +10,7 @@
 #import "UIImageView+imageViewHelper.h"
 #import "UIView+ViewHelper.h"
 #import "PreferencesHelper.h"
+#import "AddTVC.h"
 
 @interface MenuVC ()
 @property (nonatomic, strong) PreferencesHelper * preferences;
@@ -48,7 +49,7 @@
     [super viewDidLoad];
     
     NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
-    if (version == 8) {
+    if (version >= 8) {
         [self.backgroundImageView setHidden:NO];
         [self.backgroundImageView setImage:self.backgroundImage];
         [self.backgroundImageView setContentMode:UIViewContentModeTop];
@@ -121,11 +122,7 @@
     if (sender.tag == ADD_INCOME) {
         [self performSegueWithIdentifier:@"add_segue" sender:sender];
     } else if (sender.tag == ADD_OUTLAY) {
-        UIAlertView *alert = [[UIAlertView alloc] init];
-        alert.title = @"2";
-        alert.message = @"2";
-        [alert addButtonWithTitle:@"OK"];
-        [alert show];
+        [self performSegueWithIdentifier:@"add_segue" sender:sender];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] init];
         alert.title = @"3";
@@ -173,7 +170,15 @@
 #pragma mark - Navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    
+    if ([segue.identifier isEqualToString:@"add_segue"]) {
+        UINavigationController *navigation = (UINavigationController *)segue.destinationViewController;
+        AddTVC *target = (AddTVC *)navigation.topViewController;
+        if (((UIButton *)sender).tag == ADD_INCOME) {
+            target.type = ADD_INCOME;
+        } else {
+            target.type = ADD_OUTLAY;
+        }
+    }
 }
 
 @end

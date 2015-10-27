@@ -11,7 +11,9 @@
 		224D4CB21B23928200FF4D9A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 224D4CB11B23928200FF4D9A /* Event.m */; };
 		22951CCC1B09324200AECA27 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22951CCB1B09324200AECA27 /* libsqlite3.dylib */; };
 		22951CD31B09333E00AECA27 /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22951CD21B09333E00AECA27 /* DBManager.m */; };
+		22F0F7921BC0587F00B1B567 /* DayDetailPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F0F7911BC0587F00B1B567 /* DayDetailPopView.m */; settings = {ASSET_TAGS = (); }; };
 		22F8FD381B043A1600381F04 /* AddTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F8FD371B043A1600381F04 /* AddTVC.m */; };
+		22FB1E151B6AC57900272C93 /* ReturnData+Test1.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FB1E141B6AC57900272C93 /* ReturnData+Test1.m */; };
 		B505DB9F1B263B4900CA79B7 /* CalendarObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B505DB9E1B263B4900CA79B7 /* CalendarObject.m */; };
 		B505DBA21B2642F300CA79B7 /* DayObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B505DBA11B2642F300CA79B7 /* DayObject.m */; };
 		B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */; };
@@ -55,8 +57,12 @@
 		22951CD11B09331000AECA27 /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
 		22951CD21B09333E00AECA27 /* DBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
 		22951CD41B093A2500AECA27 /* SystemHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemHelper.h; sourceTree = "<group>"; };
+		22F0F7901BC0582D00B1B567 /* DayDetailPopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailPopView.h; sourceTree = "<group>"; };
+		22F0F7911BC0587F00B1B567 /* DayDetailPopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayDetailPopView.m; sourceTree = "<group>"; };
 		22F8FD371B043A1600381F04 /* AddTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTVC.m; sourceTree = "<group>"; };
 		22F8FD391B043A3A00381F04 /* AddTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTVC.h; sourceTree = "<group>"; };
+		22FB1E131B6AC57900272C93 /* ReturnData+Test1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ReturnData+Test1.h"; sourceTree = "<group>"; };
+		22FB1E141B6AC57900272C93 /* ReturnData+Test1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ReturnData+Test1.m"; sourceTree = "<group>"; };
 		B505DB9D1B263B4900CA79B7 /* CalendarObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarObject.h; sourceTree = "<group>"; };
 		B505DB9E1B263B4900CA79B7 /* CalendarObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarObject.m; sourceTree = "<group>"; };
 		B505DBA01B2642F300CA79B7 /* DayObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayObject.h; sourceTree = "<group>"; };
@@ -252,6 +258,8 @@
 				B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */,
 				B554CC901AFA8EE6006E63F7 /* DayCVCell.h */,
 				B554CC911AFA8EE6006E63F7 /* DayCVCell.m */,
+				22F0F7901BC0582D00B1B567 /* DayDetailPopView.h */,
+				22F0F7911BC0587F00B1B567 /* DayDetailPopView.m */,
 			);
 			name = Calendar;
 			sourceTree = "<group>";
@@ -272,6 +280,8 @@
 				B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */,
 				B5B835451B0558E8003AB468 /* UIView+ViewHelper.h */,
 				B5B835461B0558E8003AB468 /* UIView+ViewHelper.m */,
+				22FB1E131B6AC57900272C93 /* ReturnData+Test1.h */,
+				22FB1E141B6AC57900272C93 /* ReturnData+Test1.m */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -325,7 +335,7 @@
 				TargetAttributes = {
 					B58D7A661AF9522B0097A436 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = VNTJ9UC674;
+						DevelopmentTeam = JF3P6KC5LT;
 					};
 					B58D7A821AF9522C0097A436 = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -379,11 +389,13 @@
 				B5B3709A1B06473B0042BB74 /* RepeatTVC.m in Sources */,
 				B58D7A701AF9522B0097A436 /* AppDelegate.m in Sources */,
 				B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */,
+				22FB1E151B6AC57900272C93 /* ReturnData+Test1.m in Sources */,
 				B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */,
 				B505DB9F1B263B4900CA79B7 /* CalendarObject.m in Sources */,
 				B58D7A6D1AF9522B0097A436 /* main.m in Sources */,
 				B5A177BF1B2A0879001E8D5A /* DayView.m in Sources */,
 				B554CC921AFA8EE6006E63F7 /* DayCVCell.m in Sources */,
+				22F0F7921BC0587F00B1B567 /* DayDetailPopView.m in Sources */,
 				B505DBA21B2642F300CA79B7 /* DayObject.m in Sources */,
 				22F8FD381B043A1600381F04 /* AddTVC.m in Sources */,
 				B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */,
@@ -457,7 +469,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -494,7 +506,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -507,7 +519,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = SalaryHelper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -520,7 +532,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = SalaryHelper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;

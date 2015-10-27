@@ -51,7 +51,7 @@ static sqlite3_stmt *statement = nil;
             char *errMsg;
             
             // Create income event_table
-            const char *create_table_sql_stmt = "CREATE TABLE IF NOT EXISTS income_events(id integer PRIMARY KEY, title varchar(255), amount varchar(255) NOT NULL, start_date date NOT NULL, repeat integer DEFAULT 0, day integer DEFAULT 0, week integer DEFAULT 0, month integer DEFAULT 0, year integer DEFAULT 0)";
+            const char *create_table_sql_stmt = "CREATE TABLE IF NOT EXISTS events(id integer PRIMARY KEY, title varchar(255), amount varchar(255) NOT NULL, start_date date NOT NULL, repeat integer DEFAULT 0, day integer DEFAULT 0, week integer DEFAULT 0, month integer DEFAULT 0, year integer DEFAULT 0, type integer DEFAULT 1)"; // type 1 means income, 2 means outlay
             if (sqlite3_exec(database, create_table_sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK) {
                 isSuccess = NO;
                 completionHandler(isSuccess,
@@ -124,7 +124,7 @@ static sqlite3_stmt *statement = nil;
 
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO income_events(title,amount,start_date,repeat,day,week,month,year) VALUES (\"%@\",\"%@\",\"%@\",%d,%d,%d,%d,%d)",title,amount,date,flag,day,week,month,year];
+        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO events(title,amount,start_date,repeat,day,week,month,year) VALUES (\"%@\",\"%@\",\"%@\",%d,%d,%d,%d,%d)",title,amount,date,flag,day,week,month,year];
         NSLog(@"%@", insertSQL);
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(database, insert_stmt, -1, &statement, NULL);
@@ -148,6 +148,45 @@ static sqlite3_stmt *statement = nil;
 }
 
 /*
+ * Save outlay events in income event table
+ */
+- (void)saveOutlayEvent:(NSString*)title
+                 amount:(NSString *)amount
+              startDate:(NSString*)date
+                 repeat:(BOOL)flag
+                    day:(NSInteger)day
+                   week:(NSInteger)week
+                  month:(NSInteger)month
+                   year:(NSInteger)year
+   andCompletionHandler:(DatabaseCompletionHandler)completionHandler
+{
+    
+    const char *dbpath = [databasePath UTF8String];
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO events(title,amount,start_date,repeat,day,week,month,year,type) VALUES (\"%@\",\"%@\",\"%@\",%d,%d,%d,%d,%d,%d)",title,amount,date,flag,day,week,month,year,2];
+        NSLog(@"%@", insertSQL);
+        const char *insert_stmt = [insertSQL UTF8String];
+        sqlite3_prepare_v2(database, insert_stmt, -1, &statement, NULL);
+        if (sqlite3_step(statement) == SQLITE_DONE) {
+            sqlite3_reset(statement);
+            completionHandler(YES, nil);
+        } else {
+            sqlite3_reset(statement);
+            completionHandler(NO,[NSError errorWithDomain:DATABASE_ERROR
+                                                     code:500
+                                                 userInfo:[[NSDictionary alloc] initWithObjects:@[@"Insert failed."]
+                                                                                        forKeys:@[NSLocalizedDescriptionKey]]]);
+        }
+        sqlite3_close (database);
+    } else {
+        completionHandler(NO,[NSError errorWithDomain:DATABASE_ERROR
+                                                 code:500
+                                             userInfo:[[NSDictionary alloc] initWithObjects:@[@"Cannot open database."]
+                                                                                    forKeys:@[NSLocalizedDescriptionKey]]]);
+    }
+}
+
+/*
  * Retrieve income events
  * parms: date string
  *
@@ -158,11 +197,8 @@ static sqlite3_stmt *statement = nil;
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
-                              @"SELECT * FROM income_events WHERE (repeat = 0 AND start_date = '%@') OR (repeat = 1 AND day > 0 AND (julianday('%@')-julianday(start_date)) %% day = 0) OR (repeat = 1 AND week > 0 AND (julianday('%@')-julianday(start_date))%%7 = 0 AND ((julianday('%@')-julianday(start_date))/7)%%week = 0) OR (repeat = 1 AND month > 0 AND strftime('%%d','%@') = strftime('%%d',start_date) AND ((strftime('%%Y','%@')-strftime('%%Y',start_date))*12 - strftime('%%m',start_date) + strftime('%%m','%@'))%%month = 0) OR (repeat = 1 AND year > 0 AND strftime('%%m','%@') = strftime('%%m',start_date) AND strftime('%%d','%@') = strftime('%%d',start_date) AND (strftime('%%Y','%@')-strftime('%%Y',start_date))%%year = 0)",
-                              dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString];
-        
-        //querySQL = [NSString stringWithFormat:@"SELECT * FROM income_events WHERE repeat = 1 AND week > 0 AND (julianday('%@')-julianday(start_date)) %% week = 0",dateString];
-        //NSLog(@"%@", querySQL);
+                              @"SELECT * FROM events WHERE (repeat = 0 AND start_date = '%@') OR (repeat = 1 AND day > 0 AND (julianday('%@')-julianday(start_date)) %% day = 0) OR (repeat = 1 AND week > 0 AND (julianday('%@')-julianday(start_date))%%7 = 0 AND ((julianday('%@')-julianday(start_date))/7)%%week = 0 AND julianday('%@')>=julianday(start_date)) OR (repeat = 1 AND month > 0 AND strftime('%%d','%@') = strftime('%%d',start_date) AND ((strftime('%%Y','%@')-strftime('%%Y',start_date))*12 - strftime('%%m',start_date) + strftime('%%m','%@'))%%month = 0 AND julianday('%@')>=julianday(start_date)) OR (repeat = 1 AND year > 0 AND strftime('%%m','%@') = strftime('%%m',start_date) AND strftime('%%d','%@') = strftime('%%d',start_date) AND (strftime('%%Y','%@')-strftime('%%Y',start_date))%%year = 0 AND julianday('%@')>=julianday(start_date))",
+                              dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString, dateString];
         const char *query_stmt = [querySQL UTF8String];
         NSMutableArray *resultArray = [[NSMutableArray alloc]init];
         if (sqlite3_prepare_v2(database,query_stmt, -1, &statement, NULL) == SQLITE_OK) {
@@ -172,7 +208,8 @@ static sqlite3_stmt *statement = nil;
                 NSString *amount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
                 NSString *startDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
                 NSString *repeat = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
-                Event *event = [[Event alloc] initEventWithDetail:[rowID integerValue] Title:title andAmount:amount andStarDate:startDate andRepeat:repeat];
+                NSString *type = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                Event *event = [[Event alloc] initEventWithDetail:[rowID integerValue] Title:title andAmount:amount andStarDate:startDate andRepeat:repeat andType:type];
                 [resultArray addObject:event];
             }
             

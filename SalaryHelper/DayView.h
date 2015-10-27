@@ -19,5 +19,6 @@
 - (BOOL)isInThisMonth;
 
 - (void)setIncomeTitle:(NSString *)title;
+- (void)setOutlayTitle:(NSString *)title;
 
 @end

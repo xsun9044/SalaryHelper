@@ -34,4 +34,6 @@
 - (CalendarObject *)initDataWhenMoveRight:(CalendarObject *)obj and:(CalendarObject *)leftObj;
 - (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)obj and:(CalendarObject *)rightObj;
 
+- (void)updateEvents;
+
 @end

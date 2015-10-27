@@ -28,9 +28,10 @@
     // Hide back bar button title for next view
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
                                    initWithTitle: @""
-                                   style: UIBarButtonItemStyleBordered
+                                   style: UIBarButtonItemStylePlain
                                    target:self action: nil];
     [self.navigationItem setBackBarButtonItem: backButton];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     // This will remove extra separators from tableview for iOS 8,7 and 6
     //self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];

@@ -18,8 +18,10 @@
 #import "DayView.h"
 #import "UIColor+ColorHelper.h"
 #import "Event.h"
+#import "ReturnData+Test1.h"
+#import "DayDetailPopView.h"
 
-@interface CalCVC ()
+@interface CalCVC () <DayDetailViewDelegate>
 @property (nonatomic) CGFloat fullHeight;
 @property (nonatomic) CGFloat fullWidth;
 @property (nonatomic) CGFloat heightBottom;
@@ -31,6 +33,7 @@
 
 @property (nonatomic) BOOL checkToday;
 @property (nonatomic) BOOL shouldShowCover;
+@property (nonatomic, assign) BOOL shouldReload;
 
 @property (nonatomic) BOOL didStop;
 @property (nonatomic) BOOL didDisplayCell;
@@ -39,12 +42,15 @@
 @property (nonatomic, strong) UIView *lastSelect;
 
 @property (nonatomic, strong) CalendarObject *cal;
-@property (nonatomic, strong) CalendarObject *targetCal;
+@property (atomic, strong) CalendarObject *targetCal;
 @property (nonatomic, strong) CalendarObject *todayObject;
 
 @property (nonatomic, strong) UIView *menuBtnView;
 
-@property (nonatomic, strong) NSMutableDictionary *test;
+@property (nonatomic, strong) DayView *targetDayView;
+@property (nonatomic, strong) DayObject *targetDayObject;
+
+@property (nonatomic) BOOL shouldOpenOther;
 @end
 
 @implementation CalCVC
@@ -52,17 +58,10 @@
 #define INNER 2
 #define INIT_CHECKING_MONTH -1
 
-- (NSMutableDictionary *)test
-{
-    if (_test) {
-        _test = [[NSMutableDictionary alloc] init];
-    }
-    return _test;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     self.navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
     self.modalPresentationStyle = UIModalPresentationCurrentContext;
     self.tabBarController.modalPresentationStyle = UIModalPresentationCurrentContext;
@@ -80,14 +79,18 @@
     self.shouldShowCover = YES;
     self.didStop = YES;
     self.didDisplayCell = YES;
+    self.shouldOpenOther = NO;
     
     UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandler:)];
     [gestureRecognizer setDirection:(UISwipeGestureRecognizerDirectionDown)];
     [self.view addGestureRecognizer:gestureRecognizer];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
-    [tapGestureRecognizer setNumberOfTouchesRequired:1];
+    [tapGestureRecognizer setNumberOfTapsRequired:1];
     [self.view addGestureRecognizer:tapGestureRecognizer];
+    
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressHandler:)];
+    [self.view addGestureRecognizer:longPressGesture];
     
     self.menuBtnView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-6)/7 * 6, 0, [UIScreen mainScreen].bounds.size.width, _fullHeight / 5 - 21)];
     [self.menuBtnView setBackgroundColor:[UIColor clearColor]];
@@ -97,13 +100,27 @@
     [menuButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
     [self.menuBtnView addSubview:menuButton];
     [self.navigationController.view addSubview:self.menuBtnView];
+    
+    // Register local notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(addSuccess:)
+                                                 name:@"AddSuccessNotification"
+                                               object:nil];
+}
+
+- (void)addSuccess:(NSNotification *)notification
+{
+    self.shouldReload = YES;
+    self.shouldShowCover = YES;
+    self.willDisplayPosition = self.currentCheckingMonth;
+    [self.cal updateEvents];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     NSInteger months;
-    if (self.currentCheckingMonth == INIT_CHECKING_MONTH) {
+    if (self.currentCheckingMonth == INIT_CHECKING_MONTH) {	
         months = [NSDate monthsBetweenDate:[NSDate getDateTimeFromStringInUTC:startDate] andDate:[NSDate getDateTimeFromStringInUTC:[NSDate getCurrentDateTime]]];
         self.currentCheckingMonth = months;
         self.monthForToday = months;
@@ -112,13 +129,33 @@
     }
     
     NSIndexPath *path = [NSIndexPath indexPathForRow:(months) inSection:0];
-    [self.collectionView scrollToItemAtIndexPath:path
-                                atScrollPosition:UICollectionViewScrollPositionNone
-                                        animated:NO];
+    if (self.shouldReload) {
+        [self.collectionView reloadData];
+        self.shouldReload = NO;
+    } else {
+        [self.collectionView scrollToItemAtIndexPath:path
+                                    atScrollPosition:UICollectionViewScrollPositionNone
+                                            animated:NO];
+    }
+    
     if (self.cal == nil) {
         self.cal = [[CalendarObject alloc] initThereMonthsWithCurrentMonthIndexRow:months];
         self.todayObject = self.cal;
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (self.shouldOpenOther) {
+        self.shouldOpenOther = NO;
+        [self performSegueWithIdentifier:@"detail_segue" sender:self];
+    }
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -238,16 +275,22 @@
             [dayView setWeekendDayTitle];
         }
         
-        [dayView setDayText:day.day hideCover:day.inThisMonth isToday:day.isToday willShowIncomeBar:day.incomeEvents.count>0?YES:NO willShowOutlayBar:NO];
 #warning NEED TEST PERFORMANCE IN IPHONE 4
-        if (day.incomeEvents.count > 0) {
-            CGFloat totalAmount = 0;
-            for (Event *event in day.incomeEvents) {
-                totalAmount += (CGFloat)[event.amount doubleValue];
+        CGFloat totalAmountIncome = 0;
+        CGFloat totalAmountOutlay = 0;
+        if (day.events.count > 0) {
+            for (Event *event in day.events) {
+                if ([event.type isEqualToString:@"1"]) {
+                    totalAmountIncome += (CGFloat)[event.amount doubleValue];
+                } else {
+                    totalAmountOutlay += (CGFloat)[event.amount doubleValue];
+                }
             }
-            
-            [dayView setIncomeTitle:[NSString stringWithFormat:@"+ $%.2f", totalAmount]];
         }
+        
+        [dayView setIncomeTitle:[NSString stringWithFormat:@"+ $%.2f", totalAmountIncome]];
+        [dayView setOutlayTitle:[NSString stringWithFormat:@"- $%.2f" , totalAmountOutlay]];
+        [dayView setDayText:day.day hideCover:day.inThisMonth isToday:day.isToday willShowIncomeBar:totalAmountIncome>0?YES:NO willShowOutlayBar:totalAmountOutlay>0?YES:NO];
         
         if (day.isToday) {
             self.todayView = dayView;
@@ -358,6 +401,7 @@
 
 - (void)swipeHandler:(UISwipeGestureRecognizer *)gesture
 {
+    NSLog(@"swip");
     [self performSegueWithIdentifier:@"menu_segue" sender:gesture];
 }
 
@@ -402,6 +446,52 @@
     }
 }
 
+- (NSInteger)getIndexOfDayDataWithX:(CGFloat)x andY:(CGFloat)y
+{
+    NSInteger times = (int)y/(int)(self.heightBottom/(self.cal.daysArray.count/7));
+    NSInteger numbers = (int)x/(int)(_fullWidth/7);
+    
+    return times*7 + numbers;
+}
+
+- (void)longPressHandler:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
+        CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
+        CGPoint touchLocation = [gesture locationInView:cell.bottomView];
+        
+        for (UIView *view in cell.bottomView.subviews)
+        {
+            if ([view isKindOfClass:[DayView class]] && CGRectContainsPoint(view.frame, touchLocation))
+            {
+                if ([(DayView *)view isInThisMonth] && (self.currentCheckingMonth != self.lastSelectionMonth || (![view isEqual:self.lastSelect] && self.currentCheckingMonth == self.lastSelectionMonth))) {
+                    view.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
+                    
+                    // Clear Today
+                    if (![view isEqual:self.todayView] && self.currentCheckingMonth == self.monthForToday) {
+                        self.todayView.backgroundColor = [UIColor whiteColor];
+                    }
+                    
+                    // Clear last selection
+                    if (self.currentCheckingMonth == self.lastSelectionMonth && self.lastSelect != nil) {
+                        self.lastSelect.backgroundColor = [UIColor whiteColor];
+                    }
+                    
+                    self.lastSelect = view;
+                    self.lastSelectionMonth = self.currentCheckingMonth;
+                }
+                
+                if ([(DayView *)view isInThisMonth]) {
+                    self.targetDayView = (DayView *)view;
+                    self.targetDayObject = (DayObject *)[self.cal.daysArray objectAtIndex:[self getIndexOfDayDataWithX:view.frame.origin.x andY:view.frame.origin.y]];
+                    [self performSegueWithIdentifier:@"detail_segue" sender:self];
+                }
+            }
+        }
+    }
+}
+
 #pragma mark - Navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -410,12 +500,75 @@
         
         // If it's under IOS 8, then take the screenshot
         NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
-        if (version == 8) {
+        if (version >= 8) {
             UIGraphicsBeginImageContextWithOptions([[UIScreen mainScreen] bounds].size, self.view.opaque, 0.0);
             [self.navigationController.view.layer renderInContext:UIGraphicsGetCurrentContext()];
             UIImage * sc = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
             controller.backgroundImage = sc;
+        }
+    } else if ([segue.identifier isEqualToString:@"detail_segue"]) {
+        DayDetailPopView *controller = (DayDetailPopView *)segue.destinationViewController;
+        controller.delegate = self;
+        controller.dayView = self.targetDayView;
+        controller.events = self.targetDayObject.events;
+        // If it's above IOS 8, then take the screenshot
+        NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
+        if (version >= 8) {
+            UIGraphicsBeginImageContextWithOptions([[UIScreen mainScreen] bounds].size, self.view.opaque, 0.0);
+            [self.navigationController.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+            UIImage * sc = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            controller.bgImage = sc;
+        }
+    }
+}
+
+#pragma mark - DayDetailViewDelegate
+- (void)openOtherView:(CGPoint)point
+{
+    NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
+    CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
+    
+    for (UIView *view in cell.bottomView.subviews)
+    {
+        if ([view isKindOfClass:[DayView class]] && CGRectContainsPoint(view.frame, point) && [(DayView *)view isInThisMonth])
+        {
+            view.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
+            
+            // Clear last selection
+            if (self.currentCheckingMonth == self.lastSelectionMonth && self.lastSelect != nil) {
+                self.lastSelect.backgroundColor = [UIColor whiteColor];
+            }
+            
+            self.lastSelect = view;
+            
+            self.shouldOpenOther = YES;
+            self.targetDayView = (DayView *)view;
+        }
+    }
+}
+
+- (void)pickOtherDay:(CGPoint)point
+{
+    NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
+    CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
+    
+    for (UIView *view in cell.bottomView.subviews)
+    {
+        if ([view isKindOfClass:[DayView class]] && CGRectContainsPoint(view.frame, point) && [(DayView *)view isInThisMonth])
+        {
+            view.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
+            
+            // Clear last selection
+            if (self.currentCheckingMonth == self.lastSelectionMonth && self.lastSelect != nil) {
+                self.lastSelect.backgroundColor = [UIColor whiteColor];
+            }
+            
+            self.lastSelect = view;
+            
+            self.shouldOpenOther = NO;
+            self.targetDayView = (DayView *)view;
         }
     }
 }

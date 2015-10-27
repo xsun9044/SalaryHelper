@@ -8,10 +8,12 @@
 
 #import "DayView.h"
 #import "UIColor+ColorHelper.h"
+#import "UIView+ViewHelper.h"
 
 @interface DayView()
 
 @property (nonatomic, strong) UILabel *day;
+@property (nonatomic, strong) UIView *todayView;
 @property (nonatomic, strong) UILabel *incomeAmount;
 @property (nonatomic, strong) UILabel *outlayAmount;
 
@@ -33,26 +35,34 @@
         self.layer.borderWidth = 0.25f;
         self.layer.borderColor = [[UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1.0] CGColor];
         
-        self.day = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 36, 23)];
+        self.todayView = [[UIView alloc] initWithFrame:CGRectMake(5, 3, 25, 25)];
+        [self.todayView setBackgroundColor:[UIColor grayColor]];
+        [self.todayView makeRoundedCornerWithoutBorder:12.5f];
+        [self.todayView setAlpha:0.8];
+        [self.todayView setHidden:YES];
+        [self addSubview:self.todayView];
+        
+        self.day = [[UILabel alloc] initWithFrame:CGRectMake(5, 3, 25, 25)];
         [self.day setTextAlignment:NSTextAlignmentCenter];
         [self.day setFont:[UIFont fontWithName:@"HelveticaNeue" size: 13.0f]];
         self.day.text = @"1";
+        [self.day setBackgroundColor:[UIColor clearColor]];
         [self addSubview:self.day];
         
-        self.incomeView = [[UIView alloc] initWithFrame:CGRectMake(0, 23-4, frame.size.width, (frame.size.height-23+4)/2)];
+        self.incomeView = [[UIView alloc] initWithFrame:CGRectMake(0, 31, frame.size.width, (frame.size.height-31)/2)];
         [self.incomeView setBackgroundColor:[UIColor increaseColor]];
         self.incomeAmount = [[UILabel alloc] initWithFrame:CGRectMake(8, 0, frame.size.width-16, self.incomeView.frame.size.height)];
-        self.incomeAmount.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size: 11.0f];
+        self.incomeAmount.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size: 11.0f];
         self.incomeAmount.textColor = [UIColor whiteColor];
         self.incomeAmount.text = @"+ $1,500";
         [self.incomeAmount setTextAlignment:NSTextAlignmentRight];
         [self.incomeView addSubview:self.incomeAmount];
         [self addSubview:self.incomeView];
         
-        self.outlayView = [[UIView alloc] initWithFrame:CGRectMake(0, self.incomeView.frame.origin.y + self.incomeView.frame.size.height, frame.size.width, (frame.size.height-23+4)/2)];
+        self.outlayView = [[UIView alloc] initWithFrame:CGRectMake(0, self.incomeView.frame.origin.y + self.incomeView.frame.size.height, frame.size.width, (frame.size.height-31)/2)];
         [self.outlayView setBackgroundColor:[UIColor decreaseColor]];
         self.outlayAmount = [[UILabel alloc] initWithFrame:CGRectMake(8, 0, frame.size.width-16, self.outlayView.frame.size.height)];
-        self.outlayAmount.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size: 11.0f];
+        self.outlayAmount.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size: 11.0f];
         self.outlayAmount.textColor = [UIColor whiteColor];
         self.outlayAmount.text = @"- $1,500";
         [self.outlayAmount setTextAlignment:NSTextAlignmentRight];
@@ -73,16 +83,22 @@
     self.incomeView.hidden = !willHide || !willShowIncomeBar;
     self.outlayView.hidden = !willHide || !willShowOutlayBar;
     if (isToday) {
-        self.day.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:15.0f];
-        self.layer.borderWidth = 1.0f;
-        self.layer.borderColor = [[UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0] CGColor];
+        self.day.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f];
         self.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
+        [self.todayView setHidden:NO];
+        [self.todayView setBackgroundColor:self.day.textColor];
+        [self.day setTextColor:[UIColor whiteColor]];
     }
 }
 
 - (void)setIncomeTitle:(NSString *)title
 {
     self.incomeAmount.text = title;
+}
+
+- (void)setOutlayTitle:(NSString *)title
+{
+    self.outlayAmount.text = title;
 }
 
 - (void)setWeekendDayTitle

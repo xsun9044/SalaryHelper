@@ -40,6 +40,16 @@ typedef void(^DataRetrieveCompletionHandler)(BOOL finished, NSArray *result, NSE
                    year:(NSInteger)year
    andCompletionHandler:(DatabaseCompletionHandler)completionHandler;
 
+- (void)saveOutlayEvent:(NSString*)title
+                 amount:(NSString *)amount
+              startDate:(NSString*)date
+                 repeat:(BOOL)flag
+                    day:(NSInteger)day
+                   week:(NSInteger)week
+                  month:(NSInteger)month
+                   year:(NSInteger)year
+   andCompletionHandler:(DatabaseCompletionHandler)completionHandler;
+
 - (void)getEventsForDate:(NSString *)dateString withCompletionHandler:(DataRetrieveCompletionHandler)completionHandler;
 
 @end

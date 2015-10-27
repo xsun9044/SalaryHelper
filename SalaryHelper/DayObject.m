@@ -56,8 +56,7 @@
     [self.dbManger getEventsForDate:self.fullDate
               withCompletionHandler:^(BOOL finished, NSArray *result, NSError *error) {
                   if (finished) {
-                      self.incomeEvents = result;
-                      NSLog(@"%@ load finished", self.fullDate);
+                      self.events = result;
                   } else {
                       NSLog(@"%d-%@",error.code, error.localizedDescription);
                   }

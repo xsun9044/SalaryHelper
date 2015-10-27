@@ -19,6 +19,9 @@
 
 #define HIDE_HUD_INTEVAL 5
 
+#define ADD_INCOME 0
+#define ADD_OUTLAY 1
+
 @interface AddTVC() <UITextFieldDelegate, RepeatDelegate>
 @property (nonatomic, strong) PreferencesHelper * preferences;
 
@@ -61,7 +64,7 @@
     // Hide back bar button title for next view
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
                                    initWithTitle: @""
-                                   style: UIBarButtonItemStyleBordered
+                                   style: UIBarButtonItemStylePlain
                                    target:self action: nil];
     [self.navigationItem setBackBarButtonItem: backButton];
     
@@ -80,6 +83,11 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if (self.type == ADD_OUTLAY) {
+        self.navigationItem.title = @"Add Outlay";
+    } else {
+        self.navigationItem.title = @"Add Income";
+    }
     // register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
@@ -123,6 +131,12 @@
         
         self.clearButton1 = cell.btn1;
         self.clearButton2 = cell.btn2;
+        
+        if (self.type == ADD_INCOME) {
+            [cell.icon1 setImage:[UIImage imageNamed:@"money"]];
+        } else {
+            [cell.icon1 setImage:[UIImage imageNamed:@"cash"]];
+        }
     } else if (indexPath.row == 1) {
         cell = (InputTVCell *)[tableView dequeueReusableCellWithIdentifier:@"blank" forIndexPath:indexPath];
     } else if (indexPath.row == 2) {
@@ -282,11 +296,19 @@
     if (self.currentTextField2.text.length == 0) {
         [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
         [self.currentTextField2 setPlaceholder:@"Required"];
-        [self buildAlertPopupWithTitle:@"AMOUNT REQUIRED" andContext:@"Please input your income amount."];
+        if (self.type == ADD_INCOME) {
+            [self buildAlertPopupWithTitle:@"AMOUNT REQUIRED" andContext:@"Please input your income amount."];
+        } else {
+            [self buildAlertPopupWithTitle:@"AMOUNT REQUIRED" andContext:@"Please input your outlay amount."];
+        }
         [self performSegueWithIdentifier:@"show_popup" sender:sender];
     } else if (![self checkInputIfNumberic:self.currentTextField2.text]) {
         [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
-        [self buildAlertPopupWithTitle:@"AMOUNT FORMAT ERROR" andContext:@"Please input number for your income amount."];
+        if (self.type == ADD_INCOME) {
+            [self buildAlertPopupWithTitle:@"AMOUNT FORMAT ERROR" andContext:@"Please input number for your income amount."];
+        } else {
+            [self buildAlertPopupWithTitle:@"AMOUNT FORMAT ERROR" andContext:@"Please input number for your outlay amount."];
+        }
         [self performSegueWithIdentifier:@"show_popup" sender:sender];
     } else {
         [self.currentTextField1 resignFirstResponder];
@@ -321,29 +343,53 @@
             repeatData = [[NSArray alloc] initWithObjects:@"0",@"0",@"0",@"0",nil];
         }
         
-        NSLog(@"%@", repeatData);
-        
         HUD = [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
         HUD.labelText = @"Saving...";
         AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [delegate.dbManger saveIncomeEvent:self.currentTextField1.text
-                                    amount:self.currentTextField2.text
-                                 startDate:self.dateLabel.text
-                                    repeat:willRepeat
-                                       day:[[repeatData objectAtIndex:0] integerValue]
-                                      week:[[repeatData objectAtIndex:1] integerValue]
-                                     month:[[repeatData objectAtIndex:2] integerValue]
-                                      year:[[repeatData objectAtIndex:3] integerValue]
-                      andCompletionHandler:^(BOOL finished, NSError *error) {
-                          [MBProgressHUD hideHUDForView:self.tableView animated:YES];
-                          if (finished) { // success
-                              [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
-                              [self dismissViewControllerAnimated:YES completion:nil];
-                          } else { // failure
+        if (self.type == ADD_INCOME) {
+            [delegate.dbManger saveIncomeEvent:self.currentTextField1.text
+                                        amount:self.currentTextField2.text
+                                     startDate:self.dateLabel.text
+                                        repeat:willRepeat
+                                           day:[[repeatData objectAtIndex:0] integerValue]
+                                          week:[[repeatData objectAtIndex:1] integerValue]
+                                         month:[[repeatData objectAtIndex:2] integerValue]
+                                          year:[[repeatData objectAtIndex:3] integerValue]
+                          andCompletionHandler:^(BOOL finished, NSError *error) {
+                              [MBProgressHUD hideHUDForView:self.tableView animated:YES];
+                              if (finished) { // success
+                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSuccessNotification"
+                                                                                      object:self];
+                                  [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
+                                  [self dismissViewControllerAnimated:YES completion:nil];
+                              } else { // failure
 #warning TODO: ERROR HANDLE
-                              NSLog(@"%@", error.localizedDescription);
-                          }
-                      }];
+                                  NSLog(@"%@", error.localizedDescription);
+                              }
+                          }];
+        } else {
+            [delegate.dbManger saveOutlayEvent:self.currentTextField1.text
+                                        amount:self.currentTextField2.text
+                                     startDate:self.dateLabel.text
+                                        repeat:willRepeat
+                                           day:[[repeatData objectAtIndex:0] integerValue]
+                                          week:[[repeatData objectAtIndex:1] integerValue]
+                                         month:[[repeatData objectAtIndex:2] integerValue]
+                                          year:[[repeatData objectAtIndex:3] integerValue]
+                          andCompletionHandler:^(BOOL finished, NSError *error) {
+                              [MBProgressHUD hideHUDForView:self.tableView animated:YES];
+                              if (finished) { // success
+                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSuccessNotification"
+                                                                                      object:self];
+                                  [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
+                                  [self dismissViewControllerAnimated:YES completion:nil];
+                              } else { // failure
+#warning TODO: ERROR HANDLE
+                                  NSLog(@"%@", error.localizedDescription);
+                              }
+                          }];
+        }
+        
         [HUD hide:YES afterDelay:HIDE_HUD_INTEVAL];
     }
 }
@@ -387,7 +433,7 @@
         controller.header = self.headerString;
         // If it's under IOS 8, then take the screenshot
         NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
-        if (version == 8) {
+        if (version >= 8) {
             UIGraphicsBeginImageContextWithOptions([[UIScreen mainScreen] bounds].size, self.view.opaque, 0.0);
             [self.navigationController.view.layer renderInContext:UIGraphicsGetCurrentContext()];
             UIImage * sc = UIGraphicsGetImageFromCurrentImageContext();

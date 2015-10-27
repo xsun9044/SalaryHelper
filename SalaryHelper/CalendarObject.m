@@ -85,6 +85,20 @@
     return self;
 }
 
+- (void)updateEvents
+{
+    [self updateCurrentMonth];
+    [self.priorMonth updateCurrentMonth];
+    [self.nextMonth updateCurrentMonth];
+}
+
+- (void)updateCurrentMonth
+{
+    for (NSInteger i=self.startWeekDayOfMonth-1; i<self.startWeekDayOfMonth-1+self.daysOfCurrentMonth; i++) {
+        [[self.daysArray objectAtIndex:i] getEventForDay];
+    }
+}
+
 - (CalendarObject *)initDataWhenMoveRight:(CalendarObject *)obj and:(CalendarObject *)leftObj
 {
     
@@ -97,11 +111,9 @@
 
 - (CalendarObject *)initDataWhenMoveLeft:(CalendarObject *)obj and:(CalendarObject *)rightObj
 {
-    NSLog(@"----->in left");
     self = obj;
     self.priorMonth = [[CalendarObject alloc] initDataWithCurrentMonthIndexRow:obj.currentMonthIndex-1];
     self.nextMonth = rightObj;
-    NSLog(@"return self");
     return self;
 }
 

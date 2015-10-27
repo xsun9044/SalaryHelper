@@ -19,6 +19,7 @@
                      andAmount:(NSString *)amount
                    andStarDate:(NSString *)startDate
                      andRepeat:(NSString *)repeat
+                       andType:(NSString *)type
 
 {
     self = [super initDataWithRowID:rowID];
@@ -28,6 +29,7 @@
         _amount = amount;
         _eventStartDate = startDate==nil?@"0000-00-00":startDate;
         _repeat = repeat;
+        _type = type;
     }
     return self;
 }

@@ -24,7 +24,7 @@
     [super viewDidLoad];
     
     NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
-    if (version == 8) {
+    if (version >= 8) {
         [self.backgroundImageView setHidden:NO];
         [self.backgroundImageView setImage:self.backgroundImage];
         [self.backgroundImageView setContentMode:UIViewContentModeTop];
@@ -44,8 +44,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-    
+    [super viewDidAppear:animated]; 
     [UIView animateWithDuration:0.5f animations:^{
         self.outterView.alpha = 1;
     }];

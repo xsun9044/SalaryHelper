@@ -13,11 +13,13 @@
 @property (nonatomic, strong) NSString *eventStartDate;
 @property (nonatomic, strong) NSString *amount;
 @property (nonatomic, strong) NSString *repeat;
+@property (nonatomic, strong) NSString *type;
 
 - (Event *)initEventWithDetail:(NSInteger)rowID
                          Title:(NSString *)title
                      andAmount:(NSString *)amount
                    andStarDate:(NSString *)eventStartDate
-                     andRepeat:(NSString *)repeat;
+                     andRepeat:(NSString *)repeat
+                       andType:(NSString *)type;
 
 @end

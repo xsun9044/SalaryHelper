@@ -15,12 +15,6 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-    
-    // Change all tint color in navigation bars
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
-    
     // Check database Connection
     self.dbManger = [DBManager getSharedInstance];
     [self.dbManger createDBwithCompletionHandler:^(BOOL finished, NSError *error) {
@@ -55,6 +49,7 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AddSuccessNotification" object:nil];
 }
 
 #pragma mark - Core Data stack
