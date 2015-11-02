@@ -242,7 +242,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tio-Gq-Y3E">
-                                <rect key="frame" x="0.0" y="0.0" width="568" height="50"/>
+                                <rect key="frame" x="0.0" y="-20" width="568" height="50"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ITQ-FH-CPT">
                                         <rect key="frame" x="101" y="0.0" width="100" height="50"/>
@@ -345,7 +345,7 @@
                                 </constraints>
                             </view>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Eab-lN-ZGO">
-                                <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                                <rect key="frame" x="0.0" y="-20" width="568" height="320"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </imageView>
                         </subviews>
@@ -383,10 +383,10 @@
             </objects>
             <point key="canvasLocation" x="-272" y="949"/>
         </scene>
-        <!--Day Detail Pop View-->
+        <!--Day Detail PopVC-->
         <scene sceneID="Cus-7H-CB8">
             <objects>
-                <viewController id="xfG-dD-OMe" customClass="DayDetailPopView" sceneMemberID="viewController">
+                <viewController id="xfG-dD-OMe" customClass="DayDetailPopVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2kN-r8-A9x"/>
                         <viewControllerLayoutGuide type="bottom" id="sQw-vm-7LY"/>
@@ -572,7 +572,7 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Title (Optional)" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3LV-8t-9vW">
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Title (Optional, 200 limit)" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3LV-8t-9vW">
                                             <rect key="frame" x="61" y="17" width="317" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="30" id="AoF-Xv-iDF"/>

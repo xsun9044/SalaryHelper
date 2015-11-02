@@ -1,17 +1,17 @@
 //
-//  DayDetailPopView.m
+//  DayDetailPopVC.m
 //  SalaryHelper
 //
 //  Created by Xin Sun on 10/3/15.
 //  Copyright © 2015 Xin. All rights reserved.
 //
 
-#import "DayDetailPopView.h"
+#import "DayDetailPopVC.h"
 #import "UIColor+ColorHelper.h"
 #import "MenuVC.h"
 #import "Event.h"
 
-@interface DayDetailPopView () <UITableViewDataSource, UITableViewDelegate>
+@interface DayDetailPopVC () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (strong, nonatomic) UIImageView *movingImageView;
 @property (strong, nonatomic) UIView *detailView;
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation DayDetailPopView
+@implementation DayDetailPopVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -91,6 +91,7 @@
     
     self.detailTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.topView.frame.size.height, 3*self.dayView.frame.size.width, self.detailView.frame.size.height-self.topView.frame.size.height) style:UITableViewStylePlain];
     [self.detailTableView setBackgroundColor:[UIColor clearColor]];
+    [self.detailTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.detailTableView.alpha = 0;
     self.detailTableView.delegate = self;
     self.detailTableView.dataSource = self;
@@ -157,7 +158,9 @@
             self.movingImageView.frame = CGRectMake(self.dayView.frame.origin.x+self.dayView.frame.size.width+3*self.dayView.frame.size.width, self.fullHeight/5-21, self.fullWidth-(self.dayView.frame.origin.x+self.dayView.frame.size.width), self.fullHeight-(self.fullHeight/5-21));
         }
     } completion:^(BOOL finished) {
-        self.detailTableView.alpha = 1;
+        [UIView animateWithDuration:0.3f animations:^{
+            self.detailTableView.alpha = 1.0;
+        }];
     }];
 }
 

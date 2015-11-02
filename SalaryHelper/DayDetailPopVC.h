@@ -1,5 +1,5 @@
 //
-//  DayDetailPopView.h
+//  DayDetailPopVC.h
 //  SalaryHelper
 //
 //  Created by Xin Sun on 10/3/15.
@@ -15,7 +15,7 @@
 - (void)pickOtherDay:(CGPoint)point;
 @end
 
-@interface DayDetailPopView : UIViewController
+@interface DayDetailPopVC : UIViewController
 @property (nonatomic, weak) id<DayDetailViewDelegate> delegate;
 @property (nonatomic, strong) UIImage *bgImage;
 @property (nonatomic, strong) DayView *dayView;

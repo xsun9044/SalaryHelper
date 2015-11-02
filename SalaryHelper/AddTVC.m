@@ -293,104 +293,113 @@
 // Done Action
 - (IBAction)done:(UIBarButtonItem *)sender
 {
-    if (self.currentTextField2.text.length == 0) {
-        [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
-        [self.currentTextField2 setPlaceholder:@"Required"];
-        if (self.type == ADD_INCOME) {
-            [self buildAlertPopupWithTitle:@"AMOUNT REQUIRED" andContext:@"Please input your income amount."];
-        } else {
-            [self buildAlertPopupWithTitle:@"AMOUNT REQUIRED" andContext:@"Please input your outlay amount."];
-        }
-        [self performSegueWithIdentifier:@"show_popup" sender:sender];
-    } else if (![self checkInputIfNumberic:self.currentTextField2.text]) {
-        [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
-        if (self.type == ADD_INCOME) {
-            [self buildAlertPopupWithTitle:@"AMOUNT FORMAT ERROR" andContext:@"Please input number for your income amount."];
-        } else {
-            [self buildAlertPopupWithTitle:@"AMOUNT FORMAT ERROR" andContext:@"Please input number for your outlay amount."];
-        }
+    if (self.currentTextField1.text.length > 200) {
+        [self.currentTextField1 showAlertBorderWithCornerRadius:5.0f];
+        [self buildAlertPopupWithTitle:@"DESCRIPTION TOO LONG" andContext:@"Description limit 200 characters."];
         [self performSegueWithIdentifier:@"show_popup" sender:sender];
     } else {
-        [self.currentTextField1 resignFirstResponder];
-        [self.currentTextField2 resignFirstResponder];
-        [self.currentTextField2 hideAlertBorder];
+        [self.currentTextField1 hideAlertBorder];
         
-        //Prepare data
-        BOOL willRepeat = NO;
-        NSArray *repeatData;
-        if (![self.repeatLabel.text isEqualToString:@"Never"]) {
-            willRepeat = YES;
-            
-            // Handle repeat data
-            NSString *qty;
-            NSString *measure;
-            NSArray *parts = [self.repeatLabel.text componentsSeparatedByString:@" "];
-            if (parts.count == 2) {
-                qty = @"1";
-                measure = parts[1];
+        if (self.currentTextField2.text.length == 0) {
+            [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
+            [self.currentTextField2 setPlaceholder:@"Required"];
+            if (self.type == ADD_INCOME) {
+                [self buildAlertPopupWithTitle:@"AMOUNT REQUIRED" andContext:@"Please input your income amount."];
             } else {
-                qty = parts[1];
-                measure = parts[2];
+                [self buildAlertPopupWithTitle:@"AMOUNT REQUIRED" andContext:@"Please input your outlay amount."];
+            }
+            [self performSegueWithIdentifier:@"show_popup" sender:sender];
+        } else if (![self checkInputIfNumberic:self.currentTextField2.text]) {
+            [self.currentTextField2 showAlertBorderWithCornerRadius:5.0f];
+            if (self.type == ADD_INCOME) {
+                [self buildAlertPopupWithTitle:@"AMOUNT FORMAT ERROR" andContext:@"Please input number for your income amount."];
+            } else {
+                [self buildAlertPopupWithTitle:@"AMOUNT FORMAT ERROR" andContext:@"Please input number for your outlay amount."];
+            }
+            [self performSegueWithIdentifier:@"show_popup" sender:sender];
+        } else {
+            [self.currentTextField1 resignFirstResponder];
+            [self.currentTextField1 hideAlertBorder];
+            [self.currentTextField2 resignFirstResponder];
+            [self.currentTextField2 hideAlertBorder];
+            
+            //Prepare data
+            BOOL willRepeat = NO;
+            NSArray *repeatData;
+            if (![self.repeatLabel.text isEqualToString:@"Never"]) {
+                willRepeat = YES;
+                
+                // Handle repeat data
+                NSString *qty;
+                NSString *measure;
+                NSArray *parts = [self.repeatLabel.text componentsSeparatedByString:@" "];
+                if (parts.count == 2) {
+                    qty = @"1";
+                    measure = parts[1];
+                } else {
+                    qty = parts[1];
+                    measure = parts[2];
+                }
+                
+                repeatData = [[NSArray alloc] initWithObjects:
+                              [measure isEqualToString:@"Day"]||[measure isEqualToString:@"Days"]?qty:@"0", //0
+                              [measure isEqualToString:@"Week"]||[measure isEqualToString:@"Weeks"]?qty:@"0", //1
+                              [measure isEqualToString:@"Month"]||[measure isEqualToString:@"Months"]?qty:@"0", //2
+                              [measure isEqualToString:@"Year"]||[measure isEqualToString:@"Years"]?qty:@"0", //3
+                              nil];
+            } else {
+                repeatData = [[NSArray alloc] initWithObjects:@"0",@"0",@"0",@"0",nil];
             }
             
-            repeatData = [[NSArray alloc] initWithObjects:
-                                   [measure isEqualToString:@"Day"]||[measure isEqualToString:@"Days"]?qty:@"0", //0
-                                   [measure isEqualToString:@"Week"]||[measure isEqualToString:@"Weeks"]?qty:@"0", //1
-                                   [measure isEqualToString:@"Month"]||[measure isEqualToString:@"Months"]?qty:@"0", //2
-                                   [measure isEqualToString:@"Year"]||[measure isEqualToString:@"Years"]?qty:@"0", //3
-                                   nil];
-        } else {
-            repeatData = [[NSArray alloc] initWithObjects:@"0",@"0",@"0",@"0",nil];
-        }
-        
-        HUD = [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
-        HUD.labelText = @"Saving...";
-        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        if (self.type == ADD_INCOME) {
-            [delegate.dbManger saveIncomeEvent:self.currentTextField1.text
-                                        amount:self.currentTextField2.text
-                                     startDate:self.dateLabel.text
-                                        repeat:willRepeat
-                                           day:[[repeatData objectAtIndex:0] integerValue]
-                                          week:[[repeatData objectAtIndex:1] integerValue]
-                                         month:[[repeatData objectAtIndex:2] integerValue]
-                                          year:[[repeatData objectAtIndex:3] integerValue]
-                          andCompletionHandler:^(BOOL finished, NSError *error) {
-                              [MBProgressHUD hideHUDForView:self.tableView animated:YES];
-                              if (finished) { // success
-                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSuccessNotification"
-                                                                                      object:self];
-                                  [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
-                                  [self dismissViewControllerAnimated:YES completion:nil];
-                              } else { // failure
+            HUD = [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
+            HUD.labelText = @"Saving...";
+            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            if (self.type == ADD_INCOME) {
+                [delegate.dbManger saveIncomeEvent:self.currentTextField1.text
+                                            amount:self.currentTextField2.text
+                                         startDate:self.dateLabel.text
+                                            repeat:willRepeat
+                                               day:[[repeatData objectAtIndex:0] integerValue]
+                                              week:[[repeatData objectAtIndex:1] integerValue]
+                                             month:[[repeatData objectAtIndex:2] integerValue]
+                                              year:[[repeatData objectAtIndex:3] integerValue]
+                              andCompletionHandler:^(BOOL finished, NSError *error) {
+                                  [MBProgressHUD hideHUDForView:self.tableView animated:YES];
+                                  if (finished) { // success
+                                      [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSuccessNotification"
+                                                                                          object:self];
+                                      [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
+                                      [self dismissViewControllerAnimated:YES completion:nil];
+                                  } else { // failure
 #warning TODO: ERROR HANDLE
-                                  NSLog(@"%@", error.localizedDescription);
-                              }
-                          }];
-        } else {
-            [delegate.dbManger saveOutlayEvent:self.currentTextField1.text
-                                        amount:self.currentTextField2.text
-                                     startDate:self.dateLabel.text
-                                        repeat:willRepeat
-                                           day:[[repeatData objectAtIndex:0] integerValue]
-                                          week:[[repeatData objectAtIndex:1] integerValue]
-                                         month:[[repeatData objectAtIndex:2] integerValue]
-                                          year:[[repeatData objectAtIndex:3] integerValue]
-                          andCompletionHandler:^(BOOL finished, NSError *error) {
-                              [MBProgressHUD hideHUDForView:self.tableView animated:YES];
-                              if (finished) { // success
-                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSuccessNotification"
-                                                                                      object:self];
-                                  [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
-                                  [self dismissViewControllerAnimated:YES completion:nil];
-                              } else { // failure
+                                      NSLog(@"%@", error.localizedDescription);
+                                  }
+                              }];
+            } else {
+                [delegate.dbManger saveOutlayEvent:self.currentTextField1.text
+                                            amount:self.currentTextField2.text
+                                         startDate:self.dateLabel.text
+                                            repeat:willRepeat
+                                               day:[[repeatData objectAtIndex:0] integerValue]
+                                              week:[[repeatData objectAtIndex:1] integerValue]
+                                             month:[[repeatData objectAtIndex:2] integerValue]
+                                              year:[[repeatData objectAtIndex:3] integerValue]
+                              andCompletionHandler:^(BOOL finished, NSError *error) {
+                                  [MBProgressHUD hideHUDForView:self.tableView animated:YES];
+                                  if (finished) { // success
+                                      [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSuccessNotification"
+                                                                                          object:self];
+                                      [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
+                                      [self dismissViewControllerAnimated:YES completion:nil];
+                                  } else { // failure
 #warning TODO: ERROR HANDLE
-                                  NSLog(@"%@", error.localizedDescription);
-                              }
-                          }];
+                                      NSLog(@"%@", error.localizedDescription);
+                                  }
+                              }];
+            }
+            
+            [HUD hide:YES afterDelay:HIDE_HUD_INTEVAL];
         }
-        
-        [HUD hide:YES afterDelay:HIDE_HUD_INTEVAL];
     }
 }
 

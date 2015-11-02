@@ -9,18 +9,17 @@
 /* Begin PBXBuildFile section */
 		224D4CAD1B23903500FF4D9A /* ReturnData.m in Sources */ = {isa = PBXBuildFile; fileRef = 224D4CAC1B23903500FF4D9A /* ReturnData.m */; };
 		224D4CB21B23928200FF4D9A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 224D4CB11B23928200FF4D9A /* Event.m */; };
-		22951CCC1B09324200AECA27 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22951CCB1B09324200AECA27 /* libsqlite3.dylib */; };
+		22831A7E1BE820AE006FD5EB /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 22831A7D1BE820AE006FD5EB /* libsqlite3.tbd */; };
 		22951CD31B09333E00AECA27 /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22951CD21B09333E00AECA27 /* DBManager.m */; };
-		22F0F7921BC0587F00B1B567 /* DayDetailPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F0F7911BC0587F00B1B567 /* DayDetailPopView.m */; settings = {ASSET_TAGS = (); }; };
+		22F0F7921BC0587F00B1B567 /* DayDetailPopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F0F7911BC0587F00B1B567 /* DayDetailPopVC.m */; settings = {ASSET_TAGS = (); }; };
 		22F8FD381B043A1600381F04 /* AddTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F8FD371B043A1600381F04 /* AddTVC.m */; };
-		22FB1E151B6AC57900272C93 /* ReturnData+Test1.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FB1E141B6AC57900272C93 /* ReturnData+Test1.m */; };
 		B505DB9F1B263B4900CA79B7 /* CalendarObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B505DB9E1B263B4900CA79B7 /* CalendarObject.m */; };
 		B505DBA21B2642F300CA79B7 /* DayObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B505DBA11B2642F300CA79B7 /* DayObject.m */; };
 		B535E1781AFC07200088FE42 /* UIColor+ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E1771AFC07200088FE42 /* UIColor+ColorHelper.m */; };
 		B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */; };
 		B554CC8C1AFA59FB006E63F7 /* CalCVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */; };
 		B554CC8F1AFA6AB1006E63F7 /* NSDate+DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC8E1AFA6AB1006E63F7 /* NSDate+DateHelper.m */; };
-		B554CC921AFA8EE6006E63F7 /* DayCVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC911AFA8EE6006E63F7 /* DayCVCell.m */; };
+		B554CC921AFA8EE6006E63F7 /* DetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B554CC911AFA8EE6006E63F7 /* DetailTableViewCell.m */; };
 		B58D7A6D1AF9522B0097A436 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A6C1AF9522B0097A436 /* main.m */; };
 		B58D7A701AF9522B0097A436 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A6F1AF9522B0097A436 /* AppDelegate.m */; };
 		B58D7A731AF9522B0097A436 /* SalaryHelper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */; };
@@ -53,16 +52,14 @@
 		224D4CAE1B23904400FF4D9A /* ReturnData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReturnData.h; sourceTree = "<group>"; };
 		224D4CB01B23928200FF4D9A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		224D4CB11B23928200FF4D9A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
-		22951CCB1B09324200AECA27 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		22831A7D1BE820AE006FD5EB /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		22951CD11B09331000AECA27 /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
 		22951CD21B09333E00AECA27 /* DBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
 		22951CD41B093A2500AECA27 /* SystemHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemHelper.h; sourceTree = "<group>"; };
-		22F0F7901BC0582D00B1B567 /* DayDetailPopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailPopView.h; sourceTree = "<group>"; };
-		22F0F7911BC0587F00B1B567 /* DayDetailPopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayDetailPopView.m; sourceTree = "<group>"; };
+		22F0F7901BC0582D00B1B567 /* DayDetailPopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailPopVC.h; sourceTree = "<group>"; };
+		22F0F7911BC0587F00B1B567 /* DayDetailPopVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayDetailPopVC.m; sourceTree = "<group>"; };
 		22F8FD371B043A1600381F04 /* AddTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTVC.m; sourceTree = "<group>"; };
 		22F8FD391B043A3A00381F04 /* AddTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTVC.h; sourceTree = "<group>"; };
-		22FB1E131B6AC57900272C93 /* ReturnData+Test1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ReturnData+Test1.h"; sourceTree = "<group>"; };
-		22FB1E141B6AC57900272C93 /* ReturnData+Test1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ReturnData+Test1.m"; sourceTree = "<group>"; };
 		B505DB9D1B263B4900CA79B7 /* CalendarObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarObject.h; sourceTree = "<group>"; };
 		B505DB9E1B263B4900CA79B7 /* CalendarObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarObject.m; sourceTree = "<group>"; };
 		B505DBA01B2642F300CA79B7 /* DayObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayObject.h; sourceTree = "<group>"; };
@@ -75,8 +72,8 @@
 		B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalCVCell.m; sourceTree = "<group>"; };
 		B554CC8D1AFA6AB1006E63F7 /* NSDate+DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+DateHelper.h"; sourceTree = "<group>"; };
 		B554CC8E1AFA6AB1006E63F7 /* NSDate+DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+DateHelper.m"; sourceTree = "<group>"; };
-		B554CC901AFA8EE6006E63F7 /* DayCVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayCVCell.h; sourceTree = "<group>"; };
-		B554CC911AFA8EE6006E63F7 /* DayCVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayCVCell.m; sourceTree = "<group>"; };
+		B554CC901AFA8EE6006E63F7 /* DetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailTableViewCell.h; sourceTree = "<group>"; };
+		B554CC911AFA8EE6006E63F7 /* DetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailTableViewCell.m; sourceTree = "<group>"; };
 		B58D7A671AF9522B0097A436 /* SalaryHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalaryHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B58D7A6B1AF9522B0097A436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B58D7A6C1AF9522B0097A436 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -113,7 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22951CCC1B09324200AECA27 /* libsqlite3.dylib in Frameworks */,
+				22831A7E1BE820AE006FD5EB /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,11 +124,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		224D4CAB1B238FEC00FF4D9A /* Instance */ = {
+		22831A751BE81DA9006FD5EB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B554CC8A1AFA59FB006E63F7 /* CalCVCell.h */,
+				B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */,
 				B5A177BD1B2A0879001E8D5A /* DayView.h */,
 				B5A177BE1B2A0879001E8D5A /* DayView.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		22831A761BE81DC3006FD5EB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B5B835421B04F5EF003AB468 /* InputTVCell.h */,
+				B5B835431B04F5EF003AB468 /* InputTVCell.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		22831A771BE81DD5006FD5EB /* Model */ = {
+			isa = PBXGroup;
+			children = (
 				B505DB9D1B263B4900CA79B7 /* CalendarObject.h */,
 				B505DB9E1B263B4900CA79B7 /* CalendarObject.m */,
 				B505DBA01B2642F300CA79B7 /* DayObject.h */,
@@ -141,7 +156,46 @@
 				224D4CAC1B23903500FF4D9A /* ReturnData.m */,
 				224D4CAE1B23904400FF4D9A /* ReturnData.h */,
 			);
-			name = Instance;
+			name = Model;
+			sourceTree = "<group>";
+		};
+		22831A781BE81DDA006FD5EB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B58D7A741AF9522B0097A436 /* CalCVC.h */,
+				B58D7A751AF9522B0097A436 /* CalCVC.m */,
+				22F0F7901BC0582D00B1B567 /* DayDetailPopVC.h */,
+				22F0F7911BC0587F00B1B567 /* DayDetailPopVC.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		22831A791BE81DF7006FD5EB /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				22831A7A1BE81E62006FD5EB /* Controller */,
+			);
+			name = Menu;
+			sourceTree = "<group>";
+		};
+		22831A7A1BE81E62006FD5EB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B5F72C3A1AFBEC7F001544E7 /* MenuVC.h */,
+				B5F72C3B1AFBEC7F001544E7 /* MenuVC.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		22831A7B1BE81E77006FD5EB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B5B370981B06473B0042BB74 /* RepeatTVC.m */,
+				B5B370991B06473B0042BB74 /* RepeatTVC.h */,
+				22F8FD391B043A3A00381F04 /* AddTVC.h */,
+				22F8FD371B043A1600381F04 /* AddTVC.m */,
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 		22951CCD1B09325A00AECA27 /* DB */ = {
@@ -153,23 +207,19 @@
 			name = DB;
 			sourceTree = "<group>";
 		};
-		22F8FD351B0439C100381F04 /* InputViews */ = {
+		22F8FD351B0439C100381F04 /* Input */ = {
 			isa = PBXGroup;
 			children = (
-				B5B370981B06473B0042BB74 /* RepeatTVC.m */,
-				B5B370991B06473B0042BB74 /* RepeatTVC.h */,
-				22F8FD391B043A3A00381F04 /* AddTVC.h */,
-				22F8FD371B043A1600381F04 /* AddTVC.m */,
-				B5B835421B04F5EF003AB468 /* InputTVCell.h */,
-				B5B835431B04F5EF003AB468 /* InputTVCell.m */,
+				22831A7B1BE81E77006FD5EB /* Controller */,
+				22831A761BE81DC3006FD5EB /* View */,
 			);
-			name = InputViews;
+			name = Input;
 			sourceTree = "<group>";
 		};
 		B58D7A5E1AF9522B0097A436 = {
 			isa = PBXGroup;
 			children = (
-				22951CCB1B09324200AECA27 /* libsqlite3.dylib */,
+				22831A7D1BE820AE006FD5EB /* libsqlite3.tbd */,
 				B58D7A691AF9522B0097A436 /* SalaryHelper */,
 				B58D7A861AF9522C0097A436 /* SalaryHelperTests */,
 				B58D7A681AF9522B0097A436 /* Products */,
@@ -193,12 +243,12 @@
 				B5A177BB1B29D435001E8D5A /* Main.storyboard */,
 				B58D7A7A1AF9522C0097A436 /* Images.xcassets */,
 				B58D7A711AF9522B0097A436 /* SalaryHelper.xcdatamodeld */,
-				224D4CAB1B238FEC00FF4D9A /* Instance */,
 				B5CDFCAC1B18F9CF00C8A7C2 /* API */,
 				22951CCD1B09325A00AECA27 /* DB */,
 				B5F72C391AFBAE3B001544E7 /* Helper */,
 				B5F72C381AFBAE24001544E7 /* Calendar */,
-				22F8FD351B0439C100381F04 /* InputViews */,
+				22831A791BE81DF7006FD5EB /* Menu */,
+				22F8FD351B0439C100381F04 /* Input */,
 				B58D7A6A1AF9522B0097A436 /* Supporting Files */,
 			);
 			path = SalaryHelper;
@@ -250,16 +300,11 @@
 		B5F72C381AFBAE24001544E7 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
-				B5F72C3A1AFBEC7F001544E7 /* MenuVC.h */,
-				B5F72C3B1AFBEC7F001544E7 /* MenuVC.m */,
-				B58D7A741AF9522B0097A436 /* CalCVC.h */,
-				B58D7A751AF9522B0097A436 /* CalCVC.m */,
-				B554CC8A1AFA59FB006E63F7 /* CalCVCell.h */,
-				B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */,
-				B554CC901AFA8EE6006E63F7 /* DayCVCell.h */,
-				B554CC911AFA8EE6006E63F7 /* DayCVCell.m */,
-				22F0F7901BC0582D00B1B567 /* DayDetailPopView.h */,
-				22F0F7911BC0587F00B1B567 /* DayDetailPopView.m */,
+				22831A781BE81DDA006FD5EB /* Controller */,
+				22831A771BE81DD5006FD5EB /* Model */,
+				22831A751BE81DA9006FD5EB /* View */,
+				B554CC901AFA8EE6006E63F7 /* DetailTableViewCell.h */,
+				B554CC911AFA8EE6006E63F7 /* DetailTableViewCell.m */,
 			);
 			name = Calendar;
 			sourceTree = "<group>";
@@ -280,8 +325,6 @@
 				B535E17A1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m */,
 				B5B835451B0558E8003AB468 /* UIView+ViewHelper.h */,
 				B5B835461B0558E8003AB468 /* UIView+ViewHelper.m */,
-				22FB1E131B6AC57900272C93 /* ReturnData+Test1.h */,
-				22FB1E141B6AC57900272C93 /* ReturnData+Test1.m */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -389,13 +432,12 @@
 				B5B3709A1B06473B0042BB74 /* RepeatTVC.m in Sources */,
 				B58D7A701AF9522B0097A436 /* AppDelegate.m in Sources */,
 				B535E17B1AFC0DAD0088FE42 /* UIImageView+imageViewHelper.m in Sources */,
-				22FB1E151B6AC57900272C93 /* ReturnData+Test1.m in Sources */,
 				B5F72C3C1AFBEC7F001544E7 /* MenuVC.m in Sources */,
 				B505DB9F1B263B4900CA79B7 /* CalendarObject.m in Sources */,
 				B58D7A6D1AF9522B0097A436 /* main.m in Sources */,
 				B5A177BF1B2A0879001E8D5A /* DayView.m in Sources */,
-				B554CC921AFA8EE6006E63F7 /* DayCVCell.m in Sources */,
-				22F0F7921BC0587F00B1B567 /* DayDetailPopView.m in Sources */,
+				B554CC921AFA8EE6006E63F7 /* DetailTableViewCell.m in Sources */,
+				22F0F7921BC0587F00B1B567 /* DayDetailPopVC.m in Sources */,
 				B505DBA21B2642F300CA79B7 /* DayObject.m in Sources */,
 				22F8FD381B043A1600381F04 /* AddTVC.m in Sources */,
 				B5B835441B04F5EF003AB468 /* InputTVCell.m in Sources */,

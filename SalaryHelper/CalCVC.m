@@ -9,7 +9,6 @@
 #import "CalCVC.h"
 #import "CalCVCell.h"
 #import "NSDate+DateHelper.h"
-#import "DayCVCell.h"
 #import "MenuVC.h"
 #import "UIImageView+imageViewHelper.h"
 #import "SystemHelper.h"
@@ -19,7 +18,7 @@
 #import "UIColor+ColorHelper.h"
 #import "Event.h"
 #import "ReturnData+Test1.h"
-#import "DayDetailPopView.h"
+#import "DayDetailPopVC.h"
 
 @interface CalCVC () <DayDetailViewDelegate>
 @property (nonatomic) CGFloat fullHeight;
@@ -508,7 +507,7 @@
             controller.backgroundImage = sc;
         }
     } else if ([segue.identifier isEqualToString:@"detail_segue"]) {
-        DayDetailPopView *controller = (DayDetailPopView *)segue.destinationViewController;
+        DayDetailPopVC *controller = (DayDetailPopVC *)segue.destinationViewController;
         controller.delegate = self;
         controller.dayView = self.targetDayView;
         controller.events = self.targetDayObject.events;
@@ -527,30 +526,22 @@
 #pragma mark - DayDetailViewDelegate
 - (void)openOtherView:(CGPoint)point
 {
-    NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
-    CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
-    
-    for (UIView *view in cell.bottomView.subviews)
-    {
-        if ([view isKindOfClass:[DayView class]] && CGRectContainsPoint(view.frame, point) && [(DayView *)view isInThisMonth])
-        {
-            view.backgroundColor = [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0];
-            
-            // Clear last selection
-            if (self.currentCheckingMonth == self.lastSelectionMonth && self.lastSelect != nil) {
-                self.lastSelect.backgroundColor = [UIColor whiteColor];
-            }
-            
-            self.lastSelect = view;
-            
-            self.shouldOpenOther = YES;
-            self.targetDayView = (DayView *)view;
-        }
+    UIView *view = [self isTappedViewAValidDayView:point];
+    if (view!=nil) {
+        self.shouldOpenOther = YES;
+        self.targetDayView = (DayView *)view;
+        self.targetDayObject = (DayObject *)[self.cal.daysArray objectAtIndex:[self getIndexOfDayDataWithX:view.frame.origin.x andY:view.frame.origin.y]];
     }
 }
 
 - (void)pickOtherDay:(CGPoint)point
 {
+    if ([self isTappedViewAValidDayView:point]!=nil) {
+        self.shouldOpenOther = NO;
+    }
+}
+
+- (UIView *)isTappedViewAValidDayView:(CGPoint)point {
     NSIndexPath *path = [NSIndexPath indexPathForRow:self.currentCheckingMonth inSection:0];
     CalCVCell *cell = (CalCVCell *)[self.collectionView cellForItemAtIndexPath:path];
     
@@ -566,11 +557,11 @@
             }
             
             self.lastSelect = view;
-            
-            self.shouldOpenOther = NO;
-            self.targetDayView = (DayView *)view;
+            return view;
         }
     }
+    
+    return nil;
 }
 
 @end
