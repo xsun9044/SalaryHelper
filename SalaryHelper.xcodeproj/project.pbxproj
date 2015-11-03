@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2204801F1BE95DFF005AEE8F /* DetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2204801E1BE95DFF005AEE8F /* DetailCell.xib */; settings = {ASSET_TAGS = (); }; };
 		224D4CAD1B23903500FF4D9A /* ReturnData.m in Sources */ = {isa = PBXBuildFile; fileRef = 224D4CAC1B23903500FF4D9A /* ReturnData.m */; };
 		224D4CB21B23928200FF4D9A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 224D4CB11B23928200FF4D9A /* Event.m */; };
 		22831A7E1BE820AE006FD5EB /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 22831A7D1BE820AE006FD5EB /* libsqlite3.tbd */; };
@@ -48,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2204801E1BE95DFF005AEE8F /* DetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailCell.xib; sourceTree = "<group>"; };
 		224D4CAC1B23903500FF4D9A /* ReturnData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReturnData.m; sourceTree = "<group>"; };
 		224D4CAE1B23904400FF4D9A /* ReturnData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReturnData.h; sourceTree = "<group>"; };
 		224D4CB01B23928200FF4D9A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
@@ -219,7 +221,6 @@
 		B58D7A5E1AF9522B0097A436 = {
 			isa = PBXGroup;
 			children = (
-				22831A7D1BE820AE006FD5EB /* libsqlite3.tbd */,
 				B58D7A691AF9522B0097A436 /* SalaryHelper */,
 				B58D7A861AF9522C0097A436 /* SalaryHelperTests */,
 				B58D7A681AF9522B0097A436 /* Products */,
@@ -257,6 +258,7 @@
 		B58D7A6A1AF9522B0097A436 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				22831A7D1BE820AE006FD5EB /* libsqlite3.tbd */,
 				B58D7A6B1AF9522B0097A436 /* Info.plist */,
 				B58D7A6C1AF9522B0097A436 /* main.m */,
 			);
@@ -305,6 +307,7 @@
 				22831A751BE81DA9006FD5EB /* View */,
 				B554CC901AFA8EE6006E63F7 /* DetailTableViewCell.h */,
 				B554CC911AFA8EE6006E63F7 /* DetailTableViewCell.m */,
+				2204801E1BE95DFF005AEE8F /* DetailCell.xib */,
 			);
 			name = Calendar;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 			files = (
 				B58D7A7B1AF9522C0097A436 /* Images.xcassets in Resources */,
 				B5A177BC1B29D435001E8D5A /* Main.storyboard in Resources */,
+				2204801F1BE95DFF005AEE8F /* DetailCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

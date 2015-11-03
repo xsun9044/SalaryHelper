@@ -10,4 +10,10 @@
 
 @interface DetailTableViewCell : UITableViewCell
 
+@property (nonatomic, assign) BOOL isIncome;
+@property (nonatomic, assign) BOOL isRepeat;
+
+@property (weak, nonatomic) IBOutlet UILabel *amount;
+@property (weak, nonatomic) IBOutlet UILabel *content;
+
 @end

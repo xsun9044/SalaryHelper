@@ -10,6 +10,7 @@
 #import "UIColor+ColorHelper.h"
 #import "MenuVC.h"
 #import "Event.h"
+#import "DetailTableViewCell.h"
 
 @interface DayDetailPopVC () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
@@ -30,6 +31,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.bgImageView.image = self.bgImage;
     self.fullHeight = [[UIScreen mainScreen] bounds].size.height;
     self.fullWidth = [[UIScreen mainScreen] bounds].size.width;
@@ -91,7 +93,10 @@
     
     self.detailTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.topView.frame.size.height, 3*self.dayView.frame.size.width, self.detailView.frame.size.height-self.topView.frame.size.height) style:UITableViewStylePlain];
     [self.detailTableView setBackgroundColor:[UIColor clearColor]];
-    [self.detailTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    //[self.detailTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self.detailTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.detailTableView setBounces:NO];
+    self.detailTableView.showsVerticalScrollIndicator = NO;
     self.detailTableView.alpha = 0;
     self.detailTableView.delegate = self;
     self.detailTableView.dataSource = self;
@@ -236,17 +241,50 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 46)];
+    DetailTableViewCell *cell = (DetailTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"detail_cell"];
+    if (!cell) {
+        [tableView registerNib:[UINib nibWithNibName:@"DetailCell" bundle:nil] forCellReuseIdentifier:@"detail_cell"];
+        cell = (DetailTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"detail_cell"];
+    }
     [cell setBackgroundColor:[UIColor clearColor]];
     
     Event *event = (Event *)[self.events objectAtIndex:indexPath.row];
     if ([event.type isEqualToString:@"1"]) {
-        cell.textLabel.text = [NSString stringWithFormat:@"+%@", event.amount];
+        cell.amount.text = [NSString stringWithFormat:@"$%@", event.amount];
+        cell.isIncome = YES;
+        cell.isRepeat = [event.repeat boolValue];
     } else {
-        cell.textLabel.text = [NSString stringWithFormat:@"-%@", event.amount];
+        cell.amount.text = [NSString stringWithFormat:@"$%@", event.amount];
+        cell.isIncome = NO;
+        cell.isRepeat = [event.repeat boolValue];
     }
     
+    cell.content.text = event.title;
+    
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 30;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Remove seperator inset
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
+    // Prevent the cell from inheriting the Table View's margin settings
+    if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
+        [cell setPreservesSuperviewLayoutMargins:NO];
+    }
+    
+    // Explictly set your cell's layout margins
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
 }
 
 #pragma mark - Navigation

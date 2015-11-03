@@ -7,14 +7,11 @@
 //
 
 #import "DetailTableViewCell.h"
+#import "UIColor+ColorHelper.h"
 
 @interface DetailTableViewCell()
-
-@property (nonatomic, strong) UILabel *title;
-@property (nonatomic, strong) UILabel *amount;
-@property (nonatomic, strong) UIImageView *icon;
-@property (nonatomic, strong) UIImageView *repeatIcon;
-
+@property (weak, nonatomic) IBOutlet UIImageView *icon;
+@property (weak, nonatomic) IBOutlet UIImageView *repeatIcon;
 @end
 
 @implementation DetailTableViewCell
@@ -24,9 +21,30 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        [self setBackgroundColor:[UIColor clearColor]];
     }
     
     return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    if (self.isIncome) {
+        [self.icon setImage:[[UIImage imageNamed:@"coin"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+        [self.icon setTintColor:[UIColor increaseColor]];
+        [self.amount setTextColor:[UIColor increaseColor]];
+    } else {
+        [self.icon setImage:[[UIImage imageNamed:@"cart"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+        [self.icon setTintColor:[UIColor decreaseColor]];
+        [self.amount setTextColor:[UIColor decreaseColor]];
+    }
+    
+    if (self.isRepeat) {
+        [self.repeatIcon setHidden:NO];
+    } else {
+        [self.repeatIcon setHidden:YES];
+    }
 }
 
 @end
