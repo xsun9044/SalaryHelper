@@ -11,6 +11,7 @@
 #import "MenuVC.h"
 #import "Event.h"
 #import "DetailTableViewCell.h"
+#import "PreferencesHelper.h"
 
 @interface DayDetailPopVC () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
@@ -151,22 +152,44 @@
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    [UIView animateWithDuration:0.3f animations:^{
-        self.label.alpha = 1;
-        if (self.dayView.frame.origin.x >= 4*self.dayView.frame.size.width) {
-            self.detailView.frame = CGRectMake(self.dayView.frame.origin.x-3*self.dayView.frame.size.width, self.fullHeight/5-21, 3*self.dayView.frame.size.width, self.fullHeight-(self.fullHeight/5-21));
-            self.topView.frame = CGRectMake(0, 0, 3*self.dayView.frame.size.width, 21);
-            self.movingImageView.frame = CGRectMake(0-3*self.dayView.frame.size.width, self.fullHeight/5-21, self.dayView.frame.origin.x, self.fullHeight-(self.fullHeight/5-21));
-        } else {
-            self.detailView.frame = CGRectMake(self.dayView.frame.origin.x+self.dayView.frame.size.width, self.fullHeight/5-21, 3*self.dayView.frame.size.width, self.fullHeight-(self.fullHeight/5-21));
-            self.topView.frame = CGRectMake(0, 0, 3*self.dayView.frame.size.width, 21);
-            self.movingImageView.frame = CGRectMake(self.dayView.frame.origin.x+self.dayView.frame.size.width+3*self.dayView.frame.size.width, self.fullHeight/5-21, self.fullWidth-(self.dayView.frame.origin.x+self.dayView.frame.size.width), self.fullHeight-(self.fullHeight/5-21));
+    if ([[PreferencesHelper sharedManager] getSumbitSuccessFlag]) {
+        if (self.animationLock) {
+            return;
         }
-    } completion:^(BOOL finished) {
+        self.detailTableView.alpha = 0;
+        self.animationLock = YES;
         [UIView animateWithDuration:0.3f animations:^{
-            self.detailTableView.alpha = 1.0;
+            self.label.alpha = 0;
+            if (self.dayView.frame.origin.x >= 4*self.dayView.frame.size.width) {
+                self.detailView.frame = CGRectMake(self.dayView.frame.origin.x, self.fullHeight/5-21, 0, self.fullHeight-(self.fullHeight/5-21));
+                self.topView.frame = CGRectMake(0, 0, 0, 21);
+                [self.movingImageView setFrame:CGRectMake(0, self.fullHeight/5-21, self.dayView.frame.origin.x, self.fullHeight-(self.fullHeight/5-21))];
+            } else {
+                self.detailView.frame = CGRectMake(self.dayView.frame.origin.x+self.dayView.frame.size.width, self.fullHeight/5-21, 0, self.fullHeight-(self.fullHeight/5-21));
+                self.topView.frame = CGRectMake(0, 0, 0, 21);
+                self.movingImageView.frame = CGRectMake(self.dayView.frame.origin.x+self.dayView.frame.size.width, self.fullHeight/5-21, self.fullWidth-(self.dayView.frame.origin.x+self.dayView.frame.size.width), self.fullHeight-(self.fullHeight/5-21));
+            }
+        } completion:^(BOOL finished) {
+            [self dismissViewControllerAnimated:NO completion:nil];
         }];
-    }];
+    } else {
+        [UIView animateWithDuration:0.3f animations:^{
+            self.label.alpha = 1;
+            if (self.dayView.frame.origin.x >= 4*self.dayView.frame.size.width) {
+                self.detailView.frame = CGRectMake(self.dayView.frame.origin.x-3*self.dayView.frame.size.width, self.fullHeight/5-21, 3*self.dayView.frame.size.width, self.fullHeight-(self.fullHeight/5-21));
+                self.topView.frame = CGRectMake(0, 0, 3*self.dayView.frame.size.width, 21);
+                self.movingImageView.frame = CGRectMake(0-3*self.dayView.frame.size.width, self.fullHeight/5-21, self.dayView.frame.origin.x, self.fullHeight-(self.fullHeight/5-21));
+            } else {
+                self.detailView.frame = CGRectMake(self.dayView.frame.origin.x+self.dayView.frame.size.width, self.fullHeight/5-21, 3*self.dayView.frame.size.width, self.fullHeight-(self.fullHeight/5-21));
+                self.topView.frame = CGRectMake(0, 0, 3*self.dayView.frame.size.width, 21);
+                self.movingImageView.frame = CGRectMake(self.dayView.frame.origin.x+self.dayView.frame.size.width+3*self.dayView.frame.size.width, self.fullHeight/5-21, self.fullWidth-(self.dayView.frame.origin.x+self.dayView.frame.size.width), self.fullHeight-(self.fullHeight/5-21));
+            }
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.3f animations:^{
+                self.detailTableView.alpha = 1.0;
+            }];
+        }];
+    }
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -287,17 +310,16 @@
     }
 }
 
-#pragma mark - Navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"menu_segue"]) {
         MenuVC *controller = (MenuVC *)segue.destinationViewController;
-        
+        controller.isDetailPage = YES;
         // If it's under IOS 8, then take the screenshot
         NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
         if (version >= 8) {
             UIGraphicsBeginImageContextWithOptions([[UIScreen mainScreen] bounds].size, self.view.opaque, 0.0);
-            [self.navigationController.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+            [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
             UIImage * sc = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
             controller.backgroundImage = sc;

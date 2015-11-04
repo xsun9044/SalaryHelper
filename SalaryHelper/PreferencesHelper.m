@@ -13,6 +13,18 @@
 
 #define SUBMIT_SUCCESS @"submit_success"
 
+static PreferencesHelper *sharedInstance = nil;
+
++ (id)sharedManager { // Singleton
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[self alloc] init];
+    });
+    
+    return sharedInstance;
+}
+
+
 - (void)returnFromSubmitSuccess
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

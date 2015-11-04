@@ -13,7 +13,6 @@
 #import "AddTVC.h"
 
 @interface MenuVC ()
-@property (nonatomic, strong) PreferencesHelper * preferences;
 
 @property (weak, nonatomic) IBOutlet UIView *view1;
 @property (weak, nonatomic) IBOutlet UIView *view2;
@@ -38,12 +37,6 @@
 
 @implementation MenuVC
 
-- (PreferencesHelper *)preferences
-{
-    if (!_preferences) _preferences = [[PreferencesHelper alloc] init];
-    return _preferences;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -52,7 +45,7 @@
     if (version >= 8) {
         [self.backgroundImageView setHidden:NO];
         [self.backgroundImageView setImage:self.backgroundImage];
-        [self.backgroundImageView setContentMode:UIViewContentModeTop];
+        [self.backgroundImageView setContentMode:UIViewContentModeScaleAspectFill];
     }
     
     [self.icon1 changeTintColorOfUIImage:[UIImage imageNamed:@"money"] withColor:[UIColor whiteColor]];
@@ -84,15 +77,16 @@
 {
     [super viewDidAppear:animated];
     
-    if ([self.preferences getSumbitSuccessFlag]) { // If save done, back to calendar instead of menu
+    if ([[PreferencesHelper sharedManager] getSumbitSuccessFlag]) { // If save done, back to calendar instead of menu
         [self.menuHeight setConstant:0.0f];
         [self.imagePaddingTop setConstant:0];
         [UIView animateWithDuration:0.2f animations:^{
             [self.view layoutIfNeeded];
+            if (!self.isDetailPage) {
+                [[PreferencesHelper sharedManager] resetReturnFromSubmitSuccess];
+            }
         } completion:^(BOOL finished) {
-            [self dismissViewControllerAnimated:NO completion:^{
-                [self.preferences resetReturnFromSubmitSuccess];
-            }];
+            [self dismissViewControllerAnimated:NO completion:nil];
         }];
     } else {
         [self.menuHeight setConstant:[[UIScreen mainScreen] bounds].size.height/6];

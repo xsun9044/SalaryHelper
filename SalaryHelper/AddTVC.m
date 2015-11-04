@@ -23,8 +23,6 @@
 #define ADD_OUTLAY 1
 
 @interface AddTVC() <UITextFieldDelegate, RepeatDelegate>
-@property (nonatomic, strong) PreferencesHelper * preferences;
-
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *leftBarButtonItem;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rightBarButtonItem;
 
@@ -46,12 +44,6 @@
 @end
 
 @implementation AddTVC
-
-- (PreferencesHelper *)preferences
-{
-    if (!_preferences) _preferences = [[PreferencesHelper alloc] init];
-    return _preferences;
-}
 
 - (void)viewDidLoad
 {
@@ -368,7 +360,7 @@
                                   if (finished) { // success
                                       [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSuccessNotification"
                                                                                           object:self];
-                                      [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
+                                      [[PreferencesHelper sharedManager] returnFromSubmitSuccess]; // Set flag for submit success
                                       [self dismissViewControllerAnimated:YES completion:nil];
                                   } else { // failure
 #warning TODO: ERROR HANDLE
@@ -389,7 +381,7 @@
                                   if (finished) { // success
                                       [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSuccessNotification"
                                                                                           object:self];
-                                      [self.preferences returnFromSubmitSuccess]; // Set flag for submit success
+                                      [[PreferencesHelper sharedManager] returnFromSubmitSuccess]; // Set flag for submit success
                                       [self dismissViewControllerAnimated:YES completion:nil];
                                   } else { // failure
 #warning TODO: ERROR HANDLE

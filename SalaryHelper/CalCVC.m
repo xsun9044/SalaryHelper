@@ -19,6 +19,7 @@
 #import "Event.h"
 #import "ReturnData+Test1.h"
 #import "DayDetailPopVC.h"
+#import "PreferencesHelper.h"
 
 @interface CalCVC () <DayDetailViewDelegate>
 @property (nonatomic) CGFloat fullHeight;
@@ -118,6 +119,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     NSInteger months;
     if (self.currentCheckingMonth == INIT_CHECKING_MONTH) {	
         months = [NSDate monthsBetweenDate:[NSDate getDateTimeFromStringInUTC:startDate] andDate:[NSDate getDateTimeFromStringInUTC:[NSDate getCurrentDateTime]]];
@@ -149,6 +151,9 @@
     if (self.shouldOpenOther) {
         self.shouldOpenOther = NO;
         [self performSegueWithIdentifier:@"detail_segue" sender:self];
+    } else if ([[PreferencesHelper sharedManager] getSumbitSuccessFlag]) {
+        [self performSegueWithIdentifier:@"detail_segue" sender:self];
+        [[PreferencesHelper sharedManager] resetReturnFromSubmitSuccess];
     }
 }
 
@@ -400,7 +405,6 @@
 
 - (void)swipeHandler:(UISwipeGestureRecognizer *)gesture
 {
-    NSLog(@"swip");
     [self performSegueWithIdentifier:@"menu_segue" sender:gesture];
 }
 
@@ -496,7 +500,6 @@
 {
     if ([segue.identifier isEqualToString:@"menu_segue"]) {
         MenuVC *controller = (MenuVC *)segue.destinationViewController;
-        
         // If it's under IOS 8, then take the screenshot
         NSInteger version = [[UIDevice currentDevice].systemVersion integerValue];
         if (version >= 8) {

@@ -129,10 +129,13 @@
 		22831A751BE81DA9006FD5EB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B554CC901AFA8EE6006E63F7 /* DetailTableViewCell.h */,
+				B554CC911AFA8EE6006E63F7 /* DetailTableViewCell.m */,
 				B554CC8A1AFA59FB006E63F7 /* CalCVCell.h */,
 				B554CC8B1AFA59FB006E63F7 /* CalCVCell.m */,
 				B5A177BD1B2A0879001E8D5A /* DayView.h */,
 				B5A177BE1B2A0879001E8D5A /* DayView.m */,
+				2204801E1BE95DFF005AEE8F /* DetailCell.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -305,9 +308,6 @@
 				22831A781BE81DDA006FD5EB /* Controller */,
 				22831A771BE81DD5006FD5EB /* Model */,
 				22831A751BE81DA9006FD5EB /* View */,
-				B554CC901AFA8EE6006E63F7 /* DetailTableViewCell.h */,
-				B554CC911AFA8EE6006E63F7 /* DetailTableViewCell.m */,
-				2204801E1BE95DFF005AEE8F /* DetailCell.xib */,
 			);
 			name = Calendar;
 			sourceTree = "<group>";

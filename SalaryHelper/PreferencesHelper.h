@@ -10,6 +10,8 @@
 
 @interface PreferencesHelper : NSObject
 
++ (id)sharedManager;
+
 - (void)returnFromSubmitSuccess;
 
 - (BOOL)getSumbitSuccessFlag;

@@ -12,5 +12,7 @@
 
 @property (nonatomic, strong) UIImage *backgroundImage;
 
+@property (nonatomic) BOOL isDetailPage;
+
 @end
 

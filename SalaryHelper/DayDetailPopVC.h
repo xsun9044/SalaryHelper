@@ -20,5 +20,4 @@
 @property (nonatomic, strong) UIImage *bgImage;
 @property (nonatomic, strong) DayView *dayView;
 @property (nonatomic, strong) NSArray *events;
-
 @end
